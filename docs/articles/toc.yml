@@ -1,0 +1,16 @@
+- name: 入門指南
+  href: getting-started.md
+- name: 核心概念
+  items:
+    - name: 聚合與審計
+      href: aggregates-and-auditing.md
+    - name: 持久化與模型設定
+      href: persistence-and-modeling.md
+    - name: 查詢與規約
+      href: querying-and-specifications.md
+    - name: 多租戶與並行控制
+      href: tenancy-and-concurrency.md
+    - name: 事件、Outbox 與廣播
+      href: events-outbox-and-broadcast.md
+    - name: 錯誤契約與本地化
+      href: errors-and-localization.md

@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/DomainKit/DomainKit.csproj" />
+    <Project Path="src/DomainKit.EntityFrameworkCore/DomainKit.EntityFrameworkCore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DomainKit.Tests/DomainKit.Tests.csproj" />
+  </Folder>
+</Solution>

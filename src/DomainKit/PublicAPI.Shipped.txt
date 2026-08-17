@@ -1,0 +1,142 @@
+#nullable enable
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.AddDomainEvent(CloudyWing.DomainKit.Events.IDomainEvent! domainEvent) -> void
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.AddIntegrationEvent(CloudyWing.DomainKit.Events.IIntegrationEvent! integrationEvent) -> void
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.AggregateRoot(TKey id) -> void
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.ClearDomainEvents() -> void
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.ClearIntegrationEvents() -> void
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.DomainEvents.get -> System.Collections.Generic.IReadOnlyList<CloudyWing.DomainKit.Events.IDomainEvent!>!
+CloudyWing.DomainKit.Entities.AggregateRoot<TKey>.IntegrationEvents.get -> System.Collections.Generic.IReadOnlyList<CloudyWing.DomainKit.Events.IIntegrationEvent!>!
+CloudyWing.DomainKit.Entities.AggregateRootBase
+CloudyWing.DomainKit.Entities.AggregateRootBase.AggregateRootBase() -> void
+CloudyWing.DomainKit.Entities.AggregateRootBase.AggregateRootBase(System.Guid id) -> void
+CloudyWing.DomainKit.Entities.Entity<TKey>
+CloudyWing.DomainKit.Entities.Entity<TKey>.Entity(TKey id) -> void
+CloudyWing.DomainKit.Entities.Entity<TKey>.Id.get -> TKey
+CloudyWing.DomainKit.Entities.Entity<TKey>.Id.set -> void
+CloudyWing.DomainKit.Entities.EntityBase
+CloudyWing.DomainKit.Entities.EntityBase.EntityBase() -> void
+CloudyWing.DomainKit.Entities.EntityBase.EntityBase(System.Guid id) -> void
+CloudyWing.DomainKit.Entities.IAggregateRoot
+CloudyWing.DomainKit.Entities.IAggregateRoot.ClearDomainEvents() -> void
+CloudyWing.DomainKit.Entities.IAggregateRoot.ClearIntegrationEvents() -> void
+CloudyWing.DomainKit.Entities.IAggregateRoot.DomainEvents.get -> System.Collections.Generic.IReadOnlyList<CloudyWing.DomainKit.Events.IDomainEvent!>!
+CloudyWing.DomainKit.Entities.IAggregateRoot.IntegrationEvents.get -> System.Collections.Generic.IReadOnlyList<CloudyWing.DomainKit.Events.IIntegrationEvent!>!
+CloudyWing.DomainKit.Entities.IEntity<TKey>
+CloudyWing.DomainKit.Entities.IEntity<TKey>.Id.get -> TKey
+CloudyWing.DomainKit.Entities.IHasCreatedTime
+CloudyWing.DomainKit.Entities.IHasCreatedTime.CreatedTime.get -> System.DateTimeOffset
+CloudyWing.DomainKit.Entities.IHasCreator
+CloudyWing.DomainKit.Entities.IHasCreator.CreatorId.get -> System.Guid
+CloudyWing.DomainKit.Entities.IHasDeletedTime
+CloudyWing.DomainKit.Entities.IHasDeletedTime.DeletedTime.get -> System.DateTimeOffset?
+CloudyWing.DomainKit.Entities.IHasDeleter
+CloudyWing.DomainKit.Entities.IHasDeleter.DeleterId.get -> System.Guid?
+CloudyWing.DomainKit.Entities.IHasDisabledState
+CloudyWing.DomainKit.Entities.IHasDisabledState.IsDisabled.get -> bool
+CloudyWing.DomainKit.Entities.IHasDisplayOrder
+CloudyWing.DomainKit.Entities.IHasDisplayOrder.DisplayOrder.get -> int
+CloudyWing.DomainKit.Entities.IHasExternalKey<TKey>
+CloudyWing.DomainKit.Entities.IHasExternalKey<TKey>.ExternalKey.get -> TKey
+CloudyWing.DomainKit.Entities.IHasRowVersion
+CloudyWing.DomainKit.Entities.IHasRowVersion.RowVersion.get -> byte[]!
+CloudyWing.DomainKit.Entities.IHasUpdatedTime
+CloudyWing.DomainKit.Entities.IHasUpdatedTime.UpdatedTime.get -> System.DateTimeOffset
+CloudyWing.DomainKit.Entities.IHasUpdater
+CloudyWing.DomainKit.Entities.IHasUpdater.UpdaterId.get -> System.Guid
+CloudyWing.DomainKit.Entities.IMustHaveTenant
+CloudyWing.DomainKit.Events.IDomainEvent
+CloudyWing.DomainKit.Events.IDomainEvent.OccurredOn.get -> System.DateTimeOffset
+CloudyWing.DomainKit.Events.IDomainEventDispatcher
+CloudyWing.DomainKit.Events.IDomainEventDispatcher.DispatchAsync(System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Events.IDomainEvent!>! domainEvents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+CloudyWing.DomainKit.Events.IDomainEventHandler<TEvent>
+CloudyWing.DomainKit.Events.IDomainEventHandler<TEvent>.HandleAsync(TEvent domainEvent, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+CloudyWing.DomainKit.Events.IIntegrationEvent
+CloudyWing.DomainKit.Events.IIntegrationEvent.OccurredOn.get -> System.DateTimeOffset
+CloudyWing.DomainKit.Events.IIntegrationEventContext
+CloudyWing.DomainKit.Events.IIntegrationEventContext.EventId.get -> System.Guid
+CloudyWing.DomainKit.Events.IIntegrationEventDispatcher
+CloudyWing.DomainKit.Events.IIntegrationEventDispatcher.DispatchAsync(System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Events.IIntegrationEvent!>! integrationEvents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+CloudyWing.DomainKit.Events.IIntegrationEventHandler<TEvent>
+CloudyWing.DomainKit.Events.IIntegrationEventHandler<TEvent>.HandleAsync(TEvent integrationEvent, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.BusinessRule = 2 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.Conflict = 4 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.Forbidden = 5 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.None = 0 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.NotFound = 3 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.AppErrorType.Validation = 1 -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.BusinessException
+CloudyWing.DomainKit.Exceptions.BusinessException.BusinessException() -> void
+CloudyWing.DomainKit.Exceptions.BusinessException.BusinessException(string! message) -> void
+CloudyWing.DomainKit.Exceptions.BusinessException.BusinessException(string! message, CloudyWing.DomainKit.Exceptions.AppErrorType errorType, string? errorCode = null) -> void
+CloudyWing.DomainKit.Exceptions.BusinessException.BusinessException(string! message, System.Exception! innerException) -> void
+CloudyWing.DomainKit.Exceptions.BusinessException.ErrorCode.get -> string?
+CloudyWing.DomainKit.Exceptions.BusinessException.ErrorType.get -> CloudyWing.DomainKit.Exceptions.AppErrorType
+CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException
+CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.ConcurrencyConflictException() -> void
+CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.ConcurrencyConflictException(string! message) -> void
+CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.ConcurrencyConflictException(string! message, System.Exception! innerException) -> void
+CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.ConcurrencyConflictException(System.Exception! innerException) -> void
+CloudyWing.DomainKit.Exceptions.EntityNotFoundException
+CloudyWing.DomainKit.Exceptions.EntityNotFoundException.EntityName.get -> string!
+CloudyWing.DomainKit.Exceptions.EntityNotFoundException.EntityNotFoundException(string! entityName, object! key) -> void
+CloudyWing.DomainKit.Exceptions.EntityNotFoundException.Key.get -> object!
+CloudyWing.DomainKit.Paging.PagedList<TItem>
+CloudyWing.DomainKit.Paging.PagedList<TItem>.Items.get -> System.Collections.Generic.IReadOnlyList<TItem>!
+CloudyWing.DomainKit.Paging.PagedList<TItem>.Metadata.get -> CloudyWing.DomainKit.Paging.PagingMetadata!
+CloudyWing.DomainKit.Paging.PagedList<TItem>.PagedList(System.Collections.Generic.IReadOnlyList<TItem>! items, CloudyWing.DomainKit.Paging.PagingMetadata! metadata) -> void
+CloudyWing.DomainKit.Paging.PagingMetadata
+CloudyWing.DomainKit.Paging.PagingMetadata.HasNextPage.get -> bool
+CloudyWing.DomainKit.Paging.PagingMetadata.HasPreviousPage.get -> bool
+CloudyWing.DomainKit.Paging.PagingMetadata.PageNumber.get -> int
+CloudyWing.DomainKit.Paging.PagingMetadata.PageSize.get -> int
+CloudyWing.DomainKit.Paging.PagingMetadata.PagingMetadata(int pageNumber, int pageSize, int totalCount) -> void
+CloudyWing.DomainKit.Paging.PagingMetadata.TotalCount.get -> int
+CloudyWing.DomainKit.Paging.PagingMetadata.TotalPages.get -> int
+CloudyWing.DomainKit.Specifications.IPagedSpecification<T>
+CloudyWing.DomainKit.Specifications.IPagedSpecification<T>.HasPagination.get -> bool
+CloudyWing.DomainKit.Specifications.IPagedSpecification<T>.OrderBy.get -> System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>!
+CloudyWing.DomainKit.Specifications.IPagedSpecification<T>.PageNumber.get -> int
+CloudyWing.DomainKit.Specifications.IPagedSpecification<T>.PageSize.get -> int
+CloudyWing.DomainKit.Specifications.ISpecification<T>
+CloudyWing.DomainKit.Specifications.ISpecification<T>.And(CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.ISpecification<T>.And(System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.ISpecification<T>.Not() -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.ISpecification<T>.Or(CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.ISpecification<T>.Or(System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.ISpecification<T>.ToExpression() -> System.Linq.Expressions.Expression<System.Func<T, bool>!>!
+CloudyWing.DomainKit.Specifications.PagedSpecification<T>
+CloudyWing.DomainKit.Specifications.PagedSpecification<T>.HasPagination.get -> bool
+CloudyWing.DomainKit.Specifications.PagedSpecification<T>.OrderBy.get -> System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>!
+CloudyWing.DomainKit.Specifications.PagedSpecification<T>.PageNumber.get -> int
+CloudyWing.DomainKit.Specifications.PagedSpecification<T>.PageSize.get -> int
+CloudyWing.DomainKit.Specifications.Specification<T>
+CloudyWing.DomainKit.Specifications.Specification<T>.And(CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.Specification<T>.And(System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.Specification<T>.Not() -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.Specification<T>.Or(CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.Specification<T>.Or(System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Specifications.Specification<T>.Specification(System.Linq.Expressions.Expression<System.Func<T, bool>!>! criteria) -> void
+CloudyWing.DomainKit.Specifications.Specification<T>.ToExpression() -> System.Linq.Expressions.Expression<System.Func<T, bool>!>!
+CloudyWing.DomainKit.Specifications.SpecificationExtensions
+CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant
+CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.AmbientCurrentTenant() -> void
+CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.Change(System.Guid? tenantId) -> System.IDisposable!
+CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.TenantId.get -> System.Guid?
+CloudyWing.DomainKit.Tenancy.ICurrentTenant
+CloudyWing.DomainKit.Tenancy.ICurrentTenant.Change(System.Guid? tenantId) -> System.IDisposable!
+CloudyWing.DomainKit.Tenancy.ICurrentTenant.TenantId.get -> System.Guid?
+override CloudyWing.DomainKit.Entities.Entity<TKey>.Equals(object? obj) -> bool
+override CloudyWing.DomainKit.Entities.Entity<TKey>.GetHashCode() -> int
+static CloudyWing.DomainKit.Specifications.PagedSpecification<T>.Create(CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>! orderBy) -> CloudyWing.DomainKit.Specifications.PagedSpecification<T>!
+static CloudyWing.DomainKit.Specifications.PagedSpecification<T>.Create(CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>! orderBy, int pageNumber, int pageSize) -> CloudyWing.DomainKit.Specifications.PagedSpecification<T>!
+static CloudyWing.DomainKit.Specifications.PagedSpecification<T>.Create(System.Linq.Expressions.Expression<System.Func<T, bool>!>! criteria, System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>! orderBy) -> CloudyWing.DomainKit.Specifications.PagedSpecification<T>!
+static CloudyWing.DomainKit.Specifications.PagedSpecification<T>.Create(System.Linq.Expressions.Expression<System.Func<T, bool>!>! criteria, System.Func<System.Linq.IQueryable<T>!, System.Linq.IOrderedQueryable<T>!>! orderBy, int pageNumber, int pageSize) -> CloudyWing.DomainKit.Specifications.PagedSpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AndIf<T>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, bool condition, CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AndIf<T>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, bool condition, System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AndIfHasValue<T, TValue>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, TValue? value, System.Func<TValue, System.Linq.Expressions.Expression<System.Func<T, bool>!>!>! otherFactory) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.OrIf<T>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, bool condition, CloudyWing.DomainKit.Specifications.ISpecification<T>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.OrIf<T>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, bool condition, System.Linq.Expressions.Expression<System.Func<T, bool>!>! other) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.OrIfHasValue<T, TValue>(this CloudyWing.DomainKit.Specifications.ISpecification<T>! specification, TValue? value, System.Func<TValue, System.Linq.Expressions.Expression<System.Func<T, bool>!>!>! otherFactory) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+virtual CloudyWing.DomainKit.Entities.Entity<TKey>.IsTransient() -> bool

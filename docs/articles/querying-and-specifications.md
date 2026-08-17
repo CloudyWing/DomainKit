@@ -1,0 +1,170 @@
+# 查詢與規約
+
+## QueryService
+
+`IQueryService<TEntity>` 提供唯讀查詢，以投影選擇器回傳結果型別，避免將實體洩漏至上層。
+
+| 方法 | 語意 |
+| --- | --- |
+| `AnyAsync` / `CountAsync` | 存在性與計數 |
+| `GetSingleAsync` / `GetSingleOrDefaultAsync` | 必須剛好一筆 |
+| `GetFirstAsync` / `GetFirstOrDefaultAsync` | 依排序取第一筆 |
+| `GetListAsync` | 清單投影 |
+| `GetPagedListAsync` | 分頁投影 |
+| `GetGroupedListAsync` | 分組、彙總、Having 與排序投影 |
+
+`GetSingleAsync` 在多於一筆時拋例外。「依排序取第一筆」請改用 `GetFirstAsync`：
+
+```csharp
+string nextName = await queryService.GetFirstAsync(
+    entity => entity.Name,
+    entity => !entity.IsDisabled,
+    query => query.OrderBy(entity => entity.DisplayOrder),
+    ct
+).ConfigureAwait(false);
+```
+
+查無資料但不想拋例外時，改用 `GetFirstOrDefaultAsync`，無資料時回傳 `null`。
+
+## 建立查詢服務
+
+兩個泛型參數的 `QueryService<TDbContext, TEntity>` 提供一般投影查詢。三個泛型參數的版本再加入 Domain Key 查詢。
+
+```csharp
+public sealed class CustomerQueryService
+    : QueryService<AppDbContext, Customer, string> {
+    public CustomerQueryService(AppDbContext dbContext)
+        : base(dbContext) {
+    }
+}
+```
+
+實體實作 `IHasExternalKey<string>` 時，`AnyAsync(key)`、`GetAsync(selector, key)` 與 `FindAsync(selector, key)` 會依 `ExternalKey` 查詢。其餘實體使用 EF Core model 的單一主鍵。複合主鍵情境須覆寫 `CreateKeyPredicate`。
+
+## 規約 Specifications
+
+`Specification<T>` 封裝可命名、可組合的查詢條件，`PagedSpecification<T>` 再加上排序與分頁。
+
+```csharp
+ISpecification<Customer> active = new Specification<Customer>(c => c.IsActive);
+ISpecification<Customer> taipei = new Specification<Customer>(c => c.City == "Taipei");
+ISpecification<Customer> spec = active.And(taipei);
+```
+
+`And`、`Or` 與 `Not` 構成完整的組合運算，`And` 與 `Or` 各有接受規約與接受條件運算式的多載，不需為了組合而先把運算式包成規約。組合結果一律是新的 `ISpecification<T>`，來源規約不受影響，可安全重複使用同一個具名規約。
+
+```csharp
+ISpecification<Customer> outsideTaipei = taipei.Not();
+ISpecification<Customer> reachable = active.Or(c => c.HasContactEmail);
+```
+
+規約可直接交給 `IQueryService<TEntity>` 的規約多載：
+
+```csharp
+IPagedSpecification<Customer> paged = PagedSpecification<Customer>.Create(
+    spec,
+    query => query.OrderBy(c => c.Name),
+    1,
+    20
+);
+
+PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
+    c => new CustomerListItem(c.Id, c.Name),
+    paged,
+    ct
+).ConfigureAwait(false);
+```
+
+規約只承載查詢條件與排序分頁，不含投影。投影由 `selector` 顯式指定。查詢經導覽屬性的條件與投影由 EF Core 自動 join，不需要 `Include`；載入聚合圖供領域行為操作屬於 Repository 的職責，見[持久化與模型設定](persistence-and-modeling.md)。習慣以離散參數呼叫時，可透過 `QueryServiceSpecificationExtensions` 組成規約後委派核心多載。
+
+## 條件式組合
+
+搜尋畫面的條件多半是選填的，`SpecificationExtensions` 提供條件成立才組合的擴充方法，讓拼裝流程維持單一運算式，不必用 `if` 逐段改寫規約變數。
+
+| 擴充方法 | 組合時機 |
+| --- | --- |
+| `AndIf` / `OrIf` | 傳入的 `bool` 為 `true` |
+| `AndIfHasValue` / `OrIfHasValue` | 傳入的值存在 |
+
+```csharp
+ISpecification<Customer> specification = new Specification<Customer>(c => !c.IsDisabled)
+    .AndIfHasValue(criteria.City, city => c => c.City == city)
+    .AndIfHasValue(criteria.RegisteredAfter, date => c => c.CreatedTime >= date)
+    .AndIf(criteria.OnlyContactable, c => c.HasContactEmail);
+```
+
+`AndIfHasValue` 與 `OrIfHasValue` 把 `null` 視為無值，字串另外把空字串與純空白也視為無值，因此文字搜尋欄位不需要在呼叫端先做一次 `IsNullOrWhiteSpace`。其他型別只要不是 `null` 就算有值，`0` 與 `false` 都會觸發組合。條件不成立時原樣回傳來源規約，不會產生恆真條件。
+
+工廠委派只在值存在時執行，可直接使用該值的非 null 形式建立條件運算式。
+
+## 分頁結果
+
+`GetPagedListAsync` 回傳 `PagedList<TItem>`，`Items` 是本頁投影結果，`Metadata` 是分頁統計。
+
+| 成員 | 說明 |
+| --- | --- |
+| `PageNumber` / `PageSize` | 查詢時指定的頁碼與每頁筆數 |
+| `TotalCount` | 套用條件後的總筆數 |
+| `TotalPages` | 依總筆數與每頁筆數計算的總頁數，無資料時為 `0` |
+| `HasPreviousPage` / `HasNextPage` | 供分頁控制項判斷上下頁 |
+
+頁碼與每頁筆數必須為正整數，傳入 `0` 或負數會拋出 `ArgumentOutOfRangeException`。頁碼從 `1` 起算。
+
+查詢無法由 `IQueryService<TEntity>` 表達而需自行組 `IQueryable` 時，用 `ToPagedListAsync` 取得同樣形狀的結果，回傳型別與 QueryService 一致，上層不必分辨資料來自哪一種查詢方式。
+
+```csharp
+PagedList<CustomerListItem> page = await dbContext.Customers
+    .Where(customer => !customer.IsDisabled)
+    .OrderBy(customer => customer.Name)
+    .Select(customer => new CustomerListItem(customer.Id, customer.Name))
+    .ToPagedListAsync(pageNumber, pageSize, ct)
+    .ConfigureAwait(false);
+```
+
+它會先執行一次 `CountAsync` 再取本頁資料，共兩次資料庫往返。排序須在呼叫前完成，未排序的來源分頁結果不穩定。
+
+## 分組查詢
+
+`GetGroupedListAsync` 先套用實體篩選，再執行 `GroupBy` 與彙總投影。`havingPredicate` 套用在彙總投影之後。
+
+```csharp
+IReadOnlyList<CustomerCountByCity> counts = await queryService.GetGroupedListAsync(
+    customer => customer.City,
+    group => new CustomerCountByCity(group.Key, group.Count()),
+    customer => customer.IsActive,
+    result => result.Count >= 10,
+    query => query.OrderByDescending(result => result.Count),
+    ct
+).ConfigureAwait(false);
+```
+
+彙總投影成員只能來自分組鍵或 SQL 可轉譯的彙總計算。自訂 .NET 方法通常無法由 EF Core 轉譯，應在查詢物化後另行處理。
+
+## 審計使用者投影
+
+`AuditedQueryService<TDbContext, TEntity, TUserEntity>` 提供建立者與更新者的 LEFT JOIN 基底。衍生類別指定使用者來源與鍵選擇器，再從 `AuditedQueryEntity.Entity`、`Creator` 與 `Updater` 投影公開結果。
+
+```csharp
+public sealed class CustomerAuditQueryService
+    : AuditedQueryService<AppDbContext, Customer, AppUser> {
+    public CustomerAuditQueryService(AppDbContext dbContext)
+        : base(dbContext) {
+    }
+
+    protected override IQueryable<AppUser> Users => DbContext.Users;
+    protected override Expression<Func<Customer, Guid>> CreatorIdSelector => customer => customer.CreatorId;
+    protected override Expression<Func<Customer, Guid?>>? UpdaterIdSelector => customer => customer.UpdaterId;
+    protected override Expression<Func<AppUser, Guid>> UserIdSelector => user => user.Id;
+}
+```
+
+選擇器必須直接指向屬性，不能是運算式或方法呼叫。
+
+## 軟刪除篩選
+
+QueryService 預設使用 `AsNoTracking` 並保留 EF Core 全域 query filter。`IgnoreSoftDeletedFilter = true` 會呼叫 `IgnoreQueryFilters()`，因此不只略過軟刪除條件，也會略過同一實體的租戶等其他全域條件。此設定只能用於受控的管理流程，並由呼叫端補上必要的隔離條件。
+
+## 延伸閱讀
+
+- [持久化與模型設定](persistence-and-modeling.md)
+- [多租戶與並行控制](tenancy-and-concurrency.md)

@@ -1,0 +1,56 @@
+- name: ADR-0001 真 Code First 富血聚合
+  href: 0001-code-first-rich-aggregate.md
+- name: ADR-0002 擁抱 DbContext，不做 ORM 可攜抽象
+  href: 0002-embrace-dbcontext-no-orm-abstraction.md
+- name: ADR-0003 自製輕量雙軌事件 Dispatcher
+  href: 0003-custom-dual-track-event-dispatcher.md
+- name: ADR-0004 以 SaveChangesInterceptor 集中處理審計
+  href: 0004-interceptor-centralized-auditing.md
+- name: ADR-0005 對外辨識鍵以標記介面表達
+  href: 0005-external-key-decoupling.md
+- name: ADR-0006 拆分 IUnitOfWork 的 EF 交易多載（已否決）
+  href: 0006-split-unitofwork-ef-interface.md
+- name: ADR-0007 IQueryService 加法補上 First 系列
+  href: 0007-queryservice-first-methods.md
+- name: ADR-0008 規約採兩層介面組合
+  href: 0008-two-layer-specification-interfaces.md
+- name: ADR-0009 QueryService 核心只收規約
+  href: 0009-core-accepts-specification-only.md
+- name: ADR-0010 規約不提供 IsSatisfiedBy
+  href: 0010-no-is-satisfied-by.md
+- name: ADR-0011 投影不入規約
+  href: 0011-projection-outside-specification.md
+- name: ADR-0012 Include 只屬 Repository
+  href: 0012-include-belongs-to-repository.md
+- name: ADR-0013 Repository 不收規約
+  href: 0013-repository-does-not-accept-specification.md
+- name: ADR-0014 規約建構只保留最小 factory
+  href: 0014-minimal-specification-factory.md
+- name: ADR-0015 規約多載與離散參數多載共存
+  href: 0015-specification-and-discrete-overloads-coexist.md
+- name: ADR-0016 Include 樹以 JSON 存入 annotation
+  href: 0016-include-tree-json-annotation.md
+- name: ADR-0017 Enumeration convention 明確傳入 assembly
+  href: 0017-enumeration-convention-explicit-assembly.md
+- name: ADR-0018 AuditedQueryService 以 EF.Property 實作 LEFT JOIN
+  href: 0018-audited-queryservice-left-join.md
+- name: ADR-0019 領域例外訊息以 .resx 承載
+  href: 0019-domain-exception-messages-resx.md
+- name: ADR-0020 帶 TKey 的查詢服務沿用 QueryService 名稱
+  href: 0020-keyed-queryservice-naming.md
+- name: ADR-0021 時間 ValueConverter 採 opt-in seam
+  href: 0021-datetime-value-converter-seam.md
+- name: ADR-0022 整合事件採 transactional outbox
+  href: 0022-transactional-outbox.md
+- name: ADR-0023 事件消費語意分為工作型與失效型
+  href: 0023-event-consumption-semantics.md
+- name: ADR-0024 SQL Server 覆寫為原生 rowversion
+  href: 0024-sqlserver-native-rowversion.md
+- name: ADR-0025 公開面全數維持 public
+  href: 0025-public-api-surface-remains-public.md
+- name: ADR-0026 發佈至 nuget.org，版號由 MinVer 推導
+  href: 0026-publish-to-nuget-org-with-minver.md
+- name: ADR-0027 語言版本採 SDK 穩定預設
+  href: 0027-stable-langversion.md
+- name: ADR-0028 發佈憑證採 Trusted Publishing
+  href: 0028-trusted-publishing.md
