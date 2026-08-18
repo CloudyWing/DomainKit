@@ -19,6 +19,7 @@
     <Company />
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>0.1.0</PackageValidationBaselineVersion>
     <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
     <WarningsAsErrors>$(WarningsAsErrors);RS0016;RS0017</WarningsAsErrors>
     <NoWarn>$(NoWarn);RS0026</NoWarn>
