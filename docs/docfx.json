@@ -27,6 +27,7 @@
     "resource": [
       {
         "files": [
+          "images/**",
           ".nojekyll"
         ]
       }
@@ -39,6 +40,8 @@
     "globalMetadata": {
       "_appName": "DomainKit Docs",
       "_appTitle": "DomainKit Docs",
+      "_appLogoPath": "images/logo.png",
+      "_appFaviconPath": "images/logo.png",
       "_enableSearch": true,
       "_gitContribute": {
         "repo": "https://github.com/CloudyWing/DomainKit",
