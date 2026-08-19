@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Interface IQueryService&lt;TEntity&gt; | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Interface IQueryService&lt;TEntity&gt; | DomainKit Docs ">
+      
+      <meta name="description" content="定義唯讀查詢服務的常用查詢能力。">
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/new/main/apiSpec/new?filename=CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1.md&amp;value=---%0Auid%3A%20CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1">
+
+
+
+  <h1 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1" class="text-break">
+Interface IQueryService&lt;TEntity&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L11"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="CloudyWing.html">CloudyWing</a>.<a class="xref" href="CloudyWing.DomainKit.html">DomainKit</a>.<a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.html">EntityFrameworkCore</a>.<a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.html">Persistence</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>CloudyWing.DomainKit.EntityFrameworkCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>定義唯讀查詢服務的常用查詢能力。</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IQueryService&lt;TEntity&gt; where TEntity : class</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_AnyAsync__1_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.AnyAsync&lt;TEntity&gt;(IQueryService&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_CountAsync__1_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.CountAsync&lt;TEntity&gt;(IQueryService&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_GetListAsync__2_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Linq_Expressions_Expression_System_Func___0___1___System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Func_System_Linq_IQueryable___0__System_Linq_IOrderedQueryable___0___System_Int32_System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.GetListAsync&lt;TEntity, TRecord&gt;(IQueryService&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TRecord&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;, int, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_GetListAsync__2_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Linq_Expressions_Expression_System_Func___0___1___System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Func_System_Linq_IQueryable___0__System_Linq_IOrderedQueryable___0___System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.GetListAsync&lt;TEntity, TRecord&gt;(IQueryService&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TRecord&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_GetPagedListAsync__2_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Int32_System_Int32_System_Linq_Expressions_Expression_System_Func___0___1___System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Func_System_Linq_IQueryable___0__System_Linq_IOrderedQueryable___0___System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.GetPagedListAsync&lt;TEntity, TRecord&gt;(IQueryService&lt;TEntity&gt;, int, int, Expression&lt;Func&lt;TEntity, TRecord&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;, CancellationToken)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html#CloudyWing_DomainKit_EntityFrameworkCore_Persistence_QueryServiceSpecificationExtensions_GetPagedListAsync__2_CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService___0__System_Linq_Expressions_Expression_System_Func___0___1___System_Linq_Expressions_Expression_System_Func___0_System_Boolean___System_Func_System_Linq_IQueryable___0__System_Linq_IOrderedQueryable___0___System_Int32_System_Int32_System_Threading_CancellationToken_">QueryServiceSpecificationExtensions.GetPagedListAsync&lt;TEntity, TRecord&gt;(IQueryService&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TRecord&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;, int, int, CancellationToken)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_IgnoreSoftDeletedFilter_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.IgnoreSoftDeletedFilter*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_IgnoreSoftDeletedFilter" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.IgnoreSoftDeletedFilter">
+  IgnoreSoftDeletedFilter
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L15"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得或設定一個值，用以指出是否略過軟刪除全域查詢篩選。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IgnoreSoftDeletedFilter { get; set; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_AnyAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.AnyAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_AnyAsync_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.AnyAsync(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Threading.CancellationToken)">
+  AnyAsync(ISpecification&lt;TEntity&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約判斷是否存在符合條件的資料。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;bool&gt; AnyAsync(ISpecification&lt;TEntity&gt; specification, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>若存在符合條件的資料則為 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>；否則為 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_AnyAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.AnyAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_AnyAsync_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.AnyAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+  AnyAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L23"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>判斷是否存在符合條件的資料。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;bool&gt; AnyAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>若存在符合條件的資料則為 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>；否則為 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_CountAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.CountAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_CountAsync_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.CountAsync(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Threading.CancellationToken)">
+  CountAsync(ISpecification&lt;TEntity&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L203"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約計算符合條件的資料筆數。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;int&gt; CountAsync(ISpecification&lt;TEntity&gt; specification, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>資料筆數。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_CountAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.CountAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_CountAsync_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.CountAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Threading.CancellationToken)">
+  CountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L31"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>計算符合條件的資料筆數。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;int&gt; CountAsync(Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>資料筆數。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___CloudyWing_DomainKit_Specifications_ISpecification__0__System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetFirstAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, ISpecification&lt;TEntity&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L114"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約取得排序後的第一筆投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput&gt; GetFirstAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, ISpecification&lt;TEntity&gt; specification, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetFirstAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得排序後的第一筆投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput&gt; GetFirstAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstOrDefaultAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstOrDefaultAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstOrDefaultAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___CloudyWing_DomainKit_Specifications_ISpecification__0__System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstOrDefaultAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetFirstOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, ISpecification&lt;TEntity&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L146"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約取得排序後的第一筆投影結果，找不到時回傳 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput?&gt; GetFirstOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, ISpecification&lt;TEntity&gt; specification, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstOrDefaultAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstOrDefaultAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetFirstOrDefaultAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetFirstOrDefaultAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetFirstOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L130"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得排序後的第一筆投影結果，找不到時回傳 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput?&gt; GetFirstOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetGroupedListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___CloudyWing_DomainKit_Specifications_ISpecification__0__System_Linq_Expressions_Expression_System_Func___1_System_Boolean___System_Func_System_Linq_IQueryable___1__System_Linq_IOrderedQueryable___1___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetGroupedListAsync``2(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``0,`0},``1}},CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Func{System.Linq.IQueryable{``1},System.Linq.IOrderedQueryable{``1}},System.Threading.CancellationToken)">
+  GetGroupedListAsync&lt;TGroupKey, TOutput&gt;(Expression&lt;Func&lt;TEntity, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt;, ISpecification&lt;TEntity&gt;, Expression&lt;Func&lt;TOutput, bool&gt;&gt;?, Func&lt;IQueryable&lt;TOutput&gt;, IOrderedQueryable&lt;TOutput&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L276"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約、分組鍵與彙總投影取得分組結果清單。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyList&lt;TOutput&gt;&gt; GetGroupedListAsync&lt;TGroupKey, TOutput&gt;(Expression&lt;Func&lt;TEntity, TGroupKey&gt;&gt; keySelector, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt; selector, ISpecification&lt;TEntity&gt; specification, Expression&lt;Func&lt;TOutput, bool&gt;&gt;? havingPredicate = null, Func&lt;IQueryable&lt;TOutput&gt;, IOrderedQueryable&lt;TOutput&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TGroupKey&gt;&gt;</dt>
+    <dd><p>分組鍵選擇器。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.igrouping-2">IGrouping</a>&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt;</dt>
+    <dd><p>彙總投影選擇器。</p>
+</dd>
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>havingPredicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TOutput, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>分組後的篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TOutput&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>分組結果清單。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TGroupKey</code></dt>
+    <dd><p>分組鍵型別。</p>
+</dd>
+    <dt><code>TOutput</code></dt>
+    <dd><p>彙總投影型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___CloudyWing_DomainKit_Specifications_ISpecification__0__System_Linq_Expressions_Expression_System_Func___1_System_Boolean___System_Func_System_Linq_IQueryable___1__System_Linq_IOrderedQueryable___1___System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><code class="typeparamref">TOutput</code> 的成員必須只包含分組鍵或彙總計算結果，
+否則 EF Core 可能無法將查詢轉譯為 SQL。</p>
+</div>
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetGroupedListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func___1_System_Boolean___System_Func_System_Linq_IQueryable___1__System_Linq_IOrderedQueryable___1___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetGroupedListAsync``2(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{System.Linq.IGrouping{``0,`0},``1}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{``1,System.Boolean}},System.Func{System.Linq.IQueryable{``1},System.Linq.IOrderedQueryable{``1}},System.Threading.CancellationToken)">
+  GetGroupedListAsync&lt;TGroupKey, TOutput&gt;(Expression&lt;Func&lt;TEntity, TGroupKey&gt;&gt;, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, Expression&lt;Func&lt;TOutput, bool&gt;&gt;?, Func&lt;IQueryable&lt;TOutput&gt;, IOrderedQueryable&lt;TOutput&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L251"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以分組鍵與彙總投影取得分組結果清單。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyList&lt;TOutput&gt;&gt; GetGroupedListAsync&lt;TGroupKey, TOutput&gt;(Expression&lt;Func&lt;TEntity, TGroupKey&gt;&gt; keySelector, Expression&lt;Func&lt;IGrouping&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt; selector, Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, Expression&lt;Func&lt;TOutput, bool&gt;&gt;? havingPredicate = null, Func&lt;IQueryable&lt;TOutput&gt;, IOrderedQueryable&lt;TOutput&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TGroupKey&gt;&gt;</dt>
+    <dd><p>分組鍵選擇器。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.igrouping-2">IGrouping</a>&lt;TGroupKey, TEntity&gt;, TOutput&gt;&gt;</dt>
+    <dd><p>彙總投影選擇器。</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>havingPredicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TOutput, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>分組後的篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TOutput&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>分組結果清單。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TGroupKey</code></dt>
+    <dd><p>分組鍵型別。</p>
+</dd>
+    <dt><code>TOutput</code></dt>
+    <dd><p>彙總投影型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetGroupedListAsync__2_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func_System_Linq_IGrouping___0__0____1___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func___1_System_Boolean___System_Func_System_Linq_IQueryable___1__System_Linq_IOrderedQueryable___1___System_Threading_CancellationToken__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p><code class="typeparamref">TOutput</code> 的成員必須只包含分組鍵或彙總計算結果，
+否則 EF Core 可能無法將查詢轉譯為 SQL。</p>
+</div>
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetListAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___CloudyWing_DomainKit_Specifications_ISpecification__0__System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetListAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, ISpecification&lt;TEntity&gt;, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L214"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約取得投影清單。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyList&lt;TOutput&gt;&gt; GetListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, ISpecification&lt;TEntity&gt; specification, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>投影清單。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetListAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetListAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得符合條件的投影清單。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyList&lt;TOutput&gt;&gt; GetListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>投影清單。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetPagedListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetPagedListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetPagedListAsync__1_System_Int32_System_Int32_System_Linq_Expressions_Expression_System_Func__0___0___System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetPagedListAsync``1(System.Int32,System.Int32,System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Threading.CancellationToken)">
+  GetPagedListAsync&lt;TOutput&gt;(int, int, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, Expression&lt;Func&lt;TEntity, bool&gt;&gt;?, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;?, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L180"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得符合條件的分頁投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;PagedList&lt;TOutput&gt;&gt; GetPagedListAsync&lt;TOutput&gt;(int pageNumber, int pageSize, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, Expression&lt;Func&lt;TEntity, bool&gt;&gt;? predicate = null, Func&lt;IQueryable&lt;TEntity&gt;, IOrderedQueryable&lt;TEntity&gt;&gt;? orderBy = null, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pageNumber</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>頁碼。</p>
+</dd>
+    <dt><code>pageSize</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>每頁筆數。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;TEntity&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;TEntity&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="CloudyWing.DomainKit.Paging.PagedList-1.html">PagedList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>分頁投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetPagedListAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetPagedListAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetPagedListAsync__1_System_Linq_Expressions_Expression_System_Func__0___0___CloudyWing_DomainKit_Specifications_IPagedSpecification__0__System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetPagedListAsync``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},CloudyWing.DomainKit.Specifications.IPagedSpecification{`0},System.Threading.CancellationToken)">
+  GetPagedListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, IPagedSpecification&lt;TEntity&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L229"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以分頁規約取得分頁投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;PagedList&lt;TOutput&gt;&gt; GetPagedListAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, IPagedSpecification&lt;TEntity&gt; specification, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.IPagedSpecification-1.html">IPagedSpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>分頁查詢規約。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="CloudyWing.DomainKit.Paging.PagedList-1.html">PagedList</a>&lt;TOutput&gt;&gt;</dt>
+    <dd><p>分頁投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleAsync__1_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleAsync``1(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Threading.CancellationToken)">
+  GetSingleAsync&lt;TOutput&gt;(ISpecification&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約取得符合條件的單筆投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput&gt; GetSingleAsync&lt;TOutput&gt;(ISpecification&lt;TEntity&gt; specification, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleAsync__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleAsync``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Threading.CancellationToken)">
+  GetSingleAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L41"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得符合條件的單筆投影結果。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput&gt; GetSingleAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleOrDefaultAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleOrDefaultAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleOrDefaultAsync__1_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Linq_Expressions_Expression_System_Func__0___0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleOrDefaultAsync``1(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Threading.CancellationToken)">
+  GetSingleOrDefaultAsync&lt;TOutput&gt;(ISpecification&lt;TEntity&gt;, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以規約取得符合條件的單筆投影結果，找不到時回傳 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput?&gt; GetSingleOrDefaultAsync&lt;TOutput&gt;(ISpecification&lt;TEntity&gt; specification, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;TEntity&gt;</dt>
+    <dd><p>查詢規約。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleOrDefaultAsync_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleOrDefaultAsync*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Persistence_IQueryService_1_GetSingleOrDefaultAsync__1_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Linq_Expressions_Expression_System_Func__0___0___System_Threading_CancellationToken_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService`1.GetSingleOrDefaultAsync``1(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Threading.CancellationToken)">
+  GetSingleOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, bool&gt;&gt;, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得符合條件的單筆投影結果，找不到時回傳 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Task&lt;TOutput?&gt; GetSingleOrDefaultAsync&lt;TOutput&gt;(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate, Expression&lt;Func&lt;TEntity, TOutput&gt;&gt; selector, CancellationToken cancellationToken = default)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件。</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TEntity, TOutput&gt;&gt;</dt>
+    <dd><p>投影選擇器。</p>
+</dd>
+    <dt><code>cancellationToken</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>取消權杖。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;TOutput&gt;</dt>
+    <dd><p>投影結果。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TOutput</code></dt>
+    <dd><p>投影結果型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Persistence/IQueryService.cs/#L11" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

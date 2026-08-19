@@ -1,0 +1,1725 @@
+{
+  "source_base_path": "D:/a/DomainKit/DomainKit/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": ".nojekyll",
+      "output": {
+        "resource": {
+          "relative_path": ".nojekyll"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0001-code-first-rich-aggregate.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0001-code-first-rich-aggregate.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0002-embrace-dbcontext-no-orm-abstraction.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0002-embrace-dbcontext-no-orm-abstraction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0003-custom-dual-track-event-dispatcher.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0003-custom-dual-track-event-dispatcher.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0004-interceptor-centralized-auditing.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0004-interceptor-centralized-auditing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0005-external-key-decoupling.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0005-external-key-decoupling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0006-split-unitofwork-ef-interface.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0006-split-unitofwork-ef-interface.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0007-queryservice-first-methods.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0007-queryservice-first-methods.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0008-two-layer-specification-interfaces.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0008-two-layer-specification-interfaces.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0009-core-accepts-specification-only.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0009-core-accepts-specification-only.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0010-no-is-satisfied-by.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0010-no-is-satisfied-by.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0011-projection-outside-specification.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0011-projection-outside-specification.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0012-include-belongs-to-repository.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0012-include-belongs-to-repository.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0013-repository-does-not-accept-specification.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0013-repository-does-not-accept-specification.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0014-minimal-specification-factory.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0014-minimal-specification-factory.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0015-specification-and-discrete-overloads-coexist.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0015-specification-and-discrete-overloads-coexist.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0016-include-tree-json-annotation.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0016-include-tree-json-annotation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0017-enumeration-convention-explicit-assembly.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0017-enumeration-convention-explicit-assembly.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0018-audited-queryservice-left-join.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0018-audited-queryservice-left-join.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0019-domain-exception-messages-resx.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0019-domain-exception-messages-resx.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0020-keyed-queryservice-naming.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0020-keyed-queryservice-naming.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0021-datetime-value-converter-seam.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0021-datetime-value-converter-seam.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0022-transactional-outbox.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0022-transactional-outbox.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0023-event-consumption-semantics.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0023-event-consumption-semantics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0024-sqlserver-native-rowversion.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0024-sqlserver-native-rowversion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0025-public-api-surface-remains-public.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0025-public-api-surface-remains-public.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0026-publish-to-nuget-org-with-minver.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0026-publish-to-nuget-org-with-minver.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0027-stable-langversion.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0027-stable-langversion.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "adr/0028-trusted-publishing.md",
+      "output": {
+        ".html": {
+          "relative_path": "adr/0028-trusted-publishing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "adr/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "adr/toc.html"
+        },
+        ".json": {
+          "relative_path": "adr/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.AggregateRoot-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.AggregateRoot-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.AggregateRoot<TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.AggregateRoot-1.yml\" sourcestartlinenumber=\"1\">提供聚合根的識別碼與雙軌事件收集能力。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.AggregateRootBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.AggregateRootBase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.AggregateRootBase",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.AggregateRootBase.yml\" sourcestartlinenumber=\"1\">提供以 GUID v7 為預設識別碼的聚合根基底類別。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.Entity-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.Entity-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.Entity<TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.Entity-1.yml\" sourcestartlinenumber=\"1\">提供以識別碼為基礎的實體相等性語意。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.EntityBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.EntityBase.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.EntityBase",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.EntityBase.yml\" sourcestartlinenumber=\"1\">提供以 GUID v7 為預設識別碼的實體基底類別。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IAggregateRoot.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IAggregateRoot.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IAggregateRoot",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IAggregateRoot.yml\" sourcestartlinenumber=\"1\">取得聚合根上待派發的領域事件與整合事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IEntity-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IEntity-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IEntity<TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IEntity-1.yml\" sourcestartlinenumber=\"1\">取得領域實體的識別碼。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasCreatedTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasCreatedTime.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasCreatedTime",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasCreatedTime.yml\" sourcestartlinenumber=\"1\">取得建立時間。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasCreator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasCreator.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasCreator",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasCreator.yml\" sourcestartlinenumber=\"1\">取得建立者識別碼。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasDeletedTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasDeletedTime.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasDeletedTime",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasDeletedTime.yml\" sourcestartlinenumber=\"1\">取得軟刪除時間。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasDeleter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasDeleter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasDeleter",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasDeleter.yml\" sourcestartlinenumber=\"1\">取得刪除者識別碼。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasDisabledState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasDisabledState.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasDisabledState",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasDisabledState.yml\" sourcestartlinenumber=\"1\">取得停用狀態。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasDisplayOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasDisplayOrder.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasDisplayOrder",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasDisplayOrder.yml\" sourcestartlinenumber=\"1\">取得顯示排序值。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasExternalKey-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasExternalKey-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasExternalKey<TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasExternalKey-1.yml\" sourcestartlinenumber=\"1\">取得對外辨識鍵。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasRowVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasRowVersion.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasRowVersion",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasRowVersion.yml\" sourcestartlinenumber=\"1\">取得並行控制 token。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasUpdatedTime.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasUpdatedTime.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasUpdatedTime",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasUpdatedTime.yml\" sourcestartlinenumber=\"1\">取得最後更新時間。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IHasUpdater.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IHasUpdater.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IHasUpdater",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IHasUpdater.yml\" sourcestartlinenumber=\"1\">取得最後更新者識別碼。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.IMustHaveTenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.IMustHaveTenant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities.IMustHaveTenant",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Entities.IMustHaveTenant.yml\" sourcestartlinenumber=\"1\">標示實體必須明確持有租戶維度。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Entities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Entities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Entities",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.IAuditUser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.IAuditUser.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Auditing.IAuditUser",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.IAuditUser.yml\" sourcestartlinenumber=\"1\">提供目前審計使用者識別碼。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.NullAuditUser.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.NullAuditUser.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Auditing.NullAuditUser",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.NullAuditUser.yml\" sourcestartlinenumber=\"1\">表示未提供審計使用者的預設實作。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Auditing.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Auditing",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions.yml\" sourcestartlinenumber=\"1\">表示 DomainKit EF Core 註冊選項。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.yml\" sourcestartlinenumber=\"1\">提供 DomainKit 服務註冊擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.BroadcastEnvelope-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.BroadcastEnvelope-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.BroadcastEnvelope<TPayload>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.BroadcastEnvelope-1.yml\" sourcestartlinenumber=\"1\">表示攜帶租戶脈絡與發生時間的跨實例廣播封套。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.EventBroadcastEnvelopeExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.EventBroadcastEnvelopeExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.EventBroadcastEnvelopeExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.EventBroadcastEnvelopeExtensions.yml\" sourcestartlinenumber=\"1\">提供跨實例廣播的租戶 envelope 發布與接收 helper。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.IEventBroadcast.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.IEventBroadcast.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.IEventBroadcast",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.IEventBroadcast.yml\" sourcestartlinenumber=\"1\">定義每個執行實例都可接收的 best-effort 廣播通道。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast.yml\" sourcestartlinenumber=\"1\">提供單一行程內的廣播通道。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.DomainEventDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.DomainEventDispatcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.DomainEventDispatcher",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.DomainEventDispatcher.yml\" sourcestartlinenumber=\"1\">以 DI 容器解析並派發領域事件處理器。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.IntegrationEventDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.IntegrationEventDispatcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.IntegrationEventDispatcher",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.IntegrationEventDispatcher.yml\" sourcestartlinenumber=\"1\">以 DI 容器解析並派發整合事件處理器。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxDispatcherHostedService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxDispatcherHostedService-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxDispatcherHostedService<TDbContext>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxDispatcherHostedService-1.yml\" sourcestartlinenumber=\"1\">認領並派發持久化整合事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessage.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessage",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessage.yml\" sourcestartlinenumber=\"1\">表示待派發的持久化整合事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessageStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessageStatus.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessageStatus",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxMessageStatus.yml\" sourcestartlinenumber=\"1\">指定 Outbox 訊息狀態。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxModelBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxModelBuilderExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxModelBuilderExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxModelBuilderExtensions.yml\" sourcestartlinenumber=\"1\">提供 Outbox 模型設定擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions.yml\" sourcestartlinenumber=\"1\">表示 Outbox dispatcher 選項。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.ProcessedEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.ProcessedEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.ProcessedEvent",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.ProcessedEvent.yml\" sourcestartlinenumber=\"1\">表示事件處理器的冪等判重紀錄。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Events.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Events",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.yml\" sourcestartlinenumber=\"1\">在 EF Core 儲存生命週期中填入審計值並派發雙軌事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor.yml\" sourcestartlinenumber=\"1\">在 EF Core 儲存前為 app-managed 並行控制 token 統一更新版本值。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.TenantStampInterceptor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.TenantStampInterceptor.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.TenantStampInterceptor",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.TenantStampInterceptor.yml\" sourcestartlinenumber=\"1\">在 EF Core 儲存前將目前租戶識別碼寫入新增實體的 shadow property。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Interceptors",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Localization.EnumerationLocalizer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Localization.EnumerationLocalizer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Localization.EnumerationLocalizer<TEnum>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Localization.EnumerationLocalizer-1.yml\" sourcestartlinenumber=\"1\">提供原生 <code>enum</code> 與 Enumeration 顯示名稱的本地化查詢。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Localization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Localization.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Localization",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.AggregateIncludeBuilder-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.AggregateIncludeBuilder-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.AggregateIncludeBuilder<TEntity>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.AggregateIncludeBuilder-1.yml\" sourcestartlinenumber=\"1\">收集聚合根自動 Include 路徑。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EntityTypeBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EntityTypeBuilderExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EntityTypeBuilderExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EntityTypeBuilderExtensions.yml\" sourcestartlinenumber=\"1\">提供 EF Core 實體型別建置器的 DomainKit 擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EnumerationValueConverter-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EnumerationValueConverter-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EnumerationValueConverter<TEnum, TValue>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.EnumerationValueConverter-2.yml\" sourcestartlinenumber=\"1\">提供 Enumeration 與其基礎值型別之間的 EF Core 值轉換。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.yml\" sourcestartlinenumber=\"1\">提供 DomainKit 實體的 EF Core 模型設定擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions.yml\" sourcestartlinenumber=\"1\">提供查詢分頁擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.TenantModelBuilderExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.TenantModelBuilderExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.TenantModelBuilderExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.TenantModelBuilderExtensions.yml\" sourcestartlinenumber=\"1\">提供多租戶 EF Core model convention。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeConverter",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeConverter.yml\" sourcestartlinenumber=\"1\">將 <xref href=\"System.DateTimeOffset\" data-throw-if-not-resolved=\"false\"></xref> 在寫入資料庫時轉換為 UTC <xref href=\"System.DateTime\" data-throw-if-not-resolved=\"false\"></xref>，\n並於讀取時還原為 offset 為 0 的 <xref href=\"System.DateTimeOffset\" data-throw-if-not-resolved=\"false\"></xref>。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeOffsetConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeOffsetConverter.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeOffsetConverter",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.UtcDateTimeOffsetConverter.yml\" sourcestartlinenumber=\"1\">將 <xref href=\"System.DateTimeOffset\" data-throw-if-not-resolved=\"false\"></xref> 在寫入資料庫時正規化為 UTC（offset 0），確保時間一律以 UTC 儲存。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Modeling.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Modeling",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryEntity-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryEntity-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryEntity<TEntity, TUserEntity>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryEntity-2.yml\" sourcestartlinenumber=\"1\">提供查詢用的審計投影基底。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryService-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryService-3.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryService<TDbContext, TEntity, TUserEntity>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.AuditedQueryService-3.yml\" sourcestartlinenumber=\"1\">提供自動 JOIN 建立者與更新者的審計查詢服務基底。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService<TEntity>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IQueryService-1.yml\" sourcestartlinenumber=\"1\">定義唯讀查詢服務的常用查詢能力。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork.yml\" sourcestartlinenumber=\"1\">定義持久化工作單元的提交與交易封裝能力。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-2.yml\" sourcestartlinenumber=\"1\">以 EF Core <xref href=\"CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService%602.DbContext\" data-throw-if-not-resolved=\"false\"></xref> 實作唯讀查詢服務。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-3.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity, TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService-3.yml\" sourcestartlinenumber=\"1\">提供依 Domain Key 查詢的唯讀查詢服務基底。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryServiceSpecificationExtensions.yml\" sourcestartlinenumber=\"1\">提供以離散條件建立規約後委派至查詢服務的方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.Repository-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.Repository-3.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.Repository<TDbContext, TEntity, TKey>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.Repository-3.yml\" sourcestartlinenumber=\"1\">提供 EF Core 實體的基本新增、更新、刪除與查詢能力。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWork-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWork-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWork<TDbContext>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWork-1.yml\" sourcestartlinenumber=\"1\">以 EF Core <xref href=\"Microsoft.EntityFrameworkCore.DbContext\" data-throw-if-not-resolved=\"false\"></xref> 實作工作單元。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Persistence.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Persistence",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.ITenantDbContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.ITenantDbContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.ITenantDbContext",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.ITenantDbContext.yml\" sourcestartlinenumber=\"1\">提供 EF Core 全域查詢篩選所需的目前租戶參數。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.EntityFrameworkCore.Tenancy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.EntityFrameworkCore.Tenancy",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IDomainEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IDomainEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IDomainEvent",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IDomainEvent.yml\" sourcestartlinenumber=\"1\">標記提交前派發且可參與同一交易的領域事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IDomainEventDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IDomainEventDispatcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IDomainEventDispatcher",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IDomainEventDispatcher.yml\" sourcestartlinenumber=\"1\">派發 before-commit 領域事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IDomainEventHandler-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IDomainEventHandler-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IDomainEventHandler<TEvent>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IDomainEventHandler-1.yml\" sourcestartlinenumber=\"1\">處理指定領域事件型別。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEvent.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IIntegrationEvent",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IIntegrationEvent.yml\" sourcestartlinenumber=\"1\">標記提交成功後派發的整合事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventContext.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IIntegrationEventContext",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IIntegrationEventContext.yml\" sourcestartlinenumber=\"1\">提供目前整合事件的派發內容。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventDispatcher.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IIntegrationEventDispatcher",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IIntegrationEventDispatcher.yml\" sourcestartlinenumber=\"1\">派發 after-commit 整合事件。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventHandler-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.IIntegrationEventHandler-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events.IIntegrationEventHandler<TEvent>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Events.IIntegrationEventHandler-1.yml\" sourcestartlinenumber=\"1\">處理指定整合事件型別。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Events.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Events.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Events",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Exceptions.AppErrorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Exceptions.AppErrorType.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Exceptions.AppErrorType",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Exceptions.AppErrorType.yml\" sourcestartlinenumber=\"1\">指定應用層可穩定對映的業務錯誤分類。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Exceptions.BusinessException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Exceptions.BusinessException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Exceptions.BusinessException",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Exceptions.BusinessException.yml\" sourcestartlinenumber=\"1\">表示可預期的領域業務錯誤。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Exceptions.ConcurrencyConflictException.yml\" sourcestartlinenumber=\"1\">表示儲存作業發生樂觀鎖並行衝突。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Exceptions.EntityNotFoundException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Exceptions.EntityNotFoundException.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Exceptions.EntityNotFoundException",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Exceptions.EntityNotFoundException.yml\" sourcestartlinenumber=\"1\">表示以指定鍵值查詢實體但找不到資料。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Exceptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Exceptions",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Paging.PagedList-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Paging.PagedList-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Paging.PagedList<TItem>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Paging.PagedList-1.yml\" sourcestartlinenumber=\"1\">表示含分頁資訊的唯讀資料集合。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Paging.PagingMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Paging.PagingMetadata.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Paging.PagingMetadata",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Paging.PagingMetadata.yml\" sourcestartlinenumber=\"1\">表示分頁結果的統計資訊。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Paging.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Paging.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Paging",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.IPagedSpecification-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.IPagedSpecification-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications.IPagedSpecification<T>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Specifications.IPagedSpecification-1.yml\" sourcestartlinenumber=\"1\">定義包含排序與分頁資訊的查詢規約。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.ISpecification-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.ISpecification-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications.ISpecification<T>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Specifications.ISpecification-1.yml\" sourcestartlinenumber=\"1\">定義可組合的查詢規約。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.PagedSpecification-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.PagedSpecification-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications.PagedSpecification<T>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Specifications.PagedSpecification-1.yml\" sourcestartlinenumber=\"1\">表示包含排序與分頁資訊的不可變查詢規約。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.Specification-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.Specification-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications.Specification<T>",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Specifications.Specification-1.yml\" sourcestartlinenumber=\"1\">表示以條件運算式為基礎的不可變查詢規約。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.SpecificationExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.SpecificationExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications.SpecificationExtensions",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Specifications.SpecificationExtensions.yml\" sourcestartlinenumber=\"1\">提供查詢規約的條件式組合擴充方法。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Specifications.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Specifications.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Specifications",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Tenancy.AmbientCurrentTenant.yml\" sourcestartlinenumber=\"1\">使用 <xref href=\"System.Threading.AsyncLocal%601\" data-throw-if-not-resolved=\"false\"></xref> 保存目前租戶脈絡。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Tenancy.ICurrentTenant.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Tenancy.ICurrentTenant.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Tenancy.ICurrentTenant",
+      "Summary": "<p sourcefile=\"api/CloudyWing.DomainKit.Tenancy.ICurrentTenant.yml\" sourcestartlinenumber=\"1\">提供目前執行脈絡的租戶識別碼與暫時切換能力。</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/CloudyWing.DomainKit.Tenancy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/CloudyWing.DomainKit.Tenancy.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "CloudyWing.DomainKit.Tenancy",
+      "Summary": null
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/aggregates-and-auditing.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/aggregates-and-auditing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/errors-and-localization.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/errors-and-localization.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/events-outbox-and-broadcast.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/events-outbox-and-broadcast.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/persistence-and-modeling.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/persistence-and-modeling.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/querying-and-specifications.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/querying-and-specifications.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/tenancy-and-concurrency.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/tenancy-and-concurrency.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html"
+        },
+        ".json": {
+          "relative_path": "articles/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

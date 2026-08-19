@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>錯誤契約與本地化 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="錯誤契約與本地化 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/errors-and-localization.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="錯誤契約與本地化">錯誤契約與本地化</h1>
+
+<p>DomainKit 以 <code>BusinessException</code> 表達可預期的領域或應用錯誤，並提供穩定的錯誤分類與選配錯誤碼。套件不直接決定 HTTP 狀態碼、Problem Details 格式或 UI 呈現方式，這些對映由應用層負責。</p>
+<h2 id="businessexception">BusinessException</h2>
+<p>只傳入訊息時，錯誤分類預設為 <code>AppErrorType.BusinessRule</code>。</p>
+<pre><code class="lang-csharp">throw new BusinessException(&quot;訂單目前狀態不可取消。&quot;);
+</code></pre>
+<p>需要穩定的機器可讀契約時，同時指定分類與錯誤碼。</p>
+<pre><code class="lang-csharp">throw new BusinessException(
+    &quot;訂單已由其他流程處理。&quot;,
+    AppErrorType.Conflict,
+    &quot;sales-order.state-conflict&quot;
+);
+</code></pre>
+<p><code>AppErrorType</code> 提供下列分類：</p>
+<ul>
+<li><code>Validation</code></li>
+<li><code>BusinessRule</code></li>
+<li><code>NotFound</code></li>
+<li><code>Conflict</code></li>
+<li><code>Forbidden</code></li>
+</ul>
+<p><code>None</code> 只代表沒有錯誤，不可傳給 <code>BusinessException</code> 的分類建構式。</p>
+<p>應用層應以 <code>ErrorType</code> 決定回應類別，以 <code>ErrorCode</code> 作為前端分支或本地化鍵。不要依賴錯誤訊息文字判斷程式流程。</p>
+<h2 id="內建例外">內建例外</h2>
+<p><code>EntityNotFoundException</code> 保存 <code>EntityName</code> 與 <code>Key</code>，錯誤分類為 <code>NotFound</code>，錯誤碼為 <code>entity.not-found</code>。Repository 的 <code>GetAsync</code> 在查無資料時會拋出此例外。</p>
+<p><code>ConcurrencyConflictException</code> 表示 EF Core 樂觀鎖衝突。<code>IUnitOfWork.SaveChangesAsync</code> 捕捉 <code>DbUpdateConcurrencyException</code> 後會轉成此型別，讓應用層不必直接相依 EF Core 例外。</p>
+<h2 id="應用層對映">應用層對映</h2>
+<p>下列範例只示範分類邊界，實際回應型別由宿主決定。</p>
+<pre><code class="lang-csharp">int statusCode = exception.ErrorType switch {
+    AppErrorType.Validation =&gt; StatusCodes.Status400BadRequest,
+    AppErrorType.NotFound =&gt; StatusCodes.Status404NotFound,
+    AppErrorType.Conflict =&gt; StatusCodes.Status409Conflict,
+    AppErrorType.Forbidden =&gt; StatusCodes.Status403Forbidden,
+    _ =&gt; StatusCodes.Status422UnprocessableEntity
+};
+</code></pre>
+<p>記錄日誌時保留 <code>ErrorCode</code>、例外型別與追蹤識別碼。回傳給使用者的文字可依 UI culture 重新解析，避免把內部例外詳細資料直接輸出至 API。</p>
+<h2 id="domainkit-內建資源">DomainKit 內建資源</h2>
+<p><code>BusinessException</code>、<code>EntityNotFoundException</code> 與 <code>ConcurrencyConflictException</code> 的預設訊息由 <code>DomainKitResources</code> 取得，並依目前 UI culture 選擇資源。自行提供訊息的建構式會直接使用呼叫端文字。</p>
+<h2 id="enum-與-enumeration-顯示名稱">enum 與 Enumeration 顯示名稱</h2>
+<p><code>EnumerationLocalizer&lt;TEnum&gt;</code> 使用傳入的 <code>IStringLocalizer</code> 尋找顯示名稱。<code>TEnum</code> 可以是原生 <code>enum</code>，也可以是繼承 <code>EnumerationBase&lt;TEnum, TValue&gt;</code> 的 Enumeration 型別。</p>
+<p>成員名稱的取得方式依型別分流，原生 <code>enum</code> 取 <code>ToString()</code>，Enumeration 型別以反射取 <code>Name</code> 屬性。兩者共用同一種資源鍵格式 <code>{型別名稱}.{成員名稱}</code>。</p>
+<pre><code class="lang-text">ShipmentMethod.Express
+OrderStatus.Draft
+OrderStatus.Confirmed
+</code></pre>
+<pre><code class="lang-csharp">// 原生 enum
+EnumerationLocalizer&lt;ShipmentMethod&gt; methodLocalizer = new(localizer);
+string method = methodLocalizer.GetDisplayName(ShipmentMethod.Express);
+
+// Enumeration 型別，繼承 EnumerationBase&lt;OrderStatus, int&gt;
+EnumerationLocalizer&lt;OrderStatus&gt; statusLocalizer = new(localizer);
+string status = statusLocalizer.GetDisplayName(OrderStatus.Confirmed);
+</code></pre>
+<p>型別標註 <code>[Flags]</code> 時，複合值會逐成員在地化。成員名稱含 <code>&quot;, &quot;</code> 的值先切分成各個成員，分別查找資源後再以 <code>&quot;, &quot;</code> 組回，因此資源檔只需提供個別旗標的項目。</p>
+<p>找不到資源時回傳原始成員名稱。持久化 Enumeration 值的設定方式見<a href="persistence-and-modeling.html">持久化與模型設定</a>，該設定僅適用於 <code>EnumerationBase&lt;TEnum, TValue&gt;</code> 衍生型別，原生 <code>enum</code> 的欄位對映由 EF Core 自行處理。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="querying-and-specifications.html">查詢與規約</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/errors-and-localization.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class ModelBuilderExtensions | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class ModelBuilderExtensions | DomainKit Docs ">
+      
+      <meta name="description" content="提供 DomainKit 實體的 EF Core 模型設定擴充方法。">
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/new/main/apiSpec/new?filename=CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions.md&amp;value=---%0Auid%3A%20CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions">
+
+
+
+  <h1 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions" class="text-break">
+Class ModelBuilderExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L14"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="CloudyWing.html">CloudyWing</a>.<a class="xref" href="CloudyWing.DomainKit.html">DomainKit</a>.<a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.html">EntityFrameworkCore</a>.<a class="xref" href="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.html">Modeling</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>CloudyWing.DomainKit.EntityFrameworkCore.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>提供 DomainKit 實體的 EF Core 模型設定擴充方法。</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class ModelBuilderExtensions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">ModelBuilderExtensions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ApplyDomainKitConventions_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ApplyDomainKitConventions*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ApplyDomainKitConventions_Microsoft_EntityFrameworkCore_ModelConfigurationBuilder_Microsoft_EntityFrameworkCore_Storage_ValueConversion_ValueConverter_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ApplyDomainKitConventions(Microsoft.EntityFrameworkCore.ModelConfigurationBuilder,Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter)">
+  ApplyDomainKitConventions(ModelConfigurationBuilder, ValueConverter?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L28"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>套用 DomainKit 的全域模型 convention。若宿主提供 <code class="paramref">dateTimeOffsetConverter</code>，
+則對所有 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a> 與 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a> 屬性套用該轉換器。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ModelConfigurationBuilder ApplyDomainKitConventions(this ModelConfigurationBuilder configurationBuilder, ValueConverter? dateTimeOffsetConverter = null)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>configurationBuilder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.modelconfigurationbuilder">ModelConfigurationBuilder</a></dt>
+    <dd><p>模型設定建置器。</p>
+</dd>
+    <dt><code>dateTimeOffsetConverter</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.storage.valueconversion.valueconverter">ValueConverter</a></dt>
+    <dd><p>宿主提供的 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a> 值轉換器；為 <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> 時不套用轉換。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.modelconfigurationbuilder">ModelConfigurationBuilder</a></dt>
+    <dd><p>模型設定建置器。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section" id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ApplyDomainKitConventions_Microsoft_EntityFrameworkCore_ModelConfigurationBuilder_Microsoft_EntityFrameworkCore_Storage_ValueConversion_ValueConverter__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>由宿主 <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.dbcontext">DbContext</a> 在覆寫 <code>ConfigureConventions</code> 時呼叫。
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a> 的儲存型別因資料庫而異（SQL Server 有原生 <code>datetimeoffset</code>，SQLite 無），
+故 DomainKit 不內建特定 converter，改由宿主依 provider 傳入對應的 <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.storage.valueconversion.valueconverter">ValueConverter</a>（seam）。
+EF Core 會對 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullable-1">Nullable&lt;T&gt;</a> 自動套用同一轉換器。</p>
+</div>
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ApplyEnumerationConventions_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ApplyEnumerationConventions*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ApplyEnumerationConventions_Microsoft_EntityFrameworkCore_ModelConfigurationBuilder_System_Reflection_Assembly_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ApplyEnumerationConventions(Microsoft.EntityFrameworkCore.ModelConfigurationBuilder,System.Reflection.Assembly)">
+  ApplyEnumerationConventions(ModelConfigurationBuilder, Assembly)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>套用指定組件內所有 Enumeration 型別的值轉換慣例。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ModelConfigurationBuilder ApplyEnumerationConventions(this ModelConfigurationBuilder configurationBuilder, Assembly assembly)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>configurationBuilder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.modelconfigurationbuilder">ModelConfigurationBuilder</a></dt>
+    <dd><p>模型設定建置器。</p>
+</dd>
+    <dt><code>assembly</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.reflection.assembly">Assembly</a></dt>
+    <dd><p>包含 Enumeration 型別的組件。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.modelconfigurationbuilder">ModelConfigurationBuilder</a></dt>
+    <dd><p>模型設定建置器。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureAuditedEntity_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureAuditedEntity*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureAuditedEntity__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureAuditedEntity``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureAuditedEntity&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定建立與更新時間欄位。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureAuditedEntity&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasCreatedTime, IHasUpdatedTime</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureCreationAuditedEntity_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureCreationAuditedEntity*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureCreationAuditedEntity__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureCreationAuditedEntity``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureCreationAuditedEntity&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定建立時間欄位。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureCreationAuditedEntity&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasCreatedTime</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureCreationUserAuditedEntity_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureCreationUserAuditedEntity*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureCreationUserAuditedEntity__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureCreationUserAuditedEntity``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureCreationUserAuditedEntity&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定建立時間與建立使用者欄位。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureCreationUserAuditedEntity&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasCreatedTime, IHasCreator</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureEntityBase_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureEntityBase*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureEntityBase__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureEntityBase``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureEntityBase&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定具備 <code>Id</code> 屬性的實體基底。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureEntityBase&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureFullAuditedEntity_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureFullAuditedEntity*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureFullAuditedEntity__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureFullAuditedEntity``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureFullAuditedEntity&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L167"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定完整審計欄位與軟刪除全域查詢篩選。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureFullAuditedEntity&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater, IHasDeletedTime, IHasDeleter</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureRowVersion_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureRowVersion*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureRowVersion__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureRowVersion``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureRowVersion&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定樂觀鎖並行控制 token。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureRowVersion&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasRowVersion</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureUserAuditedEntity_" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureUserAuditedEntity*"></a>
+
+  <h3 id="CloudyWing_DomainKit_EntityFrameworkCore_Modeling_ModelBuilderExtensions_ConfigureUserAuditedEntity__1_Microsoft_EntityFrameworkCore_Metadata_Builders_EntityTypeBuilder___0__" data-uid="CloudyWing.DomainKit.EntityFrameworkCore.Modeling.ModelBuilderExtensions.ConfigureUserAuditedEntity``1(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder{``0})">
+  ConfigureUserAuditedEntity&lt;TEntity&gt;(EntityTypeBuilder&lt;TEntity&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L149"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>設定建立、更新時間與使用者欄位。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static EntityTypeBuilder&lt;TEntity&gt; ConfigureUserAuditedEntity&lt;TEntity&gt;(this EntityTypeBuilder&lt;TEntity&gt; builder) where TEntity : class, IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>builder</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/microsoft.entityframeworkcore.metadata.builders.entitytypebuilder-1">EntityTypeBuilder</a>&lt;TEntity&gt;</dt>
+    <dd><p>實體型別建置器。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TEntity</code></dt>
+    <dd><p>實體型別。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit.EntityFrameworkCore/Modeling/ModelBuilderExtensions.cs/#L14" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

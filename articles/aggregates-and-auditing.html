@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>聚合與審計 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="聚合與審計 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/aggregates-and-auditing.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="聚合與審計">聚合與審計</h1>
+
+<h2 id="聚合根">聚合根</h2>
+<p>DomainKit 採真 Code First。聚合根即 EF 對映型別。<code>AggregateRootBase</code> 將鍵固定為 <code>Guid</code>，底層為泛型 <code>AggregateRoot&lt;TKey&gt;</code>。聚合以充血方式封裝行為，狀態變更在記憶體內完成，由 <code>IUnitOfWork</code> 一次提交。</p>
+<p><code>EntityBase</code> 與 <code>AggregateRootBase</code> 預設使用 <code>Guid.CreateVersion7()</code> 建立識別碼。需要其他主鍵型別時，直接繼承 <code>Entity&lt;TKey&gt;</code> 或 <code>AggregateRoot&lt;TKey&gt;</code>。</p>
+<p>資料庫主鍵與對外 Domain Key 不同時，實作 <code>IHasExternalKey&lt;TKey&gt;</code>。Repository 與 keyed QueryService 會優先使用 <code>ExternalKey</code> 查詢。</p>
+<h2 id="實體相等性">實體相等性</h2>
+<p><code>Entity&lt;TKey&gt;</code> 覆寫 <code>Equals</code> 與 <code>GetHashCode</code>，以型別加識別碼判定相等，不使用參考相等。兩個執行個體只要是同一型別且 <code>Id</code> 相同就視為同一個實體，即使分別由不同查詢載入。</p>
+<p>識別碼仍為 <code>TKey</code> 預設值的實體視為 transient。transient 實體只與自身的參考相等，與另一個同樣 transient 的執行個體不相等，<code>GetHashCode</code> 也退回參考雜湊。這代表 transient 實體在取得識別碼後雜湊碼會改變，先放進 <code>HashSet</code> 或當作 <code>Dictionary</code> 鍵再指派識別碼，之後就查不回來。<code>AggregateRootBase</code> 與 <code>EntityBase</code> 在建構時就以 <code>Guid.CreateVersion7()</code> 產生識別碼，不會處於 transient 狀態。</p>
+<p>比較前會還原 Castle 動態代理的真實型別，延遲載入代理與原始實體可正確判定相等。判定 transient 的 <code>IsTransient</code> 為 <code>protected virtual</code>，若識別碼的「未指派」語意並非該型別的預設值，可由衍生類別覆寫。</p>
+<h2 id="審計標記介面">審計標記介面</h2>
+<p>在聚合上實作下列介面，提交時由 <code>SaveChanges</code> 攔截器自動填值：</p>
+<table>
+<thead>
+<tr>
+<th>介面</th>
+<th>填入欄位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IHasCreatedTime</code></td>
+<td><code>CreatedTime</code></td>
+</tr>
+<tr>
+<td><code>IHasCreator</code></td>
+<td><code>CreatorId</code></td>
+</tr>
+<tr>
+<td><code>IHasUpdatedTime</code></td>
+<td><code>UpdatedTime</code></td>
+</tr>
+<tr>
+<td><code>IHasUpdater</code></td>
+<td><code>UpdaterId</code></td>
+</tr>
+<tr>
+<td><code>IHasDeletedTime</code> / <code>IHasDeleter</code></td>
+<td>軟刪除時間與操作者</td>
+</tr>
+</tbody>
+</table>
+<p>依需要的審計層級，在 <code>OnModelCreating</code> 套用對應的設定擴充（位於 <code>CloudyWing.DomainKit.EntityFrameworkCore.Modeling</code>）：</p>
+<table>
+<thead>
+<tr>
+<th>設定擴充</th>
+<th>套用範圍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ConfigureEntityBase</code></td>
+<td>只設定 <code>Id</code> 為主鍵</td>
+</tr>
+<tr>
+<td><code>ConfigureCreationAuditedEntity</code></td>
+<td><code>CreatedTime</code></td>
+</tr>
+<tr>
+<td><code>ConfigureCreationUserAuditedEntity</code></td>
+<td><code>CreatedTime</code>、<code>CreatorId</code></td>
+</tr>
+<tr>
+<td><code>ConfigureAuditedEntity</code></td>
+<td><code>CreatedTime</code>、<code>UpdatedTime</code></td>
+</tr>
+<tr>
+<td><code>ConfigureUserAuditedEntity</code></td>
+<td>再加 <code>CreatorId</code>、<code>UpdaterId</code></td>
+</tr>
+<tr>
+<td><code>ConfigureFullAuditedEntity</code></td>
+<td>再加軟刪除欄位與軟刪除全域查詢篩選</td>
+</tr>
+</tbody>
+</table>
+<p>實體須實作對應的審計標記介面；<code>ConfigureFullAuditedEntity</code> 需含 <code>IHasDeletedTime</code> / <code>IHasDeleter</code>。各審計設定內部都會呼叫 <code>ConfigureEntityBase</code>，不需另外呼叫。沒有審計欄位的實體才單獨使用 <code>ConfigureEntityBase</code>。</p>
+<h2 id="狀態標記介面">狀態標記介面</h2>
+<p><code>IHasDisabledState</code> 與 <code>IHasDisplayOrder</code> 表達停用狀態與顯示順序，供跨聚合統一屬性名稱與語意。</p>
+<table>
+<thead>
+<tr>
+<th>介面</th>
+<th>屬性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IHasDisabledState</code></td>
+<td><code>IsDisabled</code></td>
+</tr>
+<tr>
+<td><code>IHasDisplayOrder</code></td>
+<td><code>DisplayOrder</code></td>
+</tr>
+</tbody>
+</table>
+<p>兩者與審計標記介面不同。DomainKit 不對其填值、不加查詢篩選、不建索引，實作後的行為完全由應用程式決定。停用狀態以 <code>IsDisabled</code> 表達，查詢啟用中的資料寫成 <code>!entity.IsDisabled</code>。</p>
+<h2 id="操作者來源">操作者來源</h2>
+<p>審計操作者 <code>CreatorId</code> 與 <code>UpdaterId</code> 的取得有兩段優先序：</p>
+<ol>
+<li><code>IUnitOfWork.SaveChangesAsync(actorId, ...)</code> 明確傳入的 <code>actorId</code>。</li>
+<li>未傳時退回 DI 注入的 <code>IAuditUser.UserId</code>（預設 <code>NullAuditUser</code> 回傳 <code>null</code>，宿主可覆寫為登入使用者）。</li>
+</ol>
+<p>非 Guid 的對外身分以 <code>IHasExternalKey&lt;TKey&gt;</code> 表達，例如以帳號字串對外辨識，內部識別仍可維持 <code>Guid</code>。</p>
+<h2 id="軟刪除">軟刪除</h2>
+<p>Repository 依 <code>IHasDeletedTime</code> 判斷刪除策略。實作此介面的實體會寫入 <code>DeletedTime</code>；未實作時才會執行實體刪除。若實體同時實作 <code>IHasDeleter</code>，審計攔截器會在軟刪除時寫入 <code>DeleterId</code>。</p>
+<p><code>ConfigureFullAuditedEntity</code> 加入 <code>DeletedTime is null</code> 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。詳見<a href="tenancy-and-concurrency.html">多租戶與並行控制</a>。</p>
+<h2 id="時間儲存與時區">時間儲存與時區</h2>
+<p>DomainKit 提供全域 convention 接點，讓宿主選擇 <code>DateTimeOffset</code> 與 <code>DateTimeOffset?</code> 的儲存方式。需要正規化為 UTC offset 0 時，傳入 <code>UtcDateTimeOffsetConverter</code>：</p>
+<pre><code class="lang-csharp">protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+    base.ConfigureConventions(configurationBuilder);
+    configurationBuilder.ApplyDomainKitConventions(new UtcDateTimeOffsetConverter());
+}
+</code></pre>
+<p>未傳入 converter 時，DomainKit 不改變 EF Core 的 provider 預設對映。若採 UTC 儲存，取到應用層後再依需求轉換為呈現時區。</p>
+<h2 id="雙軌事件">雙軌事件</h2>
+<p>聚合分別收集兩類事件：</p>
+<ul>
+<li><strong>Domain event</strong>。提交前派發，讓 handler 對 tracked entity 的變更納入同一次 <code>SaveChanges</code>。</li>
+<li><strong>Integration event</strong>。設定 Outbox 時與業務資料同交易保存，之後由背景 dispatcher 交給 handler；提交成功後也會發布至 best-effort 廣播通道。</li>
+</ul>
+<p>Handler 由 <code>AddDomainKit</code> 的 <code>handlerAssemblies</code> 掃描註冊。完整的派發、重試、判重與廣播語意見<a href="events-outbox-and-broadcast.html">事件、Outbox 與廣播</a>。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="events-outbox-and-broadcast.html">事件、Outbox 與廣播</a></li>
+<li><a href="tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/aggregates-and-auditing.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

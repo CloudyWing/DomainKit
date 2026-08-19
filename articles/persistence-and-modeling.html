@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>持久化與模型設定 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="持久化與模型設定 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/persistence-and-modeling.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="持久化與模型設定">持久化與模型設定</h1>
+
+<p>DomainKit 的 EF Core 套件提供 <code>Repository</code>、<code>IUnitOfWork</code>、聚合導覽載入與共用模型設定。Repository 負責載入及追蹤聚合，查詢投影則交由 <code>QueryService</code>，避免寫入模型與讀取模型混用。</p>
+<h2 id="repository">Repository</h2>
+<p>自訂 Repository 繼承 <code>Repository&lt;TDbContext, TEntity, TKey&gt;</code>。<code>TKey</code> 代表應用程式用來尋找聚合的 Domain Key，不一定等於資料庫主鍵。</p>
+<pre><code class="lang-csharp">public sealed class CustomerRepository
+    : Repository&lt;AppDbContext, Customer, string&gt; {
+    public CustomerRepository(AppDbContext dbContext, IUnitOfWork unitOfWork)
+        : base(dbContext, unitOfWork) {
+    }
+}
+</code></pre>
+<p>鍵值判定依下列順序執行：</p>
+<ol>
+<li>實體實作 <code>IHasExternalKey&lt;TKey&gt;</code> 時，使用 <code>ExternalKey</code>。</li>
+<li>其餘實體使用 EF Core model 定義的單一主鍵。</li>
+<li>複合主鍵須由 Repository 覆寫 <code>CreateKeyPredicate</code>，預設實作不支援。</li>
+</ol>
+<p><code>FindAsync</code> 找不到資料時回傳 <code>null</code>；<code>GetAsync</code>、<code>UpdateAsync</code> 與 <code>DeleteAsync</code> 找不到資料時拋出 <code>EntityNotFoundException</code>。</p>
+<p><code>CreateAsync</code>、<code>UpdateAsync</code> 與 <code>DeleteAsync</code> 都回傳受影響的實體，<code>UpdateAsync</code> 與 <code>DeleteAsync</code> 回傳的是已被追蹤的執行個體，可直接接續讀取更新後的狀態。<code>UpdateAsync</code> 另有接受 <code>Func&lt;TEntity, CancellationToken, Task&gt;</code> 的多載，供更新過程需要 await 其他服務時使用。</p>
+<h2 id="延後提交">延後提交</h2>
+<p><code>CreateAsync</code>、<code>UpdateAsync</code> 與 <code>DeleteAsync</code> 的 <code>autoCommit</code> 預設為 <code>false</code>。多個聚合操作可累積在同一個 <code>DbContext</code>，最後由 <code>IUnitOfWork</code> 提交一次。</p>
+<pre><code class="lang-csharp">await customerRepository.CreateAsync(customer, cancellationToken: ct).ConfigureAwait(false);
+await addressRepository.CreateAsync(address, cancellationToken: ct).ConfigureAwait(false);
+await unitOfWork.SaveChangesAsync(actorId, ct).ConfigureAwait(false);
+</code></pre>
+<p>只有確定單一操作需要立即落地時才使用 <code>autoCommit: true</code>。此模式會在 Repository 方法內呼叫 <code>SaveChangesAsync</code>。Repository 方法的 <code>actorId</code> 參數會一併傳給該次提交，因此只在 <code>autoCommit: true</code> 時有作用；延後提交的情境由 <code>IUnitOfWork.SaveChangesAsync</code> 指定操作者。</p>
+<p><code>DiscardChanges</code> 會清除 Change Tracker，以及目前追蹤聚合尚未派發的兩類事件。它適合在應用層確定放棄整個工作單元時使用。</p>
+<p><code>SaveChangesAsync</code> 過程中若拋出 <code>BusinessException</code>（包含由 domain event handler 拋出的），會先自動執行一次 <code>DiscardChanges</code> 再重新拋出。業務規則擋下的提交不會留下半套的追蹤狀態，但同一個 <code>DbContext</code> 上尚未提交的其他變更也會一併失去，捕捉此例外後需重新載入聚合。</p>
+<h2 id="明確交易">明確交易</h2>
+<p><code>UseTransactionAsync</code> 在目前沒有交易時建立交易，成功時提交，失敗時回復。若 <code>DbContext</code> 已有交易，方法會重用既有交易。執行委派仍須自行呼叫 <code>SaveChangesAsync</code>。</p>
+<pre><code class="lang-csharp">await unitOfWork.UseTransactionAsync(
+    async cancellationToken =&gt; {
+        await customerRepository.CreateAsync(customer, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(actorId, cancellationToken).ConfigureAwait(false);
+    },
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>需要在交易範圍內取得回傳值，或需要直接操作交易物件時，改用泛型多載。委派會收到目前的 <code>IDbContextTransaction</code>，可用於建立 savepoint 或把交易交給其他需要它的 API。</p>
+<pre><code class="lang-csharp">Guid customerId = await unitOfWork.UseTransactionAsync(
+    async (transaction, cancellationToken) =&gt; {
+        await customerRepository.CreateAsync(customer, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(actorId, cancellationToken).ConfigureAwait(false);
+
+        return customer.Id;
+    },
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>重用既有交易時，方法不會提交也不會回復該交易，交由原本開啟交易的那一層負責。</p>
+<h2 id="軟刪除判定">軟刪除判定</h2>
+<p><code>DeleteAsync</code> 依實體能力決定刪除方式：</p>
+<ul>
+<li>實作 <code>IHasDeletedTime</code> 的實體會寫入 <code>DeletedTime</code>，並保持資料列存在。</li>
+<li>未實作 <code>IHasDeletedTime</code> 的實體會由 <code>DbSet.Remove</code> 實體刪除。</li>
+</ul>
+<p>完整審計實體應搭配 <code>ConfigureFullAuditedEntity</code>。該設定會加入 <code>DeletedTime is null</code> 的全域查詢篩選。詳細行為見<a href="aggregates-and-auditing.html">聚合與審計</a>。</p>
+<h2 id="聚合導覽載入">聚合導覽載入</h2>
+<p>Repository 可從 EF Core model annotation 取得聚合邊界內必須載入的導覽路徑。使用 <code>HasAggregateIncludes</code> 集中宣告，避免每個 Repository 重複撰寫 <code>Include</code>。</p>
+<pre><code class="lang-csharp">modelBuilder.Entity&lt;SalesOrder&gt;(builder =&gt; {
+    builder.HasAggregateIncludes(includes =&gt; includes
+        .Include(order =&gt; order.Lines, lines =&gt; lines
+            .Include(line =&gt; line.Adjustments))
+        .Include(order =&gt; order.BillingAddress));
+});
+</code></pre>
+<p><code>FindAsync</code>、<code>GetAsync</code>、<code>UpdateAsync</code> 與 <code>DeleteAsync</code> 都會套用這些路徑。Repository 仍可覆寫 <code>IncludeQuery</code> 加入無法由共用設定表達的查詢內容。</p>
+<p>聚合 Include 應只涵蓋維護聚合一致性所需的導覽。清單與報表查詢使用投影，不應為了顯示欄位而擴張聚合載入範圍。</p>
+<h2 id="全域型別轉換">全域型別轉換</h2>
+<p><code>ApplyDomainKitConventions</code> 提供 <code>DateTimeOffset</code> converter 的宿主接點。DomainKit 不依資料庫 provider 自動選擇儲存型別。</p>
+<pre><code class="lang-csharp">protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+    base.ConfigureConventions(configurationBuilder);
+    configurationBuilder.ApplyDomainKitConventions(new UtcDateTimeOffsetConverter());
+}
+</code></pre>
+<p><code>UtcDateTimeOffsetConverter</code> 將值正規化為 offset 0 並維持 <code>DateTimeOffset</code> 儲存型別。<code>UtcDateTimeConverter</code> 將 <code>DateTimeOffset</code> 轉成 UTC <code>DateTime</code>，適用於需要以 <code>DateTime</code> 儲存的 provider。未傳入 converter 時，DomainKit 不修改 EF Core 的預設對映。</p>
+<h2 id="enumeration-對映">Enumeration 對映</h2>
+<p>採用 <code>CloudyWing.Enumeration</code> 的專案可在 <code>ConfigureConventions</code> 掃描包含 Enumeration 型別的組件。</p>
+<pre><code class="lang-csharp">protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+    base.ConfigureConventions(configurationBuilder);
+    configurationBuilder.ApplyDomainKitConventions(new UtcDateTimeOffsetConverter());
+    configurationBuilder.ApplyEnumerationConventions(typeof(OrderStatus).Assembly);
+}
+</code></pre>
+<p>每個具體 <code>EnumerationBase&lt;TEnum, TValue&gt;</code> 型別會使用其 <code>Value</code> 型別儲存。顯示名稱本地化見<a href="errors-and-localization.html">錯誤契約與本地化</a>。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="getting-started.html">入門指南</a></li>
+<li><a href="aggregates-and-auditing.html">聚合與審計</a></li>
+<li><a href="querying-and-specifications.html">查詢與規約</a></li>
+<li><a href="tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+<li><a href="errors-and-localization.html">錯誤契約與本地化</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/persistence-and-modeling.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

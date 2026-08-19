@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>入門指南 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="入門指南 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/getting-started.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="入門指南">入門指南</h1>
+
+<p>本指南示範如何導入 DomainKit，包含定義聚合、設定 DbContext、註冊服務，以及進行持久化與查詢。套件目前以 .NET 10 為目標框架。</p>
+<h2 id="安裝">安裝</h2>
+<p>DomainKit 分為核心與 EF Core 兩個套件：</p>
+<pre><code class="lang-bash">dotnet add package CloudyWing.DomainKit
+dotnet add package CloudyWing.DomainKit.EntityFrameworkCore
+</code></pre>
+<h2 id="定義聚合">定義聚合</h2>
+<p>聚合根繼承 <code>AggregateRootBase</code>（鍵為 <code>Guid</code>），以審計標記介面宣告需要自動填值的欄位，<code>IHasDisabledState</code> 之類的狀態標記介面則只統一屬性名稱與語意。</p>
+<pre><code class="lang-csharp">using CloudyWing.DomainKit.Entities;
+
+public class Customer : AggregateRootBase, IHasDisabledState,
+    IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater, IHasDeletedTime, IHasDeleter {
+    public string Name { get; private set; } = &quot;&quot;;
+
+    public bool IsDisabled { get; private set; }
+
+    private Customer() { }
+
+    public static Customer Create(string name) {
+        return new Customer { Name = name };
+    }
+}
+</code></pre>
+<h2 id="設定-dbcontext">設定 DbContext</h2>
+<p>以 <code>IXxxDbContext</code> 介面宣告需要的資料集，在 <code>OnModelCreating</code> 套用審計欄位設定，並在 <code>ConfigureConventions</code> 套用 DomainKit 全域 convention。時間的實際儲存型別由宿主依 provider 選擇 converter。</p>
+<pre><code class="lang-csharp">using CloudyWing.DomainKit.EntityFrameworkCore.Modeling;
+using Microsoft.EntityFrameworkCore;
+
+public interface ICustomerDbContext {
+    DbSet&lt;Customer&gt; Customers { get; }
+}
+
+public sealed class AppDbContext : DbContext, ICustomerDbContext {
+    public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options) : base(options) { }
+
+    public DbSet&lt;Customer&gt; Customers =&gt; Set&lt;Customer&gt;();
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) {
+        base.ConfigureConventions(configurationBuilder);
+        configurationBuilder.ApplyDomainKitConventions(new UtcDateTimeOffsetConverter());
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity&lt;Customer&gt;(builder =&gt; {
+            builder.ToTable(&quot;Customers&quot;);
+            builder.ConfigureFullAuditedEntity();
+        });
+    }
+}
+</code></pre>
+<p><code>UtcDateTimeOffsetConverter</code> 將值正規化為 offset 0。未傳入 converter 時，DomainKit 不會改變 EF Core 的預設 <code>DateTimeOffset</code> 對映。</p>
+<h2 id="註冊服務">註冊服務</h2>
+<p>不啟用 Outbox 時，可使用一般 <code>AddDbContext</code> 註冊：</p>
+<pre><code class="lang-csharp">services.AddDbContext&lt;AppDbContext&gt;(options =&gt; options.UseSqlServer(connectionString));
+services.AddDomainKit&lt;AppDbContext&gt;(
+    handlerAssemblies: [typeof(Program).Assembly]
+);
+</code></pre>
+<p><code>AddDomainKit</code> 註冊 <code>IUnitOfWork</code>、審計與事件攔截器、RowVersion 攔截器、事件 dispatcher，以及行程內廣播服務。</p>
+<p>啟用 Outbox 時，DbContext model 必須呼叫 <code>ConfigureOutbox</code>，DI 必須提供 <code>IDbContextFactory&lt;AppDbContext&gt;</code>，並在選項開啟背景 dispatcher。</p>
+<pre><code class="lang-csharp">services.AddDbContextFactory&lt;AppDbContext&gt;(
+    options =&gt; options.UseSqlServer(connectionString),
+    ServiceLifetime.Scoped
+);
+services.AddDomainKit&lt;AppDbContext&gt;(
+    options =&gt; options.EnableOutboxDispatcher = true,
+    handlerAssemblies: [typeof(Program).Assembly]
+);
+</code></pre>
+<pre><code class="lang-csharp">protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    modelBuilder.ConfigureOutbox();
+    modelBuilder.Entity&lt;Customer&gt;(builder =&gt; {
+        builder.ToTable(&quot;Customers&quot;);
+        builder.ConfigureFullAuditedEntity();
+    });
+}
+</code></pre>
+<p>加入設定後建立 EF Core migration，將 <code>OutboxMessages</code> 與 <code>ProcessedEvents</code> 納入資料庫。</p>
+<h2 id="持久化">持久化</h2>
+<p>Repository 操作聚合，<code>IUnitOfWork</code> 統一提交：</p>
+<pre><code class="lang-csharp">Customer customer = Customer.Create(&quot;Acme&quot;);
+await repository.CreateAsync(customer, cancellationToken: ct).ConfigureAwait(false);
+await unitOfWork.SaveChangesAsync(actorId, ct).ConfigureAwait(false);
+</code></pre>
+<p>提交時傳入的 <code>actorId</code> 會作為審計使用者，未傳時退回 <code>IAuditUser.UserId</code>。詳見<a href="aggregates-and-auditing.html">聚合與審計</a>。</p>
+<h2 id="查詢">查詢</h2>
+<pre><code class="lang-csharp">IReadOnlyList&lt;CustomerListItem&gt; items = await queryService.GetListAsync(
+    customer =&gt; new CustomerListItem(customer.Id, customer.Name),
+    customer =&gt; !customer.IsDisabled,
+    query =&gt; query.OrderBy(customer =&gt; customer.Name),
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>更多查詢與規約用法見<a href="querying-and-specifications.html">查詢與規約</a>。</p>
+<h2 id="下一步">下一步</h2>
+<ul>
+<li><a href="aggregates-and-auditing.html">聚合與審計</a></li>
+<li><a href="persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="querying-and-specifications.html">查詢與規約</a></li>
+<li><a href="tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+<li><a href="events-outbox-and-broadcast.html">事件、Outbox 與廣播</a></li>
+<li><a href="errors-and-localization.html">錯誤契約與本地化</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/getting-started.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

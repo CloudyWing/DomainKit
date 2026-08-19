@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class PagedSpecification&lt;T&gt; | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class PagedSpecification&lt;T&gt; | DomainKit Docs ">
+      
+      <meta name="description" content="表示包含排序與分頁資訊的不可變查詢規約。">
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/new/main/apiSpec/new?filename=CloudyWing_DomainKit_Specifications_PagedSpecification_1.md&amp;value=---%0Auid%3A%20CloudyWing.DomainKit.Specifications.PagedSpecification%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1">
+
+
+
+  <h1 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1" class="text-break">
+Class PagedSpecification&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L9"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="CloudyWing.html">CloudyWing</a>.<a class="xref" href="CloudyWing.DomainKit.html">DomainKit</a>.<a class="xref" href="CloudyWing.DomainKit.Specifications.html">Specifications</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>CloudyWing.DomainKit.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>表示包含排序與分頁資訊的不可變查詢規約。</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public sealed class PagedSpecification&lt;T&gt; : Specification&lt;T&gt;, IPagedSpecification&lt;T&gt;, ISpecification&lt;T&gt;</code></pre>
+  </div>
+
+
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>規約目標型別。</p>
+</dd>
+  </dl>
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html">Specification</a>&lt;T&gt;</div>
+      <div><span class="xref">PagedSpecification&lt;T&gt;</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="CloudyWing.DomainKit.Specifications.IPagedSpecification-1.html">IPagedSpecification</a>&lt;T&gt;</div>
+      <div><a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;T&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_ToExpression">Specification&lt;T&gt;.ToExpression()</a>
+    </div>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_And_CloudyWing_DomainKit_Specifications_ISpecification__0__">Specification&lt;T&gt;.And(ISpecification&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_And_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">Specification&lt;T&gt;.And(Expression&lt;Func&lt;T, bool&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_Or_CloudyWing_DomainKit_Specifications_ISpecification__0__">Specification&lt;T&gt;.Or(ISpecification&lt;T&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_Or_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">Specification&lt;T&gt;.Or(Expression&lt;Func&lt;T, bool&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.Specification-1.html#CloudyWing_DomainKit_Specifications_Specification_1_Not">Specification&lt;T&gt;.Not()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+  <dl class="typelist extensionMethods">
+    <dt>Extension Methods</dt>
+    <dd>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_AndIfHasValue__2_CloudyWing_DomainKit_Specifications_ISpecification___0____1_System_Func___1_System_Linq_Expressions_Expression_System_Func___0_System_Boolean____">SpecificationExtensions.AndIfHasValue&lt;T, TValue&gt;(ISpecification&lt;T&gt;, TValue?, Func&lt;TValue, Expression&lt;Func&lt;T, bool&gt;&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_AndIf__1_CloudyWing_DomainKit_Specifications_ISpecification___0__System_Boolean_CloudyWing_DomainKit_Specifications_ISpecification___0__">SpecificationExtensions.AndIf&lt;T&gt;(ISpecification&lt;T&gt;, bool, ISpecification&lt;T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_AndIf__1_CloudyWing_DomainKit_Specifications_ISpecification___0__System_Boolean_System_Linq_Expressions_Expression_System_Func___0_System_Boolean___">SpecificationExtensions.AndIf&lt;T&gt;(ISpecification&lt;T&gt;, bool, Expression&lt;Func&lt;T, bool&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_OrIfHasValue__2_CloudyWing_DomainKit_Specifications_ISpecification___0____1_System_Func___1_System_Linq_Expressions_Expression_System_Func___0_System_Boolean____">SpecificationExtensions.OrIfHasValue&lt;T, TValue&gt;(ISpecification&lt;T&gt;, TValue?, Func&lt;TValue, Expression&lt;Func&lt;T, bool&gt;&gt;&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_OrIf__1_CloudyWing_DomainKit_Specifications_ISpecification___0__System_Boolean_CloudyWing_DomainKit_Specifications_ISpecification___0__">SpecificationExtensions.OrIf&lt;T&gt;(ISpecification&lt;T&gt;, bool, ISpecification&lt;T&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="CloudyWing.DomainKit.Specifications.SpecificationExtensions.html#CloudyWing_DomainKit_Specifications_SpecificationExtensions_OrIf__1_CloudyWing_DomainKit_Specifications_ISpecification___0__System_Boolean_System_Linq_Expressions_Expression_System_Func___0_System_Boolean___">SpecificationExtensions.OrIf&lt;T&gt;(ISpecification&lt;T&gt;, bool, Expression&lt;Func&lt;T, bool&gt;&gt;)</a>
+  </div>
+  </dd></dl>
+
+
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_HasPagination_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.HasPagination*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_HasPagination" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.HasPagination">
+  HasPagination
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得一個值，用以指出是否包含分頁資訊。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasPagination { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_OrderBy_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.OrderBy*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_OrderBy" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.OrderBy">
+  OrderBy
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L30"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得排序函式。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt; OrderBy { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;T&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;T&gt;&gt;</dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_PageNumber_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.PageNumber*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_PageNumber" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.PageNumber">
+  PageNumber
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得頁碼。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PageNumber { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_PageSize_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.PageSize*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_PageSize" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.PageSize">
+  PageSize
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L40"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>取得每頁筆數。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PageSize { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}})">
+  Create(ISpecification&lt;T&gt;, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L53"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以既有規約與排序建立排序規約。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PagedSpecification&lt;T&gt; Create(ISpecification&lt;T&gt; specification, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt; orderBy)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;T&gt;</dt>
+    <dd><p>基礎規約。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;T&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;T&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="CloudyWing.DomainKit.Specifications.PagedSpecification-1.html">PagedSpecification</a>&lt;T&gt;</dt>
+    <dd><p>排序規約。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_CloudyWing_DomainKit_Specifications_ISpecification__0__System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Int32_System_Int32_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create(CloudyWing.DomainKit.Specifications.ISpecification{`0},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Int32,System.Int32)">
+  Create(ISpecification&lt;T&gt;, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt;, int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L70"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以既有規約、排序與分頁資訊建立分頁規約。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PagedSpecification&lt;T&gt; Create(ISpecification&lt;T&gt; specification, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt; orderBy, int pageNumber, int pageSize)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>specification</code> <a class="xref" href="CloudyWing.DomainKit.Specifications.ISpecification-1.html">ISpecification</a>&lt;T&gt;</dt>
+    <dd><p>基礎規約。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;T&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;T&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>pageNumber</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>頁碼。</p>
+</dd>
+    <dt><code>pageSize</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>每頁筆數。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="CloudyWing.DomainKit.Specifications.PagedSpecification-1.html">PagedSpecification</a>&lt;T&gt;</dt>
+    <dd><p>分頁規約。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}})">
+  Create(Expression&lt;Func&lt;T, bool&gt;&gt;, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以條件運算式與排序建立排序規約。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PagedSpecification&lt;T&gt; Create(Expression&lt;Func&lt;T, bool&gt;&gt; criteria, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt; orderBy)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>criteria</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件運算式。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;T&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;T&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="CloudyWing.DomainKit.Specifications.PagedSpecification-1.html">PagedSpecification</a>&lt;T&gt;</dt>
+    <dd><p>排序規約。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create*"></a>
+
+  <h3 id="CloudyWing_DomainKit_Specifications_PagedSpecification_1_Create_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___System_Func_System_Linq_IQueryable__0__System_Linq_IOrderedQueryable__0___System_Int32_System_Int32_" data-uid="CloudyWing.DomainKit.Specifications.PagedSpecification`1.Create(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}},System.Func{System.Linq.IQueryable{`0},System.Linq.IOrderedQueryable{`0}},System.Int32,System.Int32)">
+  Create(Expression&lt;Func&lt;T, bool&gt;&gt;, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt;, int, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>以條件運算式、排序與分頁資訊建立分頁規約。</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PagedSpecification&lt;T&gt; Create(Expression&lt;Func&lt;T, bool&gt;&gt; criteria, Func&lt;IQueryable&lt;T&gt;, IOrderedQueryable&lt;T&gt;&gt; orderBy, int pageNumber, int pageSize)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>criteria</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.expressions.expression-1">Expression</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>篩選條件運算式。</p>
+</dd>
+    <dt><code>orderBy</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iqueryable-1">IQueryable</a>&lt;T&gt;, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.iorderedqueryable-1">IOrderedQueryable</a>&lt;T&gt;&gt;</dt>
+    <dd><p>排序函式。</p>
+</dd>
+    <dt><code>pageNumber</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>頁碼。</p>
+</dd>
+    <dt><code>pageSize</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>每頁筆數。</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="CloudyWing.DomainKit.Specifications.PagedSpecification-1.html">PagedSpecification</a>&lt;T&gt;</dt>
+    <dd><p>分頁規約。</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/src/DomainKit/Specifications/PagedSpecification.cs/#L9" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>查詢與規約 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="查詢與規約 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/querying-and-specifications.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="查詢與規約">查詢與規約</h1>
+
+<h2 id="queryservice">QueryService</h2>
+<p><code>IQueryService&lt;TEntity&gt;</code> 提供唯讀查詢，以投影選擇器回傳結果型別，避免將實體洩漏至上層。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>語意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AnyAsync</code> / <code>CountAsync</code></td>
+<td>存在性與計數</td>
+</tr>
+<tr>
+<td><code>GetSingleAsync</code> / <code>GetSingleOrDefaultAsync</code></td>
+<td>必須剛好一筆</td>
+</tr>
+<tr>
+<td><code>GetFirstAsync</code> / <code>GetFirstOrDefaultAsync</code></td>
+<td>依排序取第一筆</td>
+</tr>
+<tr>
+<td><code>GetListAsync</code></td>
+<td>清單投影</td>
+</tr>
+<tr>
+<td><code>GetPagedListAsync</code></td>
+<td>分頁投影</td>
+</tr>
+<tr>
+<td><code>GetGroupedListAsync</code></td>
+<td>分組、彙總、Having 與排序投影</td>
+</tr>
+</tbody>
+</table>
+<p><code>GetSingleAsync</code> 在多於一筆時拋例外。「依排序取第一筆」請改用 <code>GetFirstAsync</code>：</p>
+<pre><code class="lang-csharp">string nextName = await queryService.GetFirstAsync(
+    customer =&gt; customer.Name,
+    customer =&gt; !customer.IsDisabled,
+    query =&gt; query.OrderBy(customer =&gt; customer.DisplayOrder),
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>查無資料但不想拋例外時，改用 <code>GetFirstOrDefaultAsync</code>，無資料時回傳 <code>null</code>。</p>
+<h2 id="建立查詢服務">建立查詢服務</h2>
+<p>兩個泛型參數的 <code>QueryService&lt;TDbContext, TEntity&gt;</code> 提供一般投影查詢。三個泛型參數的版本再加入 Domain Key 查詢。</p>
+<pre><code class="lang-csharp">public sealed class CustomerQueryService
+    : QueryService&lt;AppDbContext, Customer, string&gt; {
+    public CustomerQueryService(AppDbContext dbContext)
+        : base(dbContext) {
+    }
+}
+</code></pre>
+<p>實體實作 <code>IHasExternalKey&lt;string&gt;</code> 時，<code>AnyAsync(key)</code>、<code>GetAsync(selector, key)</code> 與 <code>FindAsync(selector, key)</code> 會依 <code>ExternalKey</code> 查詢。其餘實體使用 EF Core model 的單一主鍵。複合主鍵情境須覆寫 <code>CreateKeyPredicate</code>。</p>
+<h2 id="規約-specifications">規約 Specifications</h2>
+<p><code>Specification&lt;T&gt;</code> 封裝可命名、可組合的查詢條件，<code>PagedSpecification&lt;T&gt;</code> 再加上排序與分頁。</p>
+<pre><code class="lang-csharp">ISpecification&lt;Customer&gt; active = new Specification&lt;Customer&gt;(customer =&gt; !customer.IsDisabled);
+ISpecification&lt;Customer&gt; taipei = new Specification&lt;Customer&gt;(customer =&gt; customer.City == &quot;Taipei&quot;);
+ISpecification&lt;Customer&gt; spec = active.And(taipei);
+</code></pre>
+<p><code>And</code>、<code>Or</code> 與 <code>Not</code> 構成完整的組合運算，<code>And</code> 與 <code>Or</code> 各有接受規約與接受條件運算式的多載，不需為了組合而先把運算式包成規約。組合結果一律是新的 <code>ISpecification&lt;T&gt;</code>，來源規約不受影響，可安全重複使用同一個具名規約。</p>
+<pre><code class="lang-csharp">ISpecification&lt;Customer&gt; outsideTaipei = taipei.Not();
+ISpecification&lt;Customer&gt; reachable = active.Or(customer =&gt; customer.HasContactEmail);
+</code></pre>
+<p>規約可直接交給 <code>IQueryService&lt;TEntity&gt;</code> 的規約多載：</p>
+<pre><code class="lang-csharp">IPagedSpecification&lt;Customer&gt; paged = PagedSpecification&lt;Customer&gt;.Create(
+    spec,
+    query =&gt; query.OrderBy(customer =&gt; customer.Name),
+    1,
+    20
+);
+
+PagedList&lt;CustomerListItem&gt; page = await queryService.GetPagedListAsync(
+    customer =&gt; new CustomerListItem(customer.Id, customer.Name),
+    paged,
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>規約只承載查詢條件與排序分頁，不含投影。投影由 <code>selector</code> 顯式指定。查詢經導覽屬性的條件與投影由 EF Core 自動 join，不需要 <code>Include</code>；載入聚合圖供領域行為操作屬於 Repository 的職責，見<a href="persistence-and-modeling.html">持久化與模型設定</a>。習慣以離散參數呼叫時，可透過 <code>QueryServiceSpecificationExtensions</code> 組成規約後委派核心多載。</p>
+<h2 id="條件式組合">條件式組合</h2>
+<p>搜尋畫面的條件多半是選填的，<code>SpecificationExtensions</code> 提供條件成立才組合的擴充方法，讓拼裝流程維持單一運算式，不必用 <code>if</code> 逐段改寫規約變數。</p>
+<table>
+<thead>
+<tr>
+<th>擴充方法</th>
+<th>組合時機</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AndIf</code> / <code>OrIf</code></td>
+<td>傳入的 <code>bool</code> 為 <code>true</code></td>
+</tr>
+<tr>
+<td><code>AndIfHasValue</code> / <code>OrIfHasValue</code></td>
+<td>傳入的值存在</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="lang-csharp">ISpecification&lt;Customer&gt; specification = new Specification&lt;Customer&gt;(customer =&gt; !customer.IsDisabled)
+    .AndIfHasValue(criteria.City, city =&gt; customer =&gt; customer.City == city)
+    .AndIfHasValue(criteria.RegisteredAfter, date =&gt; customer =&gt; customer.CreatedTime &gt;= date)
+    .AndIf(criteria.OnlyContactable, customer =&gt; customer.HasContactEmail);
+</code></pre>
+<p><code>AndIfHasValue</code> 與 <code>OrIfHasValue</code> 把 <code>null</code> 視為無值，字串另外把空字串與純空白也視為無值，因此文字搜尋欄位不需要在呼叫端先做一次 <code>IsNullOrWhiteSpace</code>。其他型別只要不是 <code>null</code> 就算有值，<code>0</code> 與 <code>false</code> 都會觸發組合。條件不成立時原樣回傳來源規約，不會產生恆真條件。</p>
+<p>工廠委派只在值存在時執行，可直接使用該值的非 null 形式建立條件運算式。</p>
+<h2 id="分頁結果">分頁結果</h2>
+<p><code>GetPagedListAsync</code> 回傳 <code>PagedList&lt;TItem&gt;</code>，<code>Items</code> 是本頁投影結果，<code>Metadata</code> 是分頁統計。</p>
+<table>
+<thead>
+<tr>
+<th>成員</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PageNumber</code> / <code>PageSize</code></td>
+<td>查詢時指定的頁碼與每頁筆數</td>
+</tr>
+<tr>
+<td><code>TotalCount</code></td>
+<td>套用條件後的總筆數</td>
+</tr>
+<tr>
+<td><code>TotalPages</code></td>
+<td>依總筆數與每頁筆數計算的總頁數，無資料時為 <code>0</code></td>
+</tr>
+<tr>
+<td><code>HasPreviousPage</code> / <code>HasNextPage</code></td>
+<td>供分頁控制項判斷上下頁</td>
+</tr>
+</tbody>
+</table>
+<p>頁碼與每頁筆數必須為正整數，傳入 <code>0</code> 或負數會拋出 <code>ArgumentOutOfRangeException</code>。頁碼從 <code>1</code> 起算。</p>
+<p>查詢無法由 <code>IQueryService&lt;TEntity&gt;</code> 表達而需自行組 <code>IQueryable</code> 時，用 <code>ToPagedListAsync</code> 取得同樣形狀的結果，回傳型別與 QueryService 一致，上層不必分辨資料來自哪一種查詢方式。</p>
+<pre><code class="lang-csharp">PagedList&lt;CustomerListItem&gt; page = await dbContext.Customers
+    .Where(customer =&gt; !customer.IsDisabled)
+    .OrderBy(customer =&gt; customer.Name)
+    .Select(customer =&gt; new CustomerListItem(customer.Id, customer.Name))
+    .ToPagedListAsync(pageNumber, pageSize, ct)
+    .ConfigureAwait(false);
+</code></pre>
+<p>它會先執行一次 <code>CountAsync</code> 再取本頁資料，共兩次資料庫往返。排序須在呼叫前完成，未排序的來源分頁結果不穩定。</p>
+<h2 id="分組查詢">分組查詢</h2>
+<p><code>GetGroupedListAsync</code> 先套用實體篩選，再執行 <code>GroupBy</code> 與彙總投影。<code>havingPredicate</code> 套用在彙總投影之後。</p>
+<pre><code class="lang-csharp">IReadOnlyList&lt;CustomerCountByCity&gt; counts = await queryService.GetGroupedListAsync(
+    customer =&gt; customer.City,
+    group =&gt; new CustomerCountByCity(group.Key, group.Count()),
+    customer =&gt; !customer.IsDisabled,
+    result =&gt; result.Count &gt;= 10,
+    query =&gt; query.OrderByDescending(result =&gt; result.Count),
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>彙總投影成員只能來自分組鍵或 SQL 可轉譯的彙總計算。自訂 .NET 方法通常無法由 EF Core 轉譯，應在查詢物化後另行處理。</p>
+<h2 id="審計使用者投影">審計使用者投影</h2>
+<p><code>AuditedQueryService&lt;TDbContext, TEntity, TUserEntity&gt;</code> 提供建立者與更新者的 LEFT JOIN 基底。衍生類別指定使用者來源與鍵選擇器，再從 <code>AuditedQueryEntity.Entity</code>、<code>Creator</code> 與 <code>Updater</code> 投影公開結果。</p>
+<pre><code class="lang-csharp">public sealed class CustomerAuditQueryService
+    : AuditedQueryService&lt;AppDbContext, Customer, AppUser&gt; {
+    public CustomerAuditQueryService(AppDbContext dbContext)
+        : base(dbContext) {
+    }
+
+    protected override IQueryable&lt;AppUser&gt; Users =&gt; DbContext.Users;
+    protected override Expression&lt;Func&lt;Customer, Guid&gt;&gt; CreatorIdSelector =&gt; customer =&gt; customer.CreatorId;
+    protected override Expression&lt;Func&lt;Customer, Guid?&gt;&gt;? UpdaterIdSelector =&gt; customer =&gt; customer.UpdaterId;
+    protected override Expression&lt;Func&lt;AppUser, Guid&gt;&gt; UserIdSelector =&gt; user =&gt; user.Id;
+}
+</code></pre>
+<p>選擇器必須直接指向屬性，不能是運算式或方法呼叫。</p>
+<h2 id="軟刪除篩選">軟刪除篩選</h2>
+<p>QueryService 預設使用 <code>AsNoTracking</code> 並保留 EF Core 全域 query filter。<code>IgnoreSoftDeletedFilter = true</code> 會呼叫 <code>IgnoreQueryFilters()</code>，因此不只略過軟刪除條件，也會略過同一實體的租戶等其他全域條件。此設定只能用於受控的管理流程，並由呼叫端補上必要的隔離條件。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/querying-and-specifications.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

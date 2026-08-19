@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>多租戶與並行控制 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="多租戶與並行控制 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/tenancy-and-concurrency.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="多租戶與並行控制">多租戶與並行控制</h1>
+
+<p>DomainKit 提供以 <code>AsyncLocal</code> 傳遞租戶脈絡的 <code>AmbientCurrentTenant</code>、EF Core 租戶 convention、寫入時的租戶填值攔截器，以及 provider 中立的 RowVersion 設定。</p>
+<h2 id="租戶脈絡">租戶脈絡</h2>
+<p><code>ICurrentTenant</code> 暴露目前的 <code>TenantId</code>，並以 <code>Change</code> 暫時切換租戶。<code>AmbientCurrentTenant</code> 支援巢狀 scope，釋放 scope 後會還原上一層租戶。</p>
+<pre><code class="lang-csharp">services.AddSingleton&lt;ICurrentTenant, AmbientCurrentTenant&gt;();
+</code></pre>
+<pre><code class="lang-csharp">using IDisposable scope = currentTenant.Change(tenantId);
+await applicationService.ExecuteAsync(ct).ConfigureAwait(false);
+</code></pre>
+<p><code>AmbientCurrentTenant</code> 應共用同一個服務執行個體，才能讓 Middleware、DbContext 與背景工作看到相同的非同步脈絡。</p>
+<h2 id="dbcontext-契約">DbContext 契約</h2>
+<p>啟用租戶篩選的 <code>DbContext</code> 實作 <code>ITenantDbContext</code>，將目前租戶提供給 EF Core query filter。</p>
+<pre><code class="lang-csharp">public sealed class AppDbContext : DbContext, ITenantDbContext {
+    private readonly ICurrentTenant currentTenant;
+
+    public AppDbContext(
+        DbContextOptions&lt;AppDbContext&gt; options,
+        ICurrentTenant currentTenant
+    ) : base(options) {
+        this.currentTenant = currentTenant;
+    }
+
+    public Guid? CurrentTenantId =&gt; currentTenant.TenantId;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.ApplyModuleConfigurations();
+        modelBuilder.ApplyTenantConventions(
+            this,
+            typeof(GlobalPermission),
+            typeof(OutboxMessage),
+            typeof(ProcessedEvent)
+        );
+    }
+}
+</code></pre>
+<p><code>ApplyTenantConventions</code> 對所有具主鍵、非 owned、非衍生且未排除的實體執行下列設定：</p>
+<ul>
+<li>加入必要的 <code>TenantId</code> shadow property。</li>
+<li>加入目前租戶的全域查詢篩選。</li>
+<li>將 <code>TenantId</code> 放到既有索引的第一欄。</li>
+<li>保留先前設定的軟刪除 query filter，並與租戶條件合併。</li>
+</ul>
+<p>此 convention 不以 <code>IMustHaveTenant</code> 判定是否套用。<code>IMustHaveTenant</code> 用來表達領域模型的租戶語意；不屬於租戶資料的型別必須透過 <code>excludedEntityTypes</code> 明確排除。啟用 Outbox 時應排除 <code>OutboxMessage</code> 與 <code>ProcessedEvent</code>，讓 dispatcher 能跨租戶掃描並依訊息內容還原租戶。</p>
+<h2 id="租戶範圍業務主鍵">租戶範圍業務主鍵</h2>
+<p>同一個業務鍵可在不同租戶重複時，先使用 <code>HasTenantPrimaryKey</code> 標記業務鍵，再套用租戶 convention。</p>
+<pre><code class="lang-csharp">modelBuilder.HasTenantPrimaryKey&lt;NumberSequence&gt;(nameof(NumberSequence.Key));
+modelBuilder.ApplyTenantConventions(this);
+</code></pre>
+<p>最後的主鍵會由 <code>TenantId</code> 與指定的業務鍵屬性組成。</p>
+<h2 id="寫入租戶欄位">寫入租戶欄位</h2>
+<p><code>TenantStampInterceptor</code> 會在新增資料前，把目前租戶寫入具有 <code>TenantId</code> shadow property 的實體。只要本次提交包含租戶實體，缺少租戶脈絡就會拋出 <code>InvalidOperationException</code>。</p>
+<pre><code class="lang-csharp">services.AddScoped&lt;TenantStampInterceptor&gt;();
+services.AddDbContextFactory&lt;AppDbContext&gt;(
+    (serviceProvider, options) =&gt; options
+        .UseSqlServer(connectionString)
+        .AddInterceptors(serviceProvider.GetRequiredService&lt;TenantStampInterceptor&gt;()),
+    ServiceLifetime.Scoped
+);
+</code></pre>
+<p><code>AddDomainKit&lt;AppDbContext&gt;</code> 會另外加入審計、事件與 RowVersion 攔截器，不會自動註冊 <code>ICurrentTenant</code> 或 <code>TenantStampInterceptor</code>。</p>
+<h2 id="背景工作與跨租戶處理">背景工作與跨租戶處理</h2>
+<p>背景工作必須在建立 DbContext 或呼叫應用服務前切換租戶，並在每筆租戶工作完成後釋放 scope。</p>
+<pre><code class="lang-csharp">foreach (Guid tenantId in tenantIds) {
+    using IDisposable scope = currentTenant.Change(tenantId);
+    await processor.ProcessAsync(tenantId, ct).ConfigureAwait(false);
+}
+</code></pre>
+<p>Outbox 會保存事件產生時的 <code>TenantId</code>，派發前再還原租戶脈絡。詳見<a href="events-outbox-and-broadcast.html">事件、Outbox 與廣播</a>。</p>
+<h2 id="rowversion">RowVersion</h2>
+<p>需要樂觀鎖的實體實作 <code>IHasRowVersion</code>，並在 model 設定呼叫 <code>ConfigureRowVersion</code>。</p>
+<pre><code class="lang-csharp">public sealed class Customer : AggregateRootBase, IHasRowVersion {
+    public byte[] RowVersion { get; private set; } = [];
+}
+</code></pre>
+<pre><code class="lang-csharp">modelBuilder.Entity&lt;Customer&gt;(builder =&gt; {
+    builder.ConfigureFullAuditedEntity();
+    builder.ConfigureRowVersion();
+});
+</code></pre>
+<p>預設設定為 provider 中立的 concurrency token。<code>RowVersionStampInterceptor</code> 會在新增與修改時產生新的 token。</p>
+<p>SQL Server 應在 provider 專屬模型設定中覆寫為原生 <code>rowversion</code>：</p>
+<pre><code class="lang-csharp">modelBuilder.Entity&lt;Customer&gt;()
+    .Property(customer =&gt; customer.RowVersion)
+    .IsRowVersion();
+</code></pre>
+<p>EF Core 將屬性標成 <code>ValueGenerated.OnAddOrUpdate</code> 後，DomainKit 攔截器會略過應用程式填值，由 SQL Server 產生版本值。其他 provider 可維持 app-managed token，或由宿主提供相應的 provider 設定。</p>
+<h2 id="並行衝突">並行衝突</h2>
+<p><code>IUnitOfWork.SaveChangesAsync</code> 會把 <code>DbUpdateConcurrencyException</code> 轉成 <code>ConcurrencyConflictException</code>。應用層可依操作語意選擇重新載入、提示使用者重新整理，或放棄目前工作單元。DomainKit 不自動重試業務寫入。</p>
+<h2 id="查詢篩選注意事項">查詢篩選注意事項</h2>
+<p>一般查詢會同時套用租戶與軟刪除篩選。<code>QueryService.IgnoreSoftDeletedFilter = true</code> 目前透過 EF Core <code>IgnoreQueryFilters()</code> 實作，因此會略過該實體的所有全域 query filter，包含租戶篩選。這個開關只能用於受控的系統管理流程，且查詢必須自行加入明確的租戶條件。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="querying-and-specifications.html">查詢與規約</a></li>
+<li><a href="events-outbox-and-broadcast.html">事件、Outbox 與廣播</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/tenancy-and-concurrency.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

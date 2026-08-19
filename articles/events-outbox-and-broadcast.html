@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>事件、Outbox 與廣播 | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="事件、Outbox 與廣播 | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="../images/logo.png">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/events-outbox-and-broadcast.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="事件outbox-與廣播">事件、Outbox 與廣播</h1>
+
+<p>DomainKit 將同交易業務副作用、可靠整合事件與執行實例通知分成不同通道。三者的交付保證與失敗處理不同，不應互換。</p>
+<table>
+<thead>
+<tr>
+<th>通道</th>
+<th>發生時機</th>
+<th>用途</th>
+<th>交付特性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain event</td>
+<td><code>SaveChanges</code> 寫入前</td>
+<td>同一工作單元內的業務連動</td>
+<td>Handler 失敗會中止本次提交</td>
+</tr>
+<tr>
+<td>Integration event Outbox</td>
+<td>與業務資料同一次 <code>SaveChanges</code></td>
+<td>可重試的跨模組或外部整合</td>
+<td>持久化、租約認領、重試、handler 判重</td>
+</tr>
+<tr>
+<td>Event broadcast</td>
+<td>提交成功後</td>
+<td>單一執行實例內的快取失效或畫面通知</td>
+<td>Best-effort，不持久化，訂閱者失敗不回拋</td>
+</tr>
+</tbody>
+</table>
+<p>Integration event 會同時流向後兩個通道。除了寫入 Outbox，提交成功後也會自動發布至 Event broadcast，兩者的處理職責見「執行實例內廣播」。</p>
+<h2 id="定義事件">定義事件</h2>
+<p>兩類事件都包含 <code>OccurredOn</code>。</p>
+<pre><code class="lang-csharp">public sealed record CustomerRenamedDomainEvent(
+    Guid CustomerId,
+    DateTimeOffset OccurredOn
+) : IDomainEvent;
+
+public sealed record CustomerRenamedIntegrationEvent(
+    Guid CustomerId,
+    string Name,
+    DateTimeOffset OccurredOn
+) : IIntegrationEvent;
+</code></pre>
+<p>聚合行為透過受保護方法加入事件。</p>
+<pre><code class="lang-csharp">public void Rename(string name, TimeProvider timeProvider) {
+    Name = name;
+    DateTimeOffset occurredOn = timeProvider.GetUtcNow();
+    AddDomainEvent(new CustomerRenamedDomainEvent(Id, occurredOn));
+    AddIntegrationEvent(new CustomerRenamedIntegrationEvent(Id, Name, occurredOn));
+}
+</code></pre>
+<h2 id="domain-event">Domain event</h2>
+<p>實作 <code>IDomainEventHandler&lt;TEvent&gt;</code>，並將 handler 所在組件交給 <code>AddDomainKit</code> 掃描。</p>
+<pre><code class="lang-csharp">public sealed class CustomerRenamedDomainEventHandler
+    : IDomainEventHandler&lt;CustomerRenamedDomainEvent&gt; {
+    public Task HandleAsync(
+        CustomerRenamedDomainEvent domainEvent,
+        CancellationToken cancellationToken = default
+    ) {
+        return Task.CompletedTask;
+    }
+}
+</code></pre>
+<p>Domain event 在 EF Core 寫入前派發。Handler 對同一個 <code>DbContext</code> 追蹤實體所做的變更會進入同次 <code>SaveChanges</code>。Handler 新增的 Domain event 會繼續派發，最多迭代 32 輪；未收斂時提交會失敗。</p>
+<p>事件集合只在提交成功後清除。提交失敗時 Integration event 仍保留於聚合，供呼叫端決定是否重試或放棄工作單元。</p>
+<h2 id="啟用-outbox">啟用 Outbox</h2>
+<p>Outbox 需要模型、背景 dispatcher 與可由 DI 解析的 <code>IDbContextFactory&lt;TDbContext&gt;</code>。</p>
+<pre><code class="lang-csharp">protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    modelBuilder.ConfigureOutbox();
+    modelBuilder.ApplyModuleConfigurations();
+}
+</code></pre>
+<p>建立 migration 後，資料庫會包含 <code>OutboxMessages</code> 與 <code>ProcessedEvents</code>。</p>
+<pre><code class="lang-csharp">services.AddDbContextFactory&lt;AppDbContext&gt;(
+    options =&gt; options.UseSqlServer(connectionString),
+    ServiceLifetime.Scoped
+);
+
+services.AddDomainKit&lt;AppDbContext&gt;(
+    options =&gt; {
+        options.EnableOutboxDispatcher = true;
+        options.Outbox.BatchSize = 100;
+        options.Outbox.PollingInterval = TimeSpan.FromSeconds(2);
+    },
+    handlerAssemblies: [typeof(CustomerRenamedIntegrationEventHandler).Assembly]
+);
+</code></pre>
+<p>只設定 <code>EnableOutboxDispatcher</code> 不會自動建立資料表。只呼叫 <code>ConfigureOutbox</code> 但未啟動 dispatcher 時，事件會保留為 <code>Pending</code>，可在服務恢復後繼續派發。Outbox 由審計與事件攔截器建立訊息，因此啟用 Outbox 時不可將 <code>EnableAuditAndDomainEventInterceptor</code> 設成 <code>false</code>。</p>
+<p>同一個 DbContext 啟用租戶 convention 時，應從 <code>ApplyTenantConventions</code> 排除 <code>OutboxMessage</code> 與 <code>ProcessedEvent</code>。Outbox 本身已保存租戶欄位，dispatcher 也需要跨租戶掃描待處理訊息。</p>
+<pre><code class="lang-csharp">modelBuilder.ApplyTenantConventions(
+    this,
+    typeof(OutboxMessage),
+    typeof(ProcessedEvent)
+);
+</code></pre>
+<h2 id="outbox-處理流程">Outbox 處理流程</h2>
+<ol>
+<li><code>SavingChanges</code> 將聚合的 Integration event 序列化成 <code>OutboxMessage</code>，與業務資料同一次提交。</li>
+<li>背景服務依 <code>Id</code> 排序取得可處理訊息，再以條件式更新取得租約。</li>
+<li>派發前依訊息保存的 <code>TenantId</code> 還原租戶脈絡。</li>
+<li>每個 handler 成功處理後新增 <code>ProcessedEvent</code>，以 handler 型別與事件識別碼判重。</li>
+<li>全部 handler 與資料變更儲存成功後，訊息標成 <code>Processed</code>。</li>
+</ol>
+<p>Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler 應維持冪等；若 handler 在資料庫提交前已呼叫外部系統，後續儲存失敗仍可能造成外部副作用重複。</p>
+<h2 id="重試與保留">重試與保留</h2>
+<table>
+<thead>
+<tr>
+<th>選項</th>
+<th style="text-align: right;">預設值</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PollingInterval</code></td>
+<td style="text-align: right;">2 秒</td>
+<td>沒有可處理資料或 dispatcher 發生錯誤時的等待時間</td>
+</tr>
+<tr>
+<td><code>BatchSize</code></td>
+<td style="text-align: right;">50</td>
+<td>每輪最多認領與清理筆數</td>
+</tr>
+<tr>
+<td><code>LockDuration</code></td>
+<td style="text-align: right;">1 分鐘</td>
+<td>訊息租約期限</td>
+</tr>
+<tr>
+<td><code>BaseRetryDelay</code></td>
+<td style="text-align: right;">5 秒</td>
+<td>指數退避的基礎時間</td>
+</tr>
+<tr>
+<td><code>MaxRetryDelay</code></td>
+<td style="text-align: right;">15 分鐘</td>
+<td>單次重試等待上限</td>
+</tr>
+<tr>
+<td><code>MaxRetryCount</code></td>
+<td style="text-align: right;">8</td>
+<td>超過此次數後改為 <code>DeadLettered</code></td>
+</tr>
+<tr>
+<td><code>RetentionPeriod</code></td>
+<td style="text-align: right;">7 天</td>
+<td>已處理訊息與判重資料的保留期間</td>
+</tr>
+</tbody>
+</table>
+<p>事件型別以 assembly-qualified name 儲存。仍有待處理訊息時重新命名事件型別、移動組件或移除相容的建構資料，可能使反序列化失敗並進入重試或 Dead Letter 流程。部署前應先完成事件版本相容策略。</p>
+<h2 id="integration-event-handler">Integration event handler</h2>
+<pre><code class="lang-csharp">public sealed class CustomerRenamedIntegrationEventHandler
+    : IIntegrationEventHandler&lt;CustomerRenamedIntegrationEvent&gt; {
+    private readonly IIntegrationEventContext eventContext;
+
+    public CustomerRenamedIntegrationEventHandler(IIntegrationEventContext eventContext) {
+        this.eventContext = eventContext;
+    }
+
+    public Task HandleAsync(
+        CustomerRenamedIntegrationEvent integrationEvent,
+        CancellationToken cancellationToken = default
+    ) {
+        Guid eventId = eventContext.EventId;
+        return Task.CompletedTask;
+    }
+}
+</code></pre>
+<p><code>IIntegrationEventContext.EventId</code> 是 Outbox message 的識別碼，可作為外部冪等鍵。它只在 Outbox dispatcher 執行 handler 的 scope 內有意義。</p>
+<h2 id="執行實例內廣播">執行實例內廣播</h2>
+<p><code>IEventBroadcast</code> 預設由 <code>InProcessEventBroadcast</code> 實作。它只通知目前行程內的訂閱者，不會寫入 Outbox，也不會跨節點傳遞。</p>
+<p>聚合的 Integration event 在提交成功後由審計與事件攔截器自動發布至此通道，宿主不需另行呼叫 <code>PublishAsync</code>。同一個 Integration event 因此會流向兩處，Outbox handler 承擔可靠的業務處理，此通道的訂閱者承擔快取失效這類可重複執行的通知。在訂閱者內重複實作 Outbox handler 的業務副作用，會使該副作用執行兩次。</p>
+<pre><code class="lang-csharp">IDisposable subscription = eventBroadcast.Subscribe&lt;CustomerCacheInvalidated&gt;(
+    (notification, cancellationToken) =&gt; cache.RemoveAsync(
+        notification.CustomerId,
+        cancellationToken
+    )
+);
+
+await eventBroadcast.PublishAsync(
+    new CustomerCacheInvalidated(customerId),
+    ct
+).ConfigureAwait(false);
+</code></pre>
+<p>應在訂閱者生命週期結束時釋放 <code>subscription</code>。單一訂閱者拋出的非取消例外會被忽略，其他訂閱者仍會繼續收到通知。取消例外會往外拋，發布端可據此中止。</p>
+<p>訂閱與發布以通知的執行階段型別配對。<code>Subscribe&lt;TNotification&gt;</code> 只會收到型別完全相同的通知，訂閱基底型別或介面不會收到衍生型別的實例，通知型別應直接是要發布的具體型別。發布端只持有 <code>object</code> 參考時，可使用接受 <code>object</code> 的 <code>PublishAsync</code> 多載，配對規則相同，仍以實際型別查找訂閱者。沒有對應訂閱者的通知會被安靜捨棄，不視為錯誤。</p>
+<p>跨節點廣播可由宿主替換 <code>IEventBroadcast</code>。需要攜帶租戶脈絡時，使用 <code>PublishEnvelopeAsync</code> 與 <code>SubscribeEnvelope</code>；接收端會在執行 handler 前暫時還原封套中的租戶。</p>
+<h2 id="診斷資料">診斷資料</h2>
+<p>Outbox 使用 <code>CloudyWing.DomainKit</code> 作為 <code>ActivitySource</code> 與 <code>Meter</code> 名稱，提供下列指標：</p>
+<ul>
+<li><code>domainkit.outbox.dispatch.duration</code></li>
+<li><code>domainkit.outbox.deadletter</code></li>
+<li><code>domainkit.outbox.pending</code></li>
+</ul>
+<p>宿主可透過 OpenTelemetry 訂閱相同名稱的 ActivitySource 與 Meter。</p>
+<h2 id="延伸閱讀">延伸閱讀</h2>
+<ul>
+<li><a href="aggregates-and-auditing.html">聚合與審計</a></li>
+<li><a href="tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+<li><a href="errors-and-localization.html">錯誤契約與本地化</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/articles/events-outbox-and-broadcast.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

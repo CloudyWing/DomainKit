@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>DomainKit | DomainKit Docs </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="DomainKit | DomainKit Docs ">
+      
+      
+      <link rel="icon" href="images/logo.png">
+      <link rel="stylesheet" href="public/docfx.min.css">
+      <link rel="stylesheet" href="public/main.css">
+      <meta name="docfx:navrel" content="toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/CloudyWing/DomainKit/blob/main/docs/index.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="landing" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="index.html">
+            <img id="logo" class="svg" src="images/logo.png" alt="DomainKit Docs">
+            DomainKit Docs
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="domainkit">DomainKit</h1>
+
+<p>此專案是我把我過往 Domain 架構往 DDD 演進後的結果，並讓 AI 討論並補足一些不夠熟悉的部分，作為後續研究，配合自身需求維護，可能一加功能就是破壞性變更的大改版，不特別建議其他人直接相依。</p>
+<p>DDD 風格的 .NET 領域層基礎建設，包含 Entity、Aggregate Root、雙軌領域事件、審計、多租戶、樂觀鎖，以及 EF Core 的持久化、查詢、規約與 Outbox。設計前提為真 Code First。實體即 EF 對映型別並同時是充血聚合根。</p>
+<h2 id="文件導覽">文件導覽</h2>
+<h3 id="使用指南">使用指南</h3>
+<ul>
+<li><a href="articles/getting-started.html">入門指南</a></li>
+<li><a href="articles/aggregates-and-auditing.html">聚合與審計</a></li>
+<li><a href="articles/persistence-and-modeling.html">持久化與模型設定</a></li>
+<li><a href="articles/querying-and-specifications.html">查詢與規約</a></li>
+<li><a href="articles/tenancy-and-concurrency.html">多租戶與並行控制</a></li>
+<li><a href="articles/events-outbox-and-broadcast.html">事件、Outbox 與廣播</a></li>
+<li><a href="articles/errors-and-localization.html">錯誤契約與本地化</a></li>
+</ul>
+<h3 id="決策紀錄">決策紀錄</h3>
+<p>架構決策紀錄（ADR）記載各項設計的脈絡、選定方案與後果，包含已被否決與已被覆蓋的決策。</p>
+<ul>
+<li><a href="adr/">決策紀錄索引</a></li>
+</ul>
+<h2 id="版本與相容性">版本與相容性</h2>
+<p>目標框架為 .NET 10。版號由 MinVer 依 git tag（前綴 <code>v</code>）推導，發版即打 tag。</p>
+<p><code>0.x</code> 期間不保證公開 API 穩定，次版號遞增即可能包含破壞性變更，變更內容記於 <a href="https://github.com/CloudyWing/DomainKit/blob/main/CHANGELOG.md">CHANGELOG.md</a>。相依此套件時建議釘死明確版號，避免使用範圍或浮動版號。</p>
+<h2 id="license">License</h2>
+<p>本專案授權見 <a href="https://github.com/CloudyWing/DomainKit/blob/main/LICENSE.md">LICENSE.md</a>。</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/CloudyWing/DomainKit/blob/main/docs/index.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
