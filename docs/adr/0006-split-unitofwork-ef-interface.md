@@ -1,5 +1,6 @@
 ---
 status: rejected
+date: 2026-08-01
 ---
 
 # ADR-0006：將 IUnitOfWork 的 EF 交易多載拆至 IEfUnitOfWork

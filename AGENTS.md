@@ -4,7 +4,7 @@
 
 ## 共通規範
 
-- 專案目標與範圍：提供可重用的 .NET 領域層基礎建設，涵蓋 DDD 風格的 Entity 與 Aggregate Root、雙軌領域事件、審計填值、多租戶、樂觀鎖，以及 EF Core 的持久化、查詢、規約與 Outbox。設計前提為真 Code First，實體即 EF 對映型別並同時是富血聚合根。
+- 專案目標與範圍：提供可重用的 .NET 領域層基礎建設，涵蓋 DDD 風格的 Entity 與 Aggregate Root、雙軌領域事件、審計填值、多租戶、樂觀鎖，以及 EF Core 的持久化、查詢、規約與 Outbox。設計前提為真 Code First，實體即 EF 對映型別並同時是充血聚合根。
 - 主要工作目錄與交付位置：`src/DomainKit`（核心套件）、`src/DomainKit.EntityFrameworkCore`（EF 套件）、`tests/DomainKit.Tests`（測試）、`docs/`（docfx 文件與 ADR）。
 - 不可違反的安全或合規限制：發佈憑證一律由 Trusted Publishing 於 CI 執行期間動態取得，不建立長期 API key，不在 repo 或 GitHub secret 中存放發佈憑證。
 
@@ -20,8 +20,11 @@
 ## 寫作規範
 
 - 文件語言與讀者：台灣用語正體中文，讀者為套件消費端開發者。
+- 詞彙約定：「審計」指實體上 `Audited*` 一族的欄位填值機制，「稽核」指 audit trail 意義下的可追溯性，兩者不互換。
 - 文件平台與 Markdown 慣例：`docs/` 由 docfx 建置，`docs/articles/` 內的交叉連結使用相對路徑。`README.md` 的連結一律使用相對路徑，該檔同時是 `PackageReadmeFile`，套件頁面上的相對連結會失效，此為已知並接受的取捨。
 - 增刪文章時，`README.md`、`docs/index.md` 與 `docs/articles/toc.yml` 三處導覽清單都要同步。新增 ADR 時同步 `docs/adr/toc.yml`。
+- `README.md` 的 Quick Start 各節與 `docs/articles/` 對應章節內容重複，修改任一處時同步另一處，避免範例逐漸分歧。
+- README 章節標題沿用套件頁面慣例，`Installation`、`Quick Start`、`Documentation` 與 `License` 維持英文，其餘使用中文；`docs/articles/` 一律使用中文標題。
 
 <!-- AI-DECLARATIONS:BEGIN -->
 ## AI Context Declarations

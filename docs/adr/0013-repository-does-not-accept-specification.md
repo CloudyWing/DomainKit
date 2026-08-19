@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0013：Repository 不收規約

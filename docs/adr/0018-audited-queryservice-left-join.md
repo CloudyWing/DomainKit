@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0018：AuditedQueryService 以 EF.Property 實作 LEFT JOIN

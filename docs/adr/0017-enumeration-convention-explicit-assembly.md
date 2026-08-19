@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0017：Enumeration convention 由宿主明確傳入 assembly

@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0025：公開面全數維持 public，不收斂為 internal

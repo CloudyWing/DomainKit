@@ -60,7 +60,9 @@ int statusCode = exception.ErrorType switch {
 
 ## enum 與 Enumeration 顯示名稱
 
-`EnumerationLocalizer<TEnum>` 使用傳入的 `IStringLocalizer` 尋找顯示名稱。`TEnum` 可以是原生 `enum`，也可以是繼承 `EnumerationBase<TEnum, TValue>` 的 Enumeration 型別。成員名稱的取得方式依型別分流，原生 `enum` 取 `ToString()`，Enumeration 型別以反射取 `Name` 屬性，兩者共用同一種資源鍵格式 `{型別名稱}.{成員名稱}`。
+`EnumerationLocalizer<TEnum>` 使用傳入的 `IStringLocalizer` 尋找顯示名稱。`TEnum` 可以是原生 `enum`，也可以是繼承 `EnumerationBase<TEnum, TValue>` 的 Enumeration 型別。
+
+成員名稱的取得方式依型別分流，原生 `enum` 取 `ToString()`，Enumeration 型別以反射取 `Name` 屬性。兩者共用同一種資源鍵格式 `{型別名稱}.{成員名稱}`。
 
 ```text
 ShipmentMethod.Express

@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0002：擁抱 DbContext，不做 ORM 可攜抽象

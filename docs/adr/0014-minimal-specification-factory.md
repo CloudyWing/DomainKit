@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0014：規約建構只保留最小 factory，不做大 bundle builder

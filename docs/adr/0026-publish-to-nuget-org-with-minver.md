@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0026：發佈至 nuget.org，版號由 MinVer 依 git tag 推導

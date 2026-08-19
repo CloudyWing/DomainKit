@@ -4,18 +4,16 @@
 
 此專案是我把我過往 Domain 架構往 DDD 演進後的結果，並讓 AI 討論並補足一些不夠熟悉的部分，作為後續研究，配合自身需求維護，可能一加功能就是破壞性變更的大改版，不特別建議其他人直接相依。
 
-DomainKit 是一組可重用的 .NET 領域層基礎建設，提供 DDD 風格的 Entity、Aggregate Root、雙軌領域事件、審計填值、多租戶與樂觀鎖，以及 EF Core 的持久化、查詢、規約和 Outbox 基礎建設。設計前提為真 Code First。實體即 EF 對映型別並同時是富血聚合根，不使用資料物件 wrapper。
+DomainKit 是一組可重用的 .NET 領域層基礎建設，提供 DDD 風格的 Entity、Aggregate Root、雙軌領域事件、審計填值、多租戶與樂觀鎖，以及 EF Core 的持久化、查詢、規約和 Outbox 基礎建設。設計前提為真 Code First。實體即 EF 對映型別並同時是充血聚合根，不使用資料物件 wrapper。
 
 ## 套件內容
 
 - **[`src/DomainKit`](./src/DomainKit/)（`CloudyWing.DomainKit`）**
   核心領域基礎建設，零 EF 相依。包含 `Entity<TKey>`、`AggregateRoot<TKey>`、審計與 RowVersion 標記介面、`IHasExternalKey<TKey>`、租戶脈絡、雙軌事件、規約、分頁與業務例外契約。
 - **[`src/DomainKit.EntityFrameworkCore`](./src/DomainKit.EntityFrameworkCore/)（`CloudyWing.DomainKit.EntityFrameworkCore`）**
-  EF Core 持久化與基礎服務。包含 Repository、Unit of Work、QueryService、審計與並行控制攔截器、租戶 convention、Aggregate Include、Enumeration 對映、Outbox dispatcher、進程內廣播與 DI 註冊。
+  EF Core 持久化與基礎服務。包含 Repository、Unit of Work、QueryService、審計與並行控制攔截器、租戶 convention、Aggregate Include、Enumeration 對映、Outbox dispatcher、行程內廣播與 DI 註冊。
 
 ## Installation
-
-### .NET CLI
 
 ```bash
 dotnet add package CloudyWing.DomainKit
@@ -37,7 +35,7 @@ public class Customer : AggregateRootBase, IHasDisabledState,
     IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater, IHasDeletedTime, IHasDeleter {
     public string Name { get; private set; } = "";
     public bool IsDisabled { get; private set; }
-    // 富血行為與審計欄位
+    // 充血行為與審計欄位
 }
 
 public interface ICustomerDbContext {
@@ -65,7 +63,7 @@ public sealed class AppDbContext : DbContext, ICustomerDbContext {
 
 ### 註冊服務
 
-`AddDomainKit<TDbContext>` 註冊 UnitOfWork、審計／事件與 RowVersion 攔截器、事件 dispatcher 及進程內廣播服務。`handlerAssemblies` 指定要掃描事件 handler 的組件。
+`AddDomainKit<TDbContext>` 註冊 UnitOfWork、審計／事件與 RowVersion 攔截器、事件 dispatcher 及行程內廣播服務。`handlerAssemblies` 指定要掃描事件 handler 的組件。
 
 ```csharp
 services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
@@ -83,16 +81,16 @@ await unitOfWork.SaveChangesAsync(actorId, ct).ConfigureAwait(false);
 
 需要明確交易範圍時，使用 `IUnitOfWork.UseTransactionAsync`。
 
-### 查詢與 GetFirst
+### 查詢
 
 `GetSingleAsync` 的語意是「必須剛好一筆」。當查詢需求是「依排序取第一筆」時，改用 `GetFirstAsync` 或 `GetFirstOrDefaultAsync`。
 
 ```csharp
 string nextName = await queryService.GetFirstAsync(
-    entity => entity.Name,
-    entity => !entity.IsDisabled,
-    query => query.OrderBy(entity => entity.DisplayOrder),
-    cancellationToken
+    customer => customer.Name,
+    customer => !customer.IsDisabled,
+    query => query.OrderBy(customer => customer.DisplayOrder),
+    ct
 ).ConfigureAwait(false);
 ```
 
@@ -103,7 +101,7 @@ string nextName = await queryService.GetFirstAsync(
 `Specification<T>` 只負責條件，`PagedSpecification<T>` 再加上排序與分頁，可直接交給 `IQueryService<TEntity>` 的規約多載。
 
 ```csharp
-ISpecification<Customer> activeCustomers = new Specification<Customer>(customer => customer.IsActive);
+ISpecification<Customer> activeCustomers = new Specification<Customer>(customer => !customer.IsDisabled);
 ISpecification<Customer> taipeiCustomers = new Specification<Customer>(customer => customer.City == "Taipei");
 ISpecification<Customer> specification = activeCustomers.And(taipeiCustomers);
 
@@ -117,7 +115,7 @@ IPagedSpecification<Customer> pagedSpecification = PagedSpecification<Customer>.
 PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
     customer => new CustomerListItem(customer.Id, customer.Name),
     pagedSpecification,
-    cancellationToken
+    ct
 ).ConfigureAwait(false);
 ```
 

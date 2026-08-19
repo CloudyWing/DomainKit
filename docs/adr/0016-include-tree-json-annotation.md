@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0016：Aggregate Include 樹以 JSON 序列化存入 entity annotation

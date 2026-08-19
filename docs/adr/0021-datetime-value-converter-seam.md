@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0021：時間 ValueConverter 採 opt-in seam 加兩個內建實作

@@ -2,7 +2,7 @@
 
 ## 聚合根
 
-DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase` 將鍵固定為 `Guid`，底層為泛型 `AggregateRoot<TKey>`。聚合以富血方式封裝行為，狀態變更在記憶體內完成，由 `IUnitOfWork` 一次提交。
+DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase` 將鍵固定為 `Guid`，底層為泛型 `AggregateRoot<TKey>`。聚合以充血方式封裝行為，狀態變更在記憶體內完成，由 `IUnitOfWork` 一次提交。
 
 `EntityBase` 與 `AggregateRootBase` 預設使用 `Guid.CreateVersion7()` 建立識別碼。需要其他主鍵型別時，直接繼承 `Entity<TKey>` 或 `AggregateRoot<TKey>`。
 

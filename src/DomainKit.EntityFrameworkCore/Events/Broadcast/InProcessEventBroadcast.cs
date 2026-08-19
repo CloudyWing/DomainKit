@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 namespace CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast;
 
 /// <summary>
-/// 提供單一進程內的廣播通道。
+/// 提供單一行程內的廣播通道。
 /// </summary>
 public sealed class InProcessEventBroadcast : IEventBroadcast {
     private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, Func<object, CancellationToken, Task>>>

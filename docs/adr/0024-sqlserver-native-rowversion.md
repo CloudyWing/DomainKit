@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0024：SQL Server 覆寫為原生 rowversion，核心維持 app-managed token

@@ -1,12 +1,13 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0010：規約不提供 IsSatisfiedBy 的 in-memory 驗證
 
 ## Context
 
-規約若提供 `IsSatisfiedBy`，同一條件即同時存在 in-memory 編譯委派與 SQL provider 轉譯兩條求值路徑，兩者在字串 collation、null 排序與大小寫上的行為可能不一致。規約本身已帶排序與分頁，其性質為查詢規格而非領域不變式。
+規約若提供 `IsSatisfiedBy`，同一條件即同時存在 in-memory 編譯委派與 SQL provider 轉譯兩條求值路徑，兩者在字串 collation、null 排序與大小寫上的行為可能不一致。規約本身已帶排序與分頁，其性質為查詢條件而非領域不變式。
 
 ## Decision
 

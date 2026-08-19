@@ -17,9 +17,9 @@
 
 ```csharp
 string nextName = await queryService.GetFirstAsync(
-    entity => entity.Name,
-    entity => !entity.IsDisabled,
-    query => query.OrderBy(entity => entity.DisplayOrder),
+    customer => customer.Name,
+    customer => !customer.IsDisabled,
+    query => query.OrderBy(customer => customer.DisplayOrder),
     ct
 ).ConfigureAwait(false);
 ```
@@ -46,8 +46,8 @@ public sealed class CustomerQueryService
 `Specification<T>` 封裝可命名、可組合的查詢條件，`PagedSpecification<T>` 再加上排序與分頁。
 
 ```csharp
-ISpecification<Customer> active = new Specification<Customer>(c => c.IsActive);
-ISpecification<Customer> taipei = new Specification<Customer>(c => c.City == "Taipei");
+ISpecification<Customer> active = new Specification<Customer>(customer => !customer.IsDisabled);
+ISpecification<Customer> taipei = new Specification<Customer>(customer => customer.City == "Taipei");
 ISpecification<Customer> spec = active.And(taipei);
 ```
 
@@ -55,7 +55,7 @@ ISpecification<Customer> spec = active.And(taipei);
 
 ```csharp
 ISpecification<Customer> outsideTaipei = taipei.Not();
-ISpecification<Customer> reachable = active.Or(c => c.HasContactEmail);
+ISpecification<Customer> reachable = active.Or(customer => customer.HasContactEmail);
 ```
 
 規約可直接交給 `IQueryService<TEntity>` 的規約多載：
@@ -63,13 +63,13 @@ ISpecification<Customer> reachable = active.Or(c => c.HasContactEmail);
 ```csharp
 IPagedSpecification<Customer> paged = PagedSpecification<Customer>.Create(
     spec,
-    query => query.OrderBy(c => c.Name),
+    query => query.OrderBy(customer => customer.Name),
     1,
     20
 );
 
 PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
-    c => new CustomerListItem(c.Id, c.Name),
+    customer => new CustomerListItem(customer.Id, customer.Name),
     paged,
     ct
 ).ConfigureAwait(false);
@@ -87,10 +87,10 @@ PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
 | `AndIfHasValue` / `OrIfHasValue` | 傳入的值存在 |
 
 ```csharp
-ISpecification<Customer> specification = new Specification<Customer>(c => !c.IsDisabled)
-    .AndIfHasValue(criteria.City, city => c => c.City == city)
-    .AndIfHasValue(criteria.RegisteredAfter, date => c => c.CreatedTime >= date)
-    .AndIf(criteria.OnlyContactable, c => c.HasContactEmail);
+ISpecification<Customer> specification = new Specification<Customer>(customer => !customer.IsDisabled)
+    .AndIfHasValue(criteria.City, city => customer => customer.City == city)
+    .AndIfHasValue(criteria.RegisteredAfter, date => customer => customer.CreatedTime >= date)
+    .AndIf(criteria.OnlyContactable, customer => customer.HasContactEmail);
 ```
 
 `AndIfHasValue` 與 `OrIfHasValue` 把 `null` 視為無值，字串另外把空字串與純空白也視為無值，因此文字搜尋欄位不需要在呼叫端先做一次 `IsNullOrWhiteSpace`。其他型別只要不是 `null` 就算有值，`0` 與 `false` 都會觸發組合。條件不成立時原樣回傳來源規約，不會產生恆真條件。
@@ -131,7 +131,7 @@ PagedList<CustomerListItem> page = await dbContext.Customers
 IReadOnlyList<CustomerCountByCity> counts = await queryService.GetGroupedListAsync(
     customer => customer.City,
     group => new CustomerCountByCity(group.Key, group.Count()),
-    customer => customer.IsActive,
+    customer => !customer.IsDisabled,
     result => result.Count >= 10,
     query => query.OrderByDescending(result => result.Count),
     ct

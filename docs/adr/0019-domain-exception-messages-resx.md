@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0019：領域例外訊息以 .resx 強型別資源承載

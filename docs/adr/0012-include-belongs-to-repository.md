@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0012：Include 只屬 Repository，不入規約與 QueryService

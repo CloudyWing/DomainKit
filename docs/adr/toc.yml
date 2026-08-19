@@ -1,4 +1,4 @@
-- name: ADR-0001 真 Code First 富血聚合
+- name: ADR-0001 真 Code First 充血聚合
   href: 0001-code-first-rich-aggregate.md
 - name: ADR-0002 擁抱 DbContext，不做 ORM 可攜抽象
   href: 0002-embrace-dbcontext-no-orm-abstraction.md

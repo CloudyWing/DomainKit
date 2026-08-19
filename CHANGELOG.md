@@ -5,7 +5,7 @@
 ### New Features
 
 - 新增 `CloudyWing.DomainKit` 核心套件，零 EF Core 相依：
-  - `Entity<TKey>` 與 `AggregateRoot<TKey>` 提供富血聚合基底，以型別加識別碼判定相等；`EntityBase` 與 `AggregateRootBase` 於建構時以 `Guid.CreateVersion7()` 產生識別碼。
+  - `Entity<TKey>` 與 `AggregateRoot<TKey>` 提供充血聚合基底，以型別加識別碼判定相等；`EntityBase` 與 `AggregateRootBase` 於建構時以 `Guid.CreateVersion7()` 產生識別碼。
   - 審計標記介面 `IHasCreatedTime`、`IHasCreator`、`IHasUpdatedTime`、`IHasUpdater`、`IHasDeletedTime` 與 `IHasDeleter`。
   - 狀態標記介面 `IHasDisabledState` 與 `IHasDisplayOrder`，統一停用狀態與顯示順序的屬性名稱。
   - `IHasExternalKey<TKey>` 表達與資料庫主鍵解耦的對外辨識鍵。
@@ -24,6 +24,6 @@
   - `HasAggregateIncludes` 以 model annotation 集中宣告聚合邊界的導覽載入路徑。
   - `ApplyEnumerationConventions` 對映 `CloudyWing.Enumeration` 型別，`EnumerationLocalizer<TEnum>` 支援原生 `enum` 與 Enumeration 型別的顯示名稱在地化，並處理 `[Flags]` 複合值。
   - Transactional outbox：`ConfigureOutbox` 建立模型，`OutboxDispatcherHostedService` 提供租約認領、指數退避重試、dead letter 與 handler 判重。
-  - `IEventBroadcast` 提供進程內廣播通道，可由宿主替換為跨節點實作。
+  - `IEventBroadcast` 提供行程內廣播通道，可由宿主替換為跨節點實作。
   - `AddDomainKit<TDbContext>` 一次註冊上述服務並掃描指定組件中的事件 handler。
   - `ApplyDomainKitConventions` 提供 `DateTimeOffset` 儲存型別的宿主接點，內建 `UtcDateTimeOffsetConverter` 與 `UtcDateTimeConverter`。

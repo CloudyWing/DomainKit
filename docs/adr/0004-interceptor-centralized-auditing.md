@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0004：以 SaveChangesInterceptor 集中處理審計與事件派發

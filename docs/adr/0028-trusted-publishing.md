@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0028：發佈憑證採 Trusted Publishing，不建立 API key

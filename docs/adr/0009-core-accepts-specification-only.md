@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0009：QueryService 核心只收規約，離散參數走擴充方法

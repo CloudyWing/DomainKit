@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0027：語言版本採 SDK 穩定預設，不使用 preview

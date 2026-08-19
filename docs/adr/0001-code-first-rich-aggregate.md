@@ -1,8 +1,9 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
-# ADR-0001：實體即 EF 對映型別的真 Code First 富血聚合
+# ADR-0001：實體即 EF 對映型別的真 Code First 充血聚合
 
 ## Context
 
@@ -14,4 +15,4 @@ status: accepted
 
 ## Consequences
 
-持久化層以 typed 標記介面判定審計欄位，型別安全且免反射；聚合直接是 EF 追蹤對象，記憶體內變更即被 ChangeTracker 捕捉，符合單次提交模型。代價是領域型別與 EF 對映無法分離，更換 ORM 需重寫實體。
+持久化層以 typed 標記介面判定審計欄位，型別安全且免反射；聚合直接是 EF 追蹤標的，記憶體內變更即被 ChangeTracker 捕捉，符合單次提交模型。代價是領域型別與 EF 對映無法分離，更換 ORM 需重寫實體。

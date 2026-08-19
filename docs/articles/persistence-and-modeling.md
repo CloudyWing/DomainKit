@@ -129,5 +129,7 @@ protected override void ConfigureConventions(ModelConfigurationBuilder configura
 ## 延伸閱讀
 
 - [入門指南](getting-started.md)
+- [聚合與審計](aggregates-and-auditing.md)
 - [查詢與規約](querying-and-specifications.md)
 - [多租戶與並行控制](tenancy-and-concurrency.md)
+- [錯誤契約與本地化](errors-and-localization.md)

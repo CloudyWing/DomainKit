@@ -1,5 +1,6 @@
 ---
 status: accepted
+date: 2026-08-01
 ---
 
 # ADR-0003：自製輕量雙軌事件 Dispatcher，不採 MediatR

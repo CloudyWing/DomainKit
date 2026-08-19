@@ -148,7 +148,7 @@ public sealed class CustomerRenamedIntegrationEventHandler
 
 ## 執行實例內廣播
 
-`IEventBroadcast` 預設由 `InProcessEventBroadcast` 實作。它只通知目前進程內的訂閱者，不會寫入 Outbox，也不會跨節點傳遞。
+`IEventBroadcast` 預設由 `InProcessEventBroadcast` 實作。它只通知目前行程內的訂閱者，不會寫入 Outbox，也不會跨節點傳遞。
 
 聚合的 Integration event 在提交成功後由審計與事件攔截器自動發布至此通道，宿主不需另行呼叫 `PublishAsync`。同一個 Integration event 因此會流向兩處，Outbox handler 承擔可靠的業務處理，此通道的訂閱者承擔快取失效這類可重複執行的通知。在訂閱者內重複實作 Outbox handler 的業務副作用，會使該副作用執行兩次。
 

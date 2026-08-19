@@ -76,7 +76,7 @@ services.AddDomainKit<AppDbContext>(
 );
 ```
 
-`AddDomainKit` 註冊 `IUnitOfWork`、審計與事件攔截器、RowVersion 攔截器、事件 dispatcher，以及進程內廣播服務。
+`AddDomainKit` 註冊 `IUnitOfWork`、審計與事件攔截器、RowVersion 攔截器、事件 dispatcher，以及行程內廣播服務。
 
 啟用 Outbox 時，DbContext model 必須呼叫 `ConfigureOutbox`，DI 必須提供 `IDbContextFactory<AppDbContext>`，並在選項開啟背景 dispatcher。
 
