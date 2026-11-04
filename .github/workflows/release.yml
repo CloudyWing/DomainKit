@@ -1,9 +1,13 @@
 name: Release
 
+# push vX.Y.Z tag 時：驗證 → 建立 GitHub Release → 以 Trusted Publishing 發佈 NuGet。
+# 手動觸發（workflow_dispatch）時只執行 probe：取得 nuget.org 臨時憑證但不 push，
+# 用來在不發版的情況下驗證 Trusted Publishing policy 綁定。
+
 on:
   push:
     tags:
-      - "v*.*.*"
+      - 'v*.*.*'
   workflow_dispatch:
 
 permissions:
@@ -12,70 +16,46 @@ permissions:
 jobs:
   verify:
     if: github.event_name == 'push'
-    runs-on: windows-latest
-
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_NOLOGO: true
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Restore
-        run: dotnet restore DomainKit.slnx
-
-      - name: Build
-        run: dotnet build DomainKit.slnx --configuration Release --no-restore -warnaserror
-
-      - name: Test
-        run: dotnet test DomainKit.slnx --configuration Release --no-build
+    uses: CloudyWing/devops-templates/.github/workflows/reusable-dotnet-ci.yml@v1
+    with:
+      solution: DomainKit.slnx
+      dotnet-version: 10.0.x
+      warnaserror: true
 
   create-release:
     needs: verify
     permissions:
       contents: write
-    uses: CloudyWing/devops-templates/.github/workflows/reusable-create-release.yml@main
-    with:
-      changelog-path: "CHANGELOG.md"
+    uses: CloudyWing/devops-templates/.github/workflows/reusable-create-release.yml@v1
 
-  # publish-nuget 與 probe 以 composite action 執行發佈步驟，不使用 reusable
-  # workflow。nuget.org 的 Trusted Publishing 驗證 OIDC token 的
-  # job_workflow_ref claim，要求前綴為 CloudyWing/DomainKit/.github/workflows/。
-  # reusable workflow 會使該 claim 指向 devops-templates 而驗證失敗。
+  # 發佈步驟以 composite action 執行，而非 reusable workflow：nuget.org 的
+  # Trusted Publishing 驗證 OIDC token 的 job_workflow_ref，必須指向本 repo 的 workflow。
   publish-nuget:
     needs: create-release
     runs-on: windows-latest
     permissions:
       id-token: write
       contents: read
-
     env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_NOLOGO: true
-
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+      DOTNET_NOLOGO: 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
+          # MinVer 依 git tag 計算版號，需要完整歷史
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
       - name: Pack and publish
-        uses: CloudyWing/devops-templates/.github/actions/nuget-publish@main
+        uses: CloudyWing/devops-templates/.github/actions/nuget-publish@v1
         with:
           nuget-user: CloudyWing
+          expected-version: ${{ github.ref_name }}
 
   probe:
     if: github.event_name == 'workflow_dispatch'
@@ -83,24 +63,22 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
     env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: true
-      DOTNET_NOLOGO: true
-
+      DOTNET_CLI_TELEMETRY_OPTOUT: 'true'
+      DOTNET_NOLOGO: 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
 
       - name: Verify Trusted Publishing binding
-        uses: CloudyWing/devops-templates/.github/actions/nuget-publish@main
+        uses: CloudyWing/devops-templates/.github/actions/nuget-publish@v1
         with:
           nuget-user: CloudyWing
           dry-run: 'true'
