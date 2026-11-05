@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using CloudyWing.DomainKit.Entities;
 using CloudyWing.DomainKit.EntityFrameworkCore.Modeling;
@@ -17,6 +18,8 @@ namespace CloudyWing.DomainKit.EntityFrameworkCore.Persistence;
 public class Repository<TDbContext, TEntity, TKey>
     where TDbContext : DbContext
     where TEntity : class {
+    // Include 樹於模型建置後不再變動，以實體型別中繼資料為鍵快取展開結果；模型釋放時快取一併回收。
+    private static readonly ConditionalWeakTable<IEntityType, IReadOnlyList<string>> AggregateIncludePathsCache = new();
     private readonly TDbContext dbContext;
     private readonly IUnitOfWork unitOfWork;
 
@@ -204,22 +207,27 @@ public class Repository<TDbContext, TEntity, TKey>
             return query;
         }
 
-        string? payload = entityType.FindAnnotation(EntityTypeBuilderExtensions.AggregateIncludesAnnotationName)
-            ?.Value as string;
-        if (string.IsNullOrWhiteSpace(payload)) {
-            return query;
-        }
-
-        List<IncludeTreeNode>? nodes = JsonSerializer.Deserialize<List<IncludeTreeNode>>(payload);
-        if (nodes is null || nodes.Count == 0) {
-            return query;
-        }
-
-        foreach (string includePath in ExpandIncludePaths(nodes)) {
+        IReadOnlyList<string> includePaths = AggregateIncludePathsCache.GetValue(entityType, CreateIncludePaths);
+        foreach (string includePath in includePaths) {
             query = query.Include(includePath);
         }
 
         return query;
+    }
+
+    private static IReadOnlyList<string> CreateIncludePaths(IEntityType entityType) {
+        string? payload = entityType.FindAnnotation(EntityTypeBuilderExtensions.AggregateIncludesAnnotationName)
+            ?.Value as string;
+        if (string.IsNullOrWhiteSpace(payload)) {
+            return [];
+        }
+
+        List<IncludeTreeNode>? nodes = JsonSerializer.Deserialize<List<IncludeTreeNode>>(payload);
+        if (nodes is null || nodes.Count == 0) {
+            return [];
+        }
+
+        return ExpandIncludePaths(nodes);
     }
 
     private static IReadOnlyList<string> ExpandIncludePaths(IReadOnlyList<IncludeTreeNode> nodes) {
