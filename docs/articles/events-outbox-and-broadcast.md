@@ -102,10 +102,12 @@ modelBuilder.ApplyTenantConventions(
 ## Outbox 處理流程
 
 1. `SavingChanges` 將聚合的 Integration event 序列化成 `OutboxMessage`，與業務資料同一次提交。
-2. 背景服務依 `Id` 排序取得可處理訊息，再以條件式更新取得租約。
+2. 背景服務依 `Id` 排序取得可處理訊息，再以條件式更新取得租約。停機或當機中斷而停留在 `Processing` 的訊息，租約到期後也會重新認領。
 3. 派發前依訊息保存的 `TenantId` 還原租戶脈絡。
 4. 每個 handler 成功處理後新增 `ProcessedEvent`，以 handler 型別與事件識別碼判重。
 5. 全部 handler 與資料變更儲存成功後，訊息標成 `Processed`。
+
+`LockDuration` 應大於單一訊息全部 handler 的處理時間。處理時間超過租約時，其他執行個體可能重新認領同一筆訊息，由 `ProcessedEvent` 判重避免同一個 handler 重複完成。
 
 Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler 應維持冪等；若 handler 在資料庫提交前已呼叫外部系統，後續儲存失敗仍可能造成外部副作用重複。
 
@@ -122,6 +124,25 @@ Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler �
 | `RetentionPeriod` | 7 天 | 已處理訊息與判重資料的保留期間 |
 
 事件型別以 assembly-qualified name 儲存。仍有待處理訊息時重新命名事件型別、移動組件或移除相容的建構資料，可能使反序列化失敗並進入重試或 Dead Letter 流程。部署前應先完成事件版本相容策略。
+
+已處理訊息與判重資料超過 `RetentionPeriod` 後，dispatcher 每輪以資料庫端批次刪除清理，每個資料表每輪最多刪除 `BatchSize` 筆。
+
+## Outbox 維運管理
+
+`AddDomainKit` 會註冊 `IOutboxAdministrator`，提供 Dead Letter 重新排入與狀態統計。操作會略過全域查詢篩選並跨租戶存取全部訊息，只應開放給受控的維運流程。
+
+```csharp
+OutboxStatistics statistics = await outboxAdministrator.GetStatisticsAsync(ct).ConfigureAwait(false);
+
+bool requeued = await outboxAdministrator.RequeueDeadLetteredAsync(messageId, ct).ConfigureAwait(false);
+```
+
+| 方法 | 行為 |
+| --- | --- |
+| `GetStatisticsAsync` | 回傳 `Pending`、`Processing`、`Processed`、`DeadLettered` 各狀態筆數與最早一筆待派發訊息的 `OccurredOn` |
+| `RequeueDeadLetteredAsync` | 只處理 `DeadLettered` 訊息，將狀態改回 `Pending`、重試次數歸零、清除租約並設為立即可派發；訊息不存在或不是 `DeadLettered` 時回傳 `false` |
+
+重新排入不會清除 `LastError`，保留最近一次失敗摘要供追查。重新排入前應先修正造成失敗的原因，否則訊息會再次依重試策略進入 Dead Letter。
 
 ## Integration event handler
 

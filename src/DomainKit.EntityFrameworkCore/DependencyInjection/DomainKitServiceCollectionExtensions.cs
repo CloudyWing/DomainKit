@@ -52,6 +52,7 @@ public static class DomainKitServiceCollectionExtensions {
         );
         services.TryAddScoped<IUnitOfWork, UnitOfWork<TDbContext>>();
         services.TryAddScoped<RowVersionStampInterceptor>();
+        services.TryAddScoped<IOutboxAdministrator, OutboxAdministrator<TDbContext>>();
         services.TryAddSingleton<IEventBroadcast>(
             serviceProvider => new InProcessEventBroadcast(
                 serviceProvider.GetService<ILogger<InProcessEventBroadcast>>()
