@@ -127,6 +127,22 @@ Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler �
 
 已處理訊息與判重資料超過 `RetentionPeriod` 後，dispatcher 每輪以資料庫端批次刪除清理，每個資料表每輪最多刪除 `BatchSize` 筆。
 
+### 以 Options pipeline 設定
+
+上表選項預設由 `DomainKitOptions.Outbox` 直接設定，不經過 Options pipeline。需要從 configuration 綁定，或希望在 Host 啟動時就驗證選項值時，改用接受 `Action<OptionsBuilder<OutboxOptions>>` 的 `AddDomainKit` 多載。
+
+```csharp
+services.AddDomainKit<AppDbContext>(
+    options => options.EnableOutboxDispatcher = true,
+    outbox => outbox
+        .BindConfiguration("DomainKit:Outbox")
+        .ValidateOnStart(),
+    typeof(CustomerRenamedIntegrationEventHandler).Assembly
+);
+```
+
+`DomainKitOptions.Outbox` 的值會先作為預設值套用，之後才執行建置器加入的設定。此多載會註冊 `IValidateOptions<OutboxOptions>` 檢查各選項範圍，例如 `BatchSize` 必須大於 0、`MaxRetryDelay` 不可小於 `BaseRetryDelay`。驗證失敗時拋出 `OptionsValidationException`，呼叫 `ValidateOnStart` 後會在 Host 啟動時就失敗。`BindConfiguration` 來自 `Microsoft.Extensions.Options.ConfigurationExtensions` 套件，由宿主自行參考。
+
 ## Outbox 維運管理
 
 `AddDomainKit` 會註冊 `IOutboxAdministrator`，提供 Dead Letter 重新排入與狀態統計。操作會略過全域查詢篩選並跨租戶存取全部訊息，只應開放給受控的維運流程。

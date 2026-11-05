@@ -291,13 +291,7 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
     }
 
     private static void ValidateOptions(OutboxOptions options) {
-        if (options.BatchSize <= 0
-            || options.PollingInterval <= TimeSpan.Zero
-            || options.LockDuration <= TimeSpan.Zero
-            || options.BaseRetryDelay <= TimeSpan.Zero
-            || options.MaxRetryDelay < options.BaseRetryDelay
-            || options.MaxRetryCount < 0
-            || options.RetentionPeriod <= TimeSpan.Zero) {
+        if (OutboxOptionsValidator.GetFailures(options).Count > 0) {
             throw new InvalidOperationException("Outbox 選項包含無效值。");
         }
     }

@@ -25,3 +25,4 @@ CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.Processe
 CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessedCount.init -> void
 CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.get -> int
 CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.init -> void
+static CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.AddDomainKit<TDbContext>(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions!>? configure, System.Action<Microsoft.Extensions.Options.OptionsBuilder<CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions!>!>! configureOutboxOptions, params System.Reflection.Assembly![]! handlerAssemblies) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

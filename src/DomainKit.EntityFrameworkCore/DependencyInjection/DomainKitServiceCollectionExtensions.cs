@@ -29,13 +29,60 @@ public static class DomainKitServiceCollectionExtensions {
     /// <param name="configure">選項設定函式。</param>
     /// <param name="handlerAssemblies">要掃描事件處理器的組件集合。</param>
     /// <returns>服務集合。</returns>
+    /// <remarks>
+    /// <see cref="OutboxOptions" /> 以 <see cref="DomainKitOptions.Outbox" /> 的值直接註冊為 <see cref="IOptions{TOptions}" />，
+    /// 不經過 Options pipeline。需要 configuration 綁定或 <c>ValidateOnStart</c> 時，改用接受
+    /// <see cref="OptionsBuilder{TOptions}" /> 設定函式的多載。
+    /// </remarks>
+#pragma warning disable RS0027 // 新多載的 configureOutboxOptions 為必填委派，不會與既有呼叫產生多載解析歧義；保留既有簽章以維持相容。
     public static IServiceCollection AddDomainKit<TDbContext>(
         this IServiceCollection services,
         Action<DomainKitOptions>? configure = null,
         params Assembly[] handlerAssemblies
     ) where TDbContext : DbContext {
+#pragma warning restore RS0027
         ArgumentNullException.ThrowIfNull(services);
 
+        DomainKitOptions options = CreateOptions(configure, handlerAssemblies);
+        services.TryAddSingleton<IOptions<OutboxOptions>>(Options.Create(options.Outbox));
+
+        return AddDomainKitCore<TDbContext>(services, options);
+    }
+
+    /// <summary>
+    /// 註冊 DomainKit EF Core 基礎服務，並透過 Options pipeline 設定與驗證 <see cref="OutboxOptions" />。
+    /// </summary>
+    /// <typeparam name="TDbContext">資料庫內容型別。</typeparam>
+    /// <param name="services">服務集合。</param>
+    /// <param name="configure">選項設定函式。</param>
+    /// <param name="configureOutboxOptions">
+    /// <see cref="OutboxOptions" /> 的 Options 建置器設定函式，可呼叫 <c>Bind</c>、<c>BindConfiguration</c>、<c>Validate</c> 或 <c>ValidateOnStart</c>。
+    /// </param>
+    /// <param name="handlerAssemblies">要掃描事件處理器的組件集合。</param>
+    /// <returns>服務集合。</returns>
+    /// <remarks>
+    /// <see cref="DomainKitOptions.Outbox" /> 的值會先作為預設值套用，之後才執行 <paramref name="configureOutboxOptions" /> 加入的設定。
+    /// DomainKit 會註冊 <see cref="IValidateOptions{TOptions}" /> 驗證各選項的有效範圍；取得選項值時驗證失敗會拋出 <see cref="OptionsValidationException" />。
+    /// </remarks>
+    public static IServiceCollection AddDomainKit<TDbContext>(
+        this IServiceCollection services,
+        Action<DomainKitOptions>? configure,
+        Action<OptionsBuilder<OutboxOptions>> configureOutboxOptions,
+        params Assembly[] handlerAssemblies
+    ) where TDbContext : DbContext {
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configureOutboxOptions);
+
+        DomainKitOptions options = CreateOptions(configure, handlerAssemblies);
+        OptionsBuilder<OutboxOptions> outboxOptionsBuilder = services.AddOptions<OutboxOptions>()
+            .Configure(target => CopyOutboxOptions(options.Outbox, target));
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IValidateOptions<OutboxOptions>, OutboxOptionsValidator>());
+        configureOutboxOptions(outboxOptionsBuilder);
+
+        return AddDomainKitCore<TDbContext>(services, options);
+    }
+
+    private static DomainKitOptions CreateOptions(Action<DomainKitOptions>? configure, Assembly[] handlerAssemblies) {
         DomainKitOptions options = new();
         configure?.Invoke(options);
 
@@ -43,6 +90,23 @@ public static class DomainKitServiceCollectionExtensions {
             options.HandlerAssemblies.Add(handlerAssembly);
         }
 
+        return options;
+    }
+
+    private static void CopyOutboxOptions(OutboxOptions source, OutboxOptions target) {
+        target.PollingInterval = source.PollingInterval;
+        target.BatchSize = source.BatchSize;
+        target.LockDuration = source.LockDuration;
+        target.BaseRetryDelay = source.BaseRetryDelay;
+        target.MaxRetryDelay = source.MaxRetryDelay;
+        target.MaxRetryCount = source.MaxRetryCount;
+        target.RetentionPeriod = source.RetentionPeriod;
+    }
+
+    private static IServiceCollection AddDomainKitCore<TDbContext>(
+        IServiceCollection services,
+        DomainKitOptions options
+    ) where TDbContext : DbContext {
         services.TryAddScoped<IAuditUser, NullAuditUser>();
         services.TryAddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.TryAddScoped<IIntegrationEventDispatcher, IntegrationEventDispatcher>();
@@ -60,7 +124,6 @@ public static class DomainKitServiceCollectionExtensions {
             )
         );
         services.TryAddSingleton(TimeProvider.System);
-        services.TryAddSingleton<IOptions<OutboxOptions>>(Options.Create(options.Outbox));
 
         RegisterHandlers(services, options.HandlerAssemblies, typeof(IDomainEventHandler<>));
         RegisterHandlers(services, options.HandlerAssemblies, typeof(IIntegrationEventHandler<>));
