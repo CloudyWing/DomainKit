@@ -102,17 +102,26 @@ public static class DomainKitServiceCollectionExtensions {
         Type openHandlerType
     ) {
         foreach (Assembly assembly in assemblies.Distinct()) {
-            IEnumerable<TypeInfo> implementationTypes = assembly.DefinedTypes
+            IEnumerable<Type> implementationTypes = GetLoadableTypes(assembly)
                 .Where(type => type is { IsAbstract: false, IsInterface: false });
 
-            foreach (TypeInfo implementationType in implementationTypes) {
-                IEnumerable<Type> serviceTypes = implementationType.ImplementedInterfaces
+            foreach (Type implementationType in implementationTypes) {
+                IEnumerable<Type> serviceTypes = implementationType.GetInterfaces()
                     .Where(type => type.IsGenericType && type.GetGenericTypeDefinition() == openHandlerType);
 
                 foreach (Type serviceType in serviceTypes) {
-                    services.TryAddEnumerable(ServiceDescriptor.Scoped(serviceType, implementationType.AsType()));
+                    services.TryAddEnumerable(ServiceDescriptor.Scoped(serviceType, implementationType));
                 }
             }
+        }
+    }
+
+    private static IEnumerable<Type> GetLoadableTypes(Assembly assembly) {
+        try {
+            return assembly.GetTypes();
+        } catch (ReflectionTypeLoadException exception) {
+            // 組件內部分型別的相依組件無法載入時，略過這些型別，仍註冊其餘可載入的處理器。
+            return exception.Types.OfType<Type>();
         }
     }
 }
