@@ -89,7 +89,8 @@ public sealed class UnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCo
 
             return result;
         } catch {
-            await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+            // 取消時仍須完成 rollback，並保留原始例外，不讓已取消的權杖改拋 OperationCanceledException。
+            await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
             throw;
         }
     }
