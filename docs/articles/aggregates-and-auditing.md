@@ -28,6 +28,8 @@ DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase`
 | `IHasUpdater` | `UpdaterId` |
 | `IHasDeletedTime` / `IHasDeleter` | 軟刪除時間與操作者 |
 
+同步 `SaveChanges()` 與非同步 `SaveChangesAsync()` 經過相同的審計填值、RowVersion 更新、領域事件派發與 Outbox 寫入。同步路徑會同步等待領域事件處理器與廣播通道完成，具有 `SynchronizationContext` 的宿主應使用非同步版本，避免同步等待造成死結。
+
 依需要的審計層級，在 `OnModelCreating` 套用對應的設定擴充（位於 `CloudyWing.DomainKit.EntityFrameworkCore.Modeling`）：
 
 | 設定擴充 | 套用範圍 |

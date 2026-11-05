@@ -11,6 +11,15 @@ namespace CloudyWing.DomainKit.EntityFrameworkCore.Interceptors;
 /// </summary>
 public sealed class RowVersionStampInterceptor : SaveChangesInterceptor {
     /// <inheritdoc />
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result) {
+        if (eventData.Context is not null) {
+            StampRowVersions(eventData.Context);
+        }
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,

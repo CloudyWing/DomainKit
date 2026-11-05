@@ -1,1 +1,5 @@
 #nullable enable
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SaveChangesFailed(Microsoft.EntityFrameworkCore.Diagnostics.DbContextErrorEventData! eventData) -> void
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SavedChanges(Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesCompletedEventData! eventData, int result) -> int
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData! eventData, Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int> result) -> Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData! eventData, Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int> result) -> Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>
