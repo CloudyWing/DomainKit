@@ -479,7 +479,9 @@ public abstract class QueryService<TDbContext, TEntity, TKey> : QueryService<TDb
             parameter,
             Expression.Constant(propertyName)
         );
-        BinaryExpression equals = Expression.Equal(property, Expression.Constant(key, typeof(TKey)));
+        // 以 closure 捕捉鍵值，讓 EF Core 產生 SQL 參數並重用查詢計畫，避免每個鍵值都產生不同的 SQL 常值。
+        Expression<Func<TKey>> keyValue = () => key;
+        BinaryExpression equals = Expression.Equal(property, keyValue.Body);
 
         return Expression.Lambda<Func<TEntity, bool>>(equals, parameter);
     }

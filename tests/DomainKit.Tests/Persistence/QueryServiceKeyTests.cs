@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using CloudyWing.DomainKit.EntityFrameworkCore.Persistence;
 using CloudyWing.DomainKit.Tests.TestDoubles;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -88,6 +90,53 @@ public sealed class QueryServiceKeyTests {
         bool actual = await sut.AnyAsync(entity => entity.Name == "Predicate-Match").ConfigureAwait(false);
 
         Assert.That(actual, Is.True);
+    }
+
+    [Test]
+    public async Task CreateKeyPredicate_KeyValue_TranslatesToSqlParameterAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        PredicateExposingQueryService sut = new(database.DbContext);
+        Guid key = Guid.CreateVersion7();
+
+        string sql = database.DbContext.HardDeleteEntities
+            .Where(sut.ExposeKeyPredicate(key))
+            .ToQueryString();
+
+        Assert.That(sql, Does.Contain("= @key"));
+    }
+
+    [Test]
+    public async Task CreateKeyPredicate_RepositoryKeyValue_TranslatesToSqlParameterAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        IUnitOfWork unitOfWork = database.Services.GetRequiredService<IUnitOfWork>();
+        PredicateExposingRepository sut = new(database.DbContext, unitOfWork);
+        Guid key = Guid.CreateVersion7();
+
+        string sql = database.DbContext.HardDeleteEntities
+            .Where(sut.ExposeKeyPredicate(key))
+            .ToQueryString();
+
+        Assert.That(sql, Does.Contain("= @key"));
+    }
+
+    private sealed class PredicateExposingQueryService : QueryService<TestDbContext, HardDeleteEntity, Guid> {
+        public PredicateExposingQueryService(TestDbContext dbContext)
+            : base(dbContext) {
+        }
+
+        public Expression<Func<HardDeleteEntity, bool>> ExposeKeyPredicate(Guid key) {
+            return CreateKeyPredicate(key);
+        }
+    }
+
+    private sealed class PredicateExposingRepository : Repository<TestDbContext, HardDeleteEntity, Guid> {
+        public PredicateExposingRepository(TestDbContext dbContext, IUnitOfWork unitOfWork)
+            : base(dbContext, unitOfWork) {
+        }
+
+        public Expression<Func<HardDeleteEntity, bool>> ExposeKeyPredicate(Guid key) {
+            return CreateKeyPredicate(key);
+        }
     }
 
     private sealed class AuditedAggregateDomainKeyQueryService : QueryService<TestDbContext, AuditedAggregate, Guid> {
