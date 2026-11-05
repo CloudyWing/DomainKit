@@ -177,6 +177,10 @@ public interface IQueryService<TEntity> where TEntity : class {
     /// <param name="orderBy">排序函式。</param>
     /// <param name="cancellationToken">取消權杖。</param>
     /// <returns>分頁投影結果。</returns>
+    /// <remarks>
+    /// <paramref name="orderBy" /> 為 <see langword="null" /> 時不套用排序，資料庫不保證各頁的資料順序，可能出現跨頁重複或遺漏。
+    /// 分頁查詢應傳入以唯一且穩定的鍵排序的 <paramref name="orderBy" />。
+    /// </remarks>
     Task<PagedList<TOutput>> GetPagedListAsync<TOutput>(
         int pageNumber,
         int pageSize,

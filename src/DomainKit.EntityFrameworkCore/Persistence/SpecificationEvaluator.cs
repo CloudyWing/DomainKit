@@ -1,3 +1,4 @@
+using CloudyWing.DomainKit.EntityFrameworkCore.Modeling;
 using CloudyWing.DomainKit.Specifications;
 
 namespace CloudyWing.DomainKit.EntityFrameworkCore.Persistence;
@@ -22,7 +23,7 @@ internal static class SpecificationEvaluator<TEntity> where TEntity : class {
         }
 
         return orderedQuery
-            .Skip((specification.PageNumber - 1) * specification.PageSize)
+            .Skip(PagingUtils.GetSkipCount(specification.PageNumber, specification.PageSize))
             .Take(specification.PageSize);
     }
 }

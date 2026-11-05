@@ -108,7 +108,9 @@ ISpecification<Customer> specification = new Specification<Customer>(customer =>
 | `TotalPages` | 依總筆數與每頁筆數計算的總頁數，無資料時為 `0` |
 | `HasPreviousPage` / `HasNextPage` | 供分頁控制項判斷上下頁 |
 
-頁碼與每頁筆數必須為正整數，傳入 `0` 或負數會拋出 `ArgumentOutOfRangeException`。頁碼從 `1` 起算。
+頁碼與每頁筆數必須為正整數，傳入 `0` 或負數會拋出 `ArgumentOutOfRangeException`。頁碼從 `1` 起算。頁碼換算的略過筆數超過 `int.MaxValue` 時以 `int.MaxValue` 計算，回傳空白頁。
+
+`GetPagedListAsync` 的 `orderBy` 為 `null` 時不套用排序，資料庫不保證各頁的資料順序，翻頁時可能重複或遺漏資料。分頁查詢應傳入以唯一且穩定的鍵排序的 `orderBy`，排序欄位不唯一時再以 `ThenBy` 補上主鍵。
 
 查詢無法由 `IQueryService<TEntity>` 表達而需自行組 `IQueryable` 時，用 `ToPagedListAsync` 取得同樣形狀的結果，回傳型別與 QueryService 一致，上層不必分辨資料來自哪一種查詢方式。
 
