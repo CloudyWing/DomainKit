@@ -219,6 +219,55 @@ public sealed class OutboxInfrastructureTests {
         Assert.That(recorder.IntegrationEvents, Has.Count.EqualTo(1));
     }
 
+    [Test]
+    public async Task DispatchBatchAsync_ProcessingMessageWithExpiredLease_ReclaimsAndMarksProcessedAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        await AddIntegrationEventAsync(database);
+        await SetProcessingLeaseAsync(database, DateTimeOffset.UtcNow.AddMinutes(-5));
+        EventRecorder recorder = database.Services.GetRequiredService<EventRecorder>();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        int dispatched = await dispatcher.DispatchBatchAsync(default);
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(dispatched, Is.EqualTo(1));
+            Assert.That(recorder.IntegrationEvents, Has.Count.EqualTo(1));
+            Assert.That(message.Status, Is.EqualTo(OutboxMessageStatus.Processed));
+            Assert.That(message.LockedUntil, Is.Null);
+        }
+    }
+
+    [Test]
+    public async Task DispatchBatchAsync_ProcessingMessageWithActiveLease_DoesNotClaimAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        await AddIntegrationEventAsync(database);
+        await SetProcessingLeaseAsync(database, DateTimeOffset.UtcNow.AddMinutes(5));
+        EventRecorder recorder = database.Services.GetRequiredService<EventRecorder>();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        int dispatched = await dispatcher.DispatchBatchAsync(default);
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(dispatched, Is.Zero);
+            Assert.That(recorder.IntegrationEvents, Is.Empty);
+            Assert.That(message.Status, Is.EqualTo(OutboxMessageStatus.Processing));
+        }
+    }
+
+    private static async Task SetProcessingLeaseAsync(TestDatabase database, DateTimeOffset lockedUntil) {
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+        message.Status = OutboxMessageStatus.Processing;
+        message.LockedBy = "crashed-instance";
+        message.LockedUntil = lockedUntil;
+        await database.DbContext.SaveChangesAsync();
+        database.DbContext.ChangeTracker.Clear();
+    }
+
     private static async Task AddIntegrationEventAsync(TestDatabase database) {
         AuditedAggregate aggregate = new() {
             Name = "Outbox",

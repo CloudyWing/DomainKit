@@ -95,10 +95,11 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             )
             .ConfigureAwait(false);
         DomainKitDiagnostics.SetPendingCount(pendingCount);
+        // 停機或當機時已認領的訊息會停留在 Processing，租約到期後視同可重新認領。
         List<Guid> candidateIds = await claimContext.Set<OutboxMessage>()
             .IgnoreQueryFilters()
-            .Where(message => message.Status == OutboxMessageStatus.Pending
-                && message.NextRetryOn <= now
+            .Where(message => ((message.Status == OutboxMessageStatus.Pending && message.NextRetryOn <= now)
+                    || message.Status == OutboxMessageStatus.Processing)
                 && (!message.LockedUntil.HasValue || message.LockedUntil.Value < now))
             .OrderBy(message => message.Id)
             .Take(options.BatchSize)
@@ -111,7 +112,8 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             int affected = await claimContext.Set<OutboxMessage>()
                 .IgnoreQueryFilters()
                 .Where(message => message.Id == id
-                    && message.Status == OutboxMessageStatus.Pending
+                    && (message.Status == OutboxMessageStatus.Pending
+                        || message.Status == OutboxMessageStatus.Processing)
                     && (!message.LockedUntil.HasValue || message.LockedUntil.Value < now))
                 .ExecuteUpdateAsync(
                     setters => setters
@@ -224,7 +226,8 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             .IgnoreQueryFilters()
             .SingleOrDefaultAsync(item => item.Id == id, cancellationToken)
             .ConfigureAwait(false);
-        if (message is null) {
+        // 租約逾期後訊息可能已由其他執行個體完成，失敗結果不得把已完成的訊息退回待派發。
+        if (message is null || message.Status == OutboxMessageStatus.Processed) {
             return;
         }
 
