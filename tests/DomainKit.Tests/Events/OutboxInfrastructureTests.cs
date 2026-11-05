@@ -328,16 +328,4 @@ public sealed class OutboxInfrastructureTests {
             .OfType<OutboxDispatcherHostedService<TestDbContext>>()
             .Single();
     }
-
-    private sealed class FixedTimeProvider : TimeProvider {
-        private readonly DateTimeOffset utcNow;
-
-        public FixedTimeProvider(DateTimeOffset utcNow) {
-            this.utcNow = utcNow;
-        }
-
-        public override DateTimeOffset GetUtcNow() {
-            return utcNow;
-        }
-    }
 }

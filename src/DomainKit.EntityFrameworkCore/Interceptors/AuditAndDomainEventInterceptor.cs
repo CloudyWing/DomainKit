@@ -158,7 +158,7 @@ public sealed class AuditAndDomainEventInterceptor : SaveChangesInterceptor {
     }
 
     private void ApplyAuditValues(DbContext dbContext) {
-        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateTimeOffset now = timeProvider.GetUtcNow();
         Guid? actorId = AuditScope.ActorId ?? auditUser.UserId;
 
         foreach (EntityEntry entry in dbContext.ChangeTracker.Entries()) {

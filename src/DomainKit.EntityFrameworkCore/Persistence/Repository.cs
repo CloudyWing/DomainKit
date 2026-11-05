@@ -5,6 +5,7 @@ using CloudyWing.DomainKit.Entities;
 using CloudyWing.DomainKit.EntityFrameworkCore.Modeling;
 using CloudyWing.DomainKit.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CloudyWing.DomainKit.EntityFrameworkCore.Persistence;
@@ -22,6 +23,7 @@ public class Repository<TDbContext, TEntity, TKey>
     private static readonly ConditionalWeakTable<IEntityType, IReadOnlyList<string>> AggregateIncludePathsCache = new();
     private readonly TDbContext dbContext;
     private readonly IUnitOfWork unitOfWork;
+    private readonly TimeProvider? timeProvider;
 
     /// <summary>
     /// 初始化 <see cref="Repository{TDbContext,TEntity,TKey}" /> 類別的新執行個體。
@@ -34,6 +36,19 @@ public class Repository<TDbContext, TEntity, TKey>
 
         this.dbContext = dbContext;
         this.unitOfWork = unitOfWork;
+    }
+
+    /// <summary>
+    /// 以指定時間提供者初始化 <see cref="Repository{TDbContext,TEntity,TKey}" /> 類別的新執行個體。
+    /// </summary>
+    /// <param name="dbContext">資料庫內容。</param>
+    /// <param name="unitOfWork">工作單元。</param>
+    /// <param name="timeProvider">寫入軟刪除時間使用的時間提供者。</param>
+    public Repository(TDbContext dbContext, IUnitOfWork unitOfWork, TimeProvider timeProvider)
+        : this(dbContext, unitOfWork) {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+
+        this.timeProvider = timeProvider;
     }
 
     /// <summary>
@@ -129,7 +144,7 @@ public class Repository<TDbContext, TEntity, TKey>
     ) {
         TEntity entity = await GetAsync(key, cancellationToken).ConfigureAwait(false);
         if (entity is IHasDeletedTime) {
-            dbContext.Entry(entity).Property(nameof(IHasDeletedTime.DeletedTime)).CurrentValue = DateTimeOffset.UtcNow;
+            dbContext.Entry(entity).Property(nameof(IHasDeletedTime.DeletedTime)).CurrentValue = ResolveTimeProvider().GetUtcNow();
             dbContext.Entry(entity).State = EntityState.Modified;
         } else {
             dbContext.Set<TEntity>().Remove(entity);
@@ -192,6 +207,16 @@ public class Repository<TDbContext, TEntity, TKey>
         BinaryExpression equals = Expression.Equal(property, keyValue.Body);
 
         return Expression.Lambda<Func<TEntity, bool>>(equals, parameter);
+    }
+
+    private TimeProvider ResolveTimeProvider() {
+        // 未由建構子指定時，沿用 DbContext 所屬應用程式服務容器註冊的 TimeProvider，與審計攔截器使用同一時間來源。
+        return timeProvider
+            ?? dbContext.GetService<IDbContextOptions>()
+                .FindExtension<CoreOptionsExtension>()
+                ?.ApplicationServiceProvider
+                ?.GetService(typeof(TimeProvider)) as TimeProvider
+            ?? TimeProvider.System;
     }
 
     private IQueryable<TEntity> CreateQuery() {

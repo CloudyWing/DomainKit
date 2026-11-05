@@ -67,6 +67,8 @@ DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase`
 
 Repository 依 `IHasDeletedTime` 判斷刪除策略。實作此介面的實體會寫入 `DeletedTime`；未實作時才會執行實體刪除。若實體同時實作 `IHasDeleter`，審計攔截器會在軟刪除時寫入 `DeleterId`。
 
+審計時間與 `DeletedTime` 皆取自 `TimeProvider`。審計攔截器使用 DI 註冊的 `TimeProvider`，`AddDomainKit` 未發現既有註冊時才補上 `TimeProvider.System`。Repository 優先使用建構子傳入的 `TimeProvider`；使用不含 `TimeProvider` 的建構子時，改取 DbContext 所屬應用程式服務容器中的註冊，兩者皆無時使用 `TimeProvider.System`。
+
 `ConfigureFullAuditedEntity` 加入 `DeletedTime is null` 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。詳見[多租戶與並行控制](tenancy-and-concurrency.md)。
 
 ## 時間儲存與時區

@@ -37,6 +37,54 @@ public sealed class RepositoryTests {
     }
 
     [Test]
+    public async Task DeleteAsync_TimeProviderOverload_StampsProvidedTimeAsync() {
+        DateTimeOffset fixedNow = new(2026, 3, 4, 5, 6, 7, TimeSpan.Zero);
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        IUnitOfWork unitOfWork = database.Services.GetRequiredService<IUnitOfWork>();
+        Repository<TestDbContext, AuditedAggregate, Guid> sut = new(
+            database.DbContext,
+            unitOfWork,
+            new FixedTimeProvider(fixedNow)
+        );
+        AuditedAggregate entity = await sut.CreateAsync(
+            new AuditedAggregate {
+                Name = "Delete-With-Provider",
+                ExternalKey = Guid.CreateVersion7()
+            },
+            autoCommit: true
+        );
+
+        AuditedAggregate deleted = await sut.DeleteAsync(entity.ExternalKey, autoCommit: true);
+
+        Assert.That(deleted.DeletedTime, Is.EqualTo(fixedNow));
+    }
+
+    [Test]
+    public async Task DeleteAsync_RegisteredTimeProvider_StampsApplicationTimeAsync() {
+        DateTimeOffset fixedNow = new(2026, 3, 4, 5, 6, 7, TimeSpan.Zero);
+        await using TestDatabase database = await TestDatabase.CreateAsync(
+            configureServices: services => services.AddSingleton<TimeProvider>(new FixedTimeProvider(fixedNow))
+        );
+        IUnitOfWork unitOfWork = database.Services.GetRequiredService<IUnitOfWork>();
+        Repository<TestDbContext, AuditedAggregate, Guid> sut = new(database.DbContext, unitOfWork);
+        AuditedAggregate entity = await sut.CreateAsync(
+            new AuditedAggregate {
+                Name = "Delete-With-Registered-Provider",
+                ExternalKey = Guid.CreateVersion7()
+            },
+            autoCommit: true
+        );
+
+        AuditedAggregate deleted = await sut.DeleteAsync(entity.ExternalKey, autoCommit: true);
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(deleted.CreatedTime, Is.EqualTo(fixedNow));
+            Assert.That(deleted.UpdatedTime, Is.EqualTo(fixedNow));
+            Assert.That(deleted.DeletedTime, Is.EqualTo(fixedNow));
+        }
+    }
+
+    [Test]
     public async Task CreateAsync_AutoCommitTrue_PersistsImmediatelyAsync() {
         await using TestDatabase database = await TestDatabase.CreateAsync();
         IUnitOfWork unitOfWork = database.Services.GetRequiredService<IUnitOfWork>();
