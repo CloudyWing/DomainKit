@@ -258,6 +258,51 @@ public sealed class OutboxInfrastructureTests {
         }
     }
 
+    [Test]
+    public async Task DispatchBatchAsync_ProcessedRowsOlderThanRetention_DeletesExpiredRowsOnlyAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        Guid expiredId = Guid.CreateVersion7();
+        Guid recentId = Guid.CreateVersion7();
+        database.DbContext.Set<OutboxMessage>().AddRange(
+            CreateProcessedMessage(expiredId, now.AddDays(-8)),
+            CreateProcessedMessage(recentId, now.AddDays(-1))
+        );
+        database.DbContext.Set<ProcessedEvent>().AddRange(
+            new ProcessedEvent { HandlerName = "expired", EventId = expiredId, ProcessedOn = now.AddDays(-8) },
+            new ProcessedEvent { HandlerName = "recent", EventId = recentId, ProcessedOn = now.AddDays(-1) }
+        );
+        await database.DbContext.SaveChangesAsync();
+        database.DbContext.ChangeTracker.Clear();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        await dispatcher.DispatchBatchAsync(default);
+        List<Guid> remainingMessageIds = await database.DbContext.Set<OutboxMessage>()
+            .Select(message => message.Id)
+            .ToListAsync();
+        List<Guid> remainingProcessedEventIds = await database.DbContext.Set<ProcessedEvent>()
+            .Select(processed => processed.EventId)
+            .ToListAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(remainingMessageIds, Is.EquivalentTo(new[] { recentId }));
+            Assert.That(remainingProcessedEventIds, Is.EquivalentTo(new[] { recentId }));
+        }
+    }
+
+    private static OutboxMessage CreateProcessedMessage(Guid id, DateTimeOffset processedOn) {
+        return new OutboxMessage {
+            Id = id,
+            EventType = typeof(TestIntegrationEvent).AssemblyQualifiedName
+                ?? throw new InvalidOperationException("測試事件缺少組件限定名稱。"),
+            Payload = "{}",
+            OccurredOn = processedOn,
+            Status = OutboxMessageStatus.Processed,
+            NextRetryOn = processedOn,
+            ProcessedOn = processedOn
+        };
+    }
+
     private static async Task SetProcessingLeaseAsync(TestDatabase database, DateTimeOffset lockedUntil) {
         database.DbContext.ChangeTracker.Clear();
         OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();

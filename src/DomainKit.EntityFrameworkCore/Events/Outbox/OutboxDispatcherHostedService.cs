@@ -262,29 +262,22 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
         await using TDbContext dbContext = await dbContextFactory
             .CreateDbContextAsync(cancellationToken)
             .ConfigureAwait(false);
-        List<ProcessedEvent> processedEvents = await dbContext.Set<ProcessedEvent>()
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-        List<ProcessedEvent> expiredProcessedEvents = processedEvents
+        // 以伺服器端批次刪除清理過期資料，避免每輪把整張表載入記憶體。
+        await dbContext.Set<ProcessedEvent>()
             .Where(processed => processed.ProcessedOn < cutoff)
+            .OrderBy(processed => processed.ProcessedOn)
             .Take(options.BatchSize)
-            .ToList();
-        List<OutboxMessage> processedOutboxMessages = await dbContext.Set<OutboxMessage>()
-            .IgnoreQueryFilters()
-            .Where(message => message.Status == OutboxMessageStatus.Processed)
-            .ToListAsync(cancellationToken)
+            .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
-        List<OutboxMessage> expiredOutboxMessages = processedOutboxMessages
-            .Where(message => message.ProcessedOn.HasValue && message.ProcessedOn.Value < cutoff)
+        await dbContext.Set<OutboxMessage>()
+            .IgnoreQueryFilters()
+            .Where(message => message.Status == OutboxMessageStatus.Processed
+                && message.ProcessedOn.HasValue
+                && message.ProcessedOn.Value < cutoff)
+            .OrderBy(message => message.ProcessedOn)
             .Take(options.BatchSize)
-            .ToList();
-        if (expiredProcessedEvents.Count == 0 && expiredOutboxMessages.Count == 0) {
-            return;
-        }
-
-        dbContext.Set<ProcessedEvent>().RemoveRange(expiredProcessedEvents);
-        dbContext.Set<OutboxMessage>().RemoveRange(expiredOutboxMessages);
-        await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private static void ValidateOptions(OutboxOptions options) {
