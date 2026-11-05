@@ -79,7 +79,7 @@ await repository.CreateAsync(customer, cancellationToken: ct).ConfigureAwait(fal
 await unitOfWork.SaveChangesAsync(actorId, ct).ConfigureAwait(false);
 ```
 
-需要明確交易範圍時，使用 `IUnitOfWork.UseTransactionAsync`。
+需要明確交易範圍時，使用 `IUnitOfWork.UseTransactionAsync`。provider 啟用具重試能力的 execution strategy 時，改用 `UseResilientTransactionAsync` 擴充方法，暫時性失敗時重新執行整個交易。
 
 ### 查詢
 

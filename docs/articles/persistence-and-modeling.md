@@ -71,7 +71,30 @@ Guid customerId = await unitOfWork.UseTransactionAsync(
 ).ConfigureAwait(false);
 ```
 
-重用既有交易時，方法不會提交也不會回復該交易，交由原本開啟交易的那一層負責。
+重用既有交易時，方法不會提交也不會回復該交易，交由原本開啟交易的那一層負責。回復一律以 `CancellationToken.None` 執行，取消權杖已觸發時仍會完成回復，並拋出委派原本的例外。
+
+## 可重試的交易
+
+資料庫 provider 啟用具重試能力的 execution strategy（例如 SQL Server 的 `EnableRetryOnFailure`）時，自行開啟的交易必須包在 execution strategy 內。`UnitOfWorkExtensions.UseResilientTransactionAsync` 以 `CreateExecutionStrategy().ExecuteAsync` 包住 `UseTransactionAsync`，暫時性失敗時重新執行整個交易。
+
+```csharp
+await unitOfWork.UseResilientTransactionAsync(
+    async cancellationToken => {
+        Customer customer = await customerRepository.GetAsync(customerId, cancellationToken)
+            .ConfigureAwait(false);
+        customer.Rename(name, timeProvider);
+        await unitOfWork.SaveChangesAsync(actorId, cancellationToken).ConfigureAwait(false);
+    },
+    ct
+).ConfigureAwait(false);
+```
+
+使用前確認下列條件：
+
+- 委派在重試時會完整重新執行，應在委派內載入與修改資料，並可安全重複執行。
+- 重試前會呼叫 `DiscardChanges`，清除 DbContext 的所有追蹤狀態與待派發事件，包含呼叫前已追蹤的變更。
+- 只能在尚未開啟交易時呼叫。已有交易時，具重試能力的 execution strategy 會拒絕執行。
+- 擴充方法需要 DomainKit 的 `UnitOfWork<TDbContext>` 實作，其他 `IUnitOfWork` 實作會拋出 `NotSupportedException`。
 
 ## 軟刪除判定
 
