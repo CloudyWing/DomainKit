@@ -82,6 +82,8 @@ protected override void ConfigureConventions(ModelConfigurationBuilder configura
 }
 ```
 
+EF Core 的 pre-convention API 只接受轉換器型別，`ApplyDomainKitConventions` 會以傳入實例的執行期型別註冊，再由 EF Core 透過公開無參數建構子建立新實例。傳入實例的建構子參數與狀態不會套用。需要帶設定的轉換器時，建立以無參數建構子固定設定的衍生型別，或在個別屬性以 `HasConversion` 傳入實例。
+
 未傳入 converter 時，DomainKit 不改變 EF Core 的 provider 預設對映。若採 UTC 儲存，取到應用層後再依需求轉換為呈現時區。
 
 ## 雙軌事件
