@@ -69,7 +69,7 @@ Repository 依 `IHasDeletedTime` 判斷刪除策略。實作此介面的實體�
 
 審計時間與 `DeletedTime` 皆取自 `TimeProvider`。審計攔截器使用 DI 註冊的 `TimeProvider`，`AddDomainKit` 未發現既有註冊時才補上 `TimeProvider.System`。Repository 優先使用建構子傳入的 `TimeProvider`；使用不含 `TimeProvider` 的建構子時，改取 DbContext 所屬應用程式服務容器中的註冊，兩者皆無時使用 `TimeProvider.System`。
 
-`ConfigureFullAuditedEntity` 加入 `DeletedTime is null` 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。詳見[多租戶與並行控制](tenancy-and-concurrency.md)。
+`ConfigureFullAuditedEntity` 加入 `DeletedTime is null` 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。模型呼叫 `UseDomainKitNamedQueryFilters` 後，軟刪除篩選改為具名篩選 `DomainKit.SoftDelete`，可只略過軟刪除而保留租戶篩選。詳見[多租戶與並行控制](tenancy-and-concurrency.md)。
 
 ## 時間儲存與時區
 

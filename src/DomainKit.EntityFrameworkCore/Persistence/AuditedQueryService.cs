@@ -86,7 +86,7 @@ public abstract class AuditedQueryService<TDbContext, TEntity, TUserEntity>
     protected virtual IQueryable<TEntity> CreateEntityQuery() {
         IQueryable<TEntity> query = DbContext.Set<TEntity>().AsNoTracking();
 
-        return IgnoreSoftDeletedFilter ? query.IgnoreQueryFilters() : query;
+        return QueryFilterUtils.ApplyFilterSwitches(query, DbContext, IgnoreSoftDeletedFilter, IgnoreSoftDeleteFilterOnly);
     }
 
     private static string GetPropertyName<TSource, TProperty>(Expression<Func<TSource, TProperty>> selector) {

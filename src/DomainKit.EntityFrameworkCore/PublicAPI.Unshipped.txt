@@ -26,3 +26,10 @@ CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.Processe
 CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.get -> int
 CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.init -> void
 static CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.AddDomainKit<TDbContext>(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions!>? configure, System.Action<Microsoft.Extensions.Options.OptionsBuilder<CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions!>!>! configureOutboxOptions, params System.Reflection.Assembly![]! handlerAssemblies) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames
+CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryFilterModelBuilderExtensions
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity>.IgnoreSoftDeleteFilterOnly.get -> bool
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity>.IgnoreSoftDeleteFilterOnly.set -> void
+const CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames.SoftDelete = "DomainKit.SoftDelete" -> string!
+const CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames.Tenant = "DomainKit.Tenant" -> string!
+static CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters(this Microsoft.EntityFrameworkCore.ModelBuilder! modelBuilder) -> Microsoft.EntityFrameworkCore.ModelBuilder!

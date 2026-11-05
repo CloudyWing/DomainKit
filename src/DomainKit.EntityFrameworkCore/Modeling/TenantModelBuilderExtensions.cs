@@ -36,6 +36,11 @@ public static class TenantModelBuilderExtensions {
     /// <summary>
     /// 對具有主鍵的非 owned 實體加入租戶欄位、查詢篩選與租戶前導索引。
     /// </summary>
+    /// <remarks>
+    /// 實體已有匿名查詢篩選時，租戶條件以 AND 合併至該匿名篩選。實體只有具名查詢篩選，
+    /// 或模型先呼叫 <see cref="QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters" /> 時，
+    /// 租戶條件以名稱 <see cref="DomainKitQueryFilterNames.Tenant" /> 註冊為具名查詢篩選；其餘情況註冊為匿名查詢篩選。
+    /// </remarks>
     /// <param name="modelBuilder">Model 建置器。</param>
     /// <param name="tenantDbContext">提供目前租戶參數的 DbContext。</param>
     /// <param name="excludedEntityTypes">不套用多租戶 convention 的實體型別。</param>
@@ -48,6 +53,7 @@ public static class TenantModelBuilderExtensions {
         ArgumentNullException.ThrowIfNull(modelBuilder);
         ArgumentNullException.ThrowIfNull(tenantDbContext);
         HashSet<Type> exclusions = excludedEntityTypes.ToHashSet();
+        bool useNamedFilters = QueryFilterModelBuilderExtensions.IsNamedQueryFiltersEnabled(modelBuilder.Model);
         foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes().ToList()) {
             if (entityType.IsOwned()
                 || entityType.BaseType is not null
@@ -61,16 +67,29 @@ public static class TenantModelBuilderExtensions {
             tenantProperty.IsNullable = false;
             ApplyTenantPrimaryKey(entityType, tenantProperty);
             PrependTenantToIndexes(entityType, tenantProperty);
-            LambdaExpression tenantFilter = CreateTenantFilter(entityType.ClrType, tenantDbContext);
-            LambdaExpression? existingFilter = entityType.GetDeclaredQueryFilters()
-                .SingleOrDefault(filter => filter.IsAnonymous)
-                ?.Expression;
-            entityType.SetQueryFilter(existingFilter is null
-                ? tenantFilter
-                : CombineFilters(entityType.ClrType, existingFilter, tenantFilter));
+            ApplyTenantFilter(entityType, CreateTenantFilter(entityType.ClrType, tenantDbContext), useNamedFilters);
         }
 
         return modelBuilder;
+    }
+
+    private static void ApplyTenantFilter(
+        IMutableEntityType entityType,
+        LambdaExpression tenantFilter,
+        bool useNamedFilters
+    ) {
+        IReadOnlyCollection<IQueryFilter> declaredFilters = entityType.GetDeclaredQueryFilters();
+        LambdaExpression? anonymousFilter = declaredFilters
+            .SingleOrDefault(filter => filter.IsAnonymous)
+            ?.Expression;
+        if (anonymousFilter is not null) {
+            // 既有匿名篩選無法與具名篩選並存，沿用合併為單一匿名篩選的做法。
+            entityType.SetQueryFilter(CombineFilters(entityType.ClrType, anonymousFilter, tenantFilter));
+        } else if (useNamedFilters || declaredFilters.Count > 0) {
+            entityType.SetQueryFilter(DomainKitQueryFilterNames.Tenant, tenantFilter);
+        } else {
+            entityType.SetQueryFilter(tenantFilter);
+        }
     }
 
     private static void ApplyTenantPrimaryKey(IMutableEntityType entityType, IMutableProperty tenantProperty) {

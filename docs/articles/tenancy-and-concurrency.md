@@ -51,7 +51,7 @@ public sealed class AppDbContext : DbContext, ITenantDbContext {
 - 加入必要的 `TenantId` shadow property。
 - 加入目前租戶的全域查詢篩選。
 - 將 `TenantId` 放到既有索引的第一欄。
-- 保留先前設定的軟刪除 query filter，並與租戶條件合併。
+- 實體已有匿名 query filter（例如未啟用具名篩選時的軟刪除篩選）時，與租戶條件合併為同一個匿名篩選。實體只有具名篩選，或已呼叫 `UseDomainKitNamedQueryFilters` 時，租戶條件改以具名篩選 `DomainKit.Tenant` 加入。
 
 此 convention 不以 `IMustHaveTenant` 判定是否套用。`IMustHaveTenant` 用來表達領域模型的租戶語意；不屬於租戶資料的型別必須透過 `excludedEntityTypes` 明確排除。啟用 Outbox 時應排除 `OutboxMessage` 與 `ProcessedEvent`，讓 dispatcher 能跨租戶掃描並依訊息內容還原租戶。
 
@@ -132,7 +132,30 @@ EF Core 將屬性標成 `ValueGenerated.OnAddOrUpdate` 後，DomainKit 攔截器
 
 ## 查詢篩選注意事項
 
-一般查詢會同時套用租戶與軟刪除篩選。`QueryService.IgnoreSoftDeletedFilter = true` 目前透過 EF Core `IgnoreQueryFilters()` 實作，因此會略過該實體的所有全域 query filter，包含租戶篩選。這個開關只能用於受控的系統管理流程，且查詢必須自行加入明確的租戶條件。
+一般查詢會同時套用租戶與軟刪除篩選。`QueryService.IgnoreSoftDeletedFilter = true` 透過 EF Core `IgnoreQueryFilters()` 實作，會略過該實體的所有全域 query filter，包含租戶篩選。
+
+> [!WARNING]
+> `IgnoreSoftDeletedFilter = true` 會讓查詢跨租戶取得資料。這個開關只能用於受控的系統管理流程，且查詢必須自行加入明確的租戶條件。
+
+只需要查到已軟刪除資料、仍要維持租戶隔離時，在 `OnModelCreating` 開頭呼叫 `UseDomainKitNamedQueryFilters`，再改用 `IgnoreSoftDeleteFilterOnly`。
+
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    modelBuilder.UseDomainKitNamedQueryFilters();
+    modelBuilder.ApplyModuleConfigurations();
+    modelBuilder.ApplyTenantConventions(this, typeof(OutboxMessage), typeof(ProcessedEvent));
+}
+```
+
+```csharp
+CustomerQueryService queryService = new(dbContext) {
+    IgnoreSoftDeleteFilterOnly = true
+};
+```
+
+啟用後軟刪除與租戶篩選分別註冊為 `DomainKitQueryFilterNames.SoftDelete`（`DomainKit.SoftDelete`）與 `DomainKitQueryFilterNames.Tenant`（`DomainKit.Tenant`）兩個具名篩選，`IgnoreSoftDeleteFilterOnly` 只略過前者。自行組 `IQueryable` 時也可直接呼叫 `IgnoreQueryFilters([DomainKitQueryFilterNames.SoftDelete])`。`IgnoreQueryFilters()` 仍會略過全部篩選，結果與未啟用時相同。
+
+EF Core 不允許同一實體同時具有匿名與具名查詢篩選。啟用後，套用 `ConfigureFullAuditedEntity` 的實體不可再以 `HasQueryFilter(expression)` 加入匿名篩選，自訂條件改用 `HasQueryFilter(name, expression)`。未啟用時篩選維持匿名形式，`IgnoreSoftDeleteFilterOnly` 遇到匿名篩選會拋出 `InvalidOperationException`，避免誤把租戶篩選一起略過。
 
 ## 延伸閱讀
 

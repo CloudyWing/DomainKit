@@ -12,6 +12,10 @@ public interface IQueryService<TEntity> where TEntity : class {
     /// <summary>
     /// 取得或設定一個值，用以指出是否略過軟刪除全域查詢篩選。
     /// </summary>
+    /// <remarks>
+    /// DomainKit 的 <see cref="QueryService{TDbContext,TEntity}" /> 以 EF Core <c>IgnoreQueryFilters()</c> 實作，
+    /// 會一併略過租戶等其他全域查詢篩選，只應用於受控的管理流程，並由呼叫端補上必要的隔離條件。
+    /// </remarks>
     bool IgnoreSoftDeletedFilter { get; set; }
 
     /// <summary>

@@ -214,7 +214,12 @@ public sealed class CustomerAuditQueryService
 
 ## 軟刪除篩選
 
-QueryService 預設使用 `AsNoTracking` 並保留 EF Core 全域 query filter。`IgnoreSoftDeletedFilter = true` 會呼叫 `IgnoreQueryFilters()`，因此不只略過軟刪除條件，也會略過同一實體的租戶等其他全域條件。此設定只能用於受控的管理流程，並由呼叫端補上必要的隔離條件。
+QueryService 預設使用 `AsNoTracking` 並保留 EF Core 全域 query filter。`IgnoreSoftDeletedFilter = true` 會呼叫 `IgnoreQueryFilters()`，因此不只略過軟刪除條件，也會略過同一實體的租戶等其他全域條件。
+
+> [!WARNING]
+> `IgnoreSoftDeletedFilter = true` 會一併略過租戶篩選。此設定只能用於受控的管理流程，並由呼叫端補上必要的隔離條件。
+
+只需要包含已軟刪除資料時，模型先呼叫 `UseDomainKitNamedQueryFilters` 將篩選註冊為具名篩選，再設定 `IgnoreSoftDeleteFilterOnly = true`。此開關只略過 `DomainKit.SoftDelete`，租戶等其他篩選照常套用；兩個開關同時為 `true` 時以 `IgnoreSoftDeletedFilter` 為準。設定方式與限制見[多租戶與並行控制](tenancy-and-concurrency.md)。`IgnoreSoftDeleteFilterOnly` 宣告於 `QueryService` 基底類別，不屬於 `IQueryService<TEntity>` 介面。
 
 ## 延伸閱讀
 

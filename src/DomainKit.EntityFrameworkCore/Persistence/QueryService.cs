@@ -32,7 +32,21 @@ public abstract class QueryService<TDbContext, TEntity> : IQueryService<TEntity>
     protected TDbContext DbContext { get; }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// 設為 <see langword="true" /> 時呼叫 EF Core <c>IgnoreQueryFilters()</c>，會略過該實體的所有全域查詢篩選，包含租戶篩選。
+    /// 只需要包含已軟刪除資料時，改用 <see cref="IgnoreSoftDeleteFilterOnly" />。
+    /// </remarks>
     public bool IgnoreSoftDeletedFilter { get; set; }
+
+    /// <summary>
+    /// 取得或設定一個值，用以指出是否只略過軟刪除全域查詢篩選，並保留租戶等其他全域查詢篩選。
+    /// </summary>
+    /// <remarks>
+    /// 需要模型以 <see cref="QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters" /> 將軟刪除篩選註冊為具名篩選。
+    /// 實體使用匿名查詢篩選時，查詢會拋出 <see cref="InvalidOperationException" />。
+    /// <see cref="IgnoreSoftDeletedFilter" /> 為 <see langword="true" /> 時以其為準，略過所有全域查詢篩選。
+    /// </remarks>
+    public bool IgnoreSoftDeleteFilterOnly { get; set; }
 
     /// <inheritdoc />
     public async Task<bool> AnyAsync(
@@ -358,7 +372,7 @@ public abstract class QueryService<TDbContext, TEntity> : IQueryService<TEntity>
     protected virtual IQueryable<TEntity> CreateQuery() {
         IQueryable<TEntity> query = DbContext.Set<TEntity>().AsNoTracking();
 
-        return IgnoreSoftDeletedFilter ? query.IgnoreQueryFilters() : query;
+        return QueryFilterUtils.ApplyFilterSwitches(query, DbContext, IgnoreSoftDeletedFilter, IgnoreSoftDeleteFilterOnly);
     }
 
     private static IQueryable<TEntity> ApplyPredicateAndOrder(

@@ -164,6 +164,10 @@ public static class ModelBuilderExtensions {
     /// <summary>
     /// 設定完整審計欄位與軟刪除全域查詢篩選。
     /// </summary>
+    /// <remarks>
+    /// 預設以匿名查詢篩選註冊軟刪除條件。模型先呼叫 <see cref="QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters" /> 時，
+    /// 改以名稱 <see cref="DomainKitQueryFilterNames.SoftDelete" /> 註冊具名查詢篩選。
+    /// </remarks>
     /// <typeparam name="TEntity">實體型別。</typeparam>
     /// <param name="builder">實體型別建置器。</param>
     /// <returns>實體型別建置器。</returns>
@@ -175,7 +179,12 @@ public static class ModelBuilderExtensions {
         builder.ConfigureUserAuditedEntity();
         builder.Property<DateTimeOffset?>(nameof(IHasDeletedTime.DeletedTime));
         builder.Property<Guid?>(nameof(IHasDeleter.DeleterId));
-        builder.HasQueryFilter(CreateSoftDeleteFilter<TEntity>());
+        Expression<Func<TEntity, bool>> softDeleteFilter = CreateSoftDeleteFilter<TEntity>();
+        if (QueryFilterModelBuilderExtensions.IsNamedQueryFiltersEnabled(builder.Metadata.Model)) {
+            builder.HasQueryFilter(DomainKitQueryFilterNames.SoftDelete, softDeleteFilter);
+        } else {
+            builder.HasQueryFilter(softDeleteFilter);
+        }
 
         return builder;
     }
