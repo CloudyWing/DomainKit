@@ -70,6 +70,8 @@ modelBuilder.ApplyTenantConventions(this);
 
 `TenantStampInterceptor` 會在新增資料前，把目前租戶寫入具有 `TenantId` shadow property 的實體。只要本次提交包含租戶實體，缺少租戶脈絡就會拋出 `InvalidOperationException`。
 
+新增實體的 `TenantId` 一律以目前租戶覆寫，呼叫端先行指定的值不會保留。這是刻意的隔離設計，寫入的資料只會落在目前租戶範圍。需要代替其他租戶寫入時，以 `ICurrentTenant.Change` 切換租戶脈絡後再提交。
+
 ```csharp
 services.AddScoped<TenantStampInterceptor>();
 services.AddDbContextFactory<AppDbContext>(
