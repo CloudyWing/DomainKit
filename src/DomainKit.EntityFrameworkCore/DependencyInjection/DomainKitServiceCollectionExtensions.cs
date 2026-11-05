@@ -34,13 +34,11 @@ public static class DomainKitServiceCollectionExtensions {
     /// 不經過 Options pipeline。需要 configuration 綁定或 <c>ValidateOnStart</c> 時，改用接受
     /// <see cref="OptionsBuilder{TOptions}" /> 設定函式的多載。
     /// </remarks>
-#pragma warning disable RS0027 // 新多載的 configureOutboxOptions 為必填委派，不會與既有呼叫產生多載解析歧義；保留既有簽章以維持相容。
     public static IServiceCollection AddDomainKit<TDbContext>(
         this IServiceCollection services,
         Action<DomainKitOptions>? configure = null,
         params Assembly[] handlerAssemblies
     ) where TDbContext : DbContext {
-#pragma warning restore RS0027
         ArgumentNullException.ThrowIfNull(services);
 
         DomainKitOptions options = CreateOptions(configure, handlerAssemblies);

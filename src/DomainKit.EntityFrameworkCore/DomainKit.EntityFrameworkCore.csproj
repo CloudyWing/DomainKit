@@ -6,6 +6,10 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- RS0027：新增的多載與既有帶選擇性參數的多載，參數型別不一致，不會產生多載解析歧義；既有公開 API 不調整參數以維持相容。 -->
+    <NoWarn>$(NoWarn);RS0027</NoWarn>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="" Link="LICENSE.md" />
