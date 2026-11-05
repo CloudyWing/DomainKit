@@ -1,1 +1,5 @@
 #nullable enable
+static CloudyWing.DomainKit.Specifications.Specification<T>.False.get -> CloudyWing.DomainKit.Specifications.Specification<T>!
+static CloudyWing.DomainKit.Specifications.Specification<T>.True.get -> CloudyWing.DomainKit.Specifications.Specification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AllOf<T>(this System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Specifications.ISpecification<T>!>! specifications) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AnyOf<T>(this System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Specifications.ISpecification<T>!>! specifications) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!

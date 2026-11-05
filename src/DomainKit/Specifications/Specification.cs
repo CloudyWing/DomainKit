@@ -7,6 +7,8 @@ namespace CloudyWing.DomainKit.Specifications;
 /// </summary>
 /// <typeparam name="T">規約目標型別。</typeparam>
 public class Specification<T> : ISpecification<T> {
+    private static readonly Specification<T> TrueSpecification = new(_ => true);
+    private static readonly Specification<T> FalseSpecification = new(_ => false);
     private readonly Expression<Func<T, bool>> criteria;
 
     /// <summary>
@@ -18,6 +20,22 @@ public class Specification<T> : ISpecification<T> {
 
         this.criteria = criteria;
     }
+
+    /// <summary>
+    /// 取得恆為真的規約，作為 AND 組合的起始值或不限制條件的預設規約。
+    /// </summary>
+    /// <remarks>
+    /// 回傳的執行個體不可變，可安全共用。
+    /// </remarks>
+    public static Specification<T> True => TrueSpecification;
+
+    /// <summary>
+    /// 取得恆為假的規約，作為 OR 組合的起始值或不符合任何資料的規約。
+    /// </summary>
+    /// <remarks>
+    /// 回傳的執行個體不可變，可安全共用。
+    /// </remarks>
+    public static Specification<T> False => FalseSpecification;
 
     /// <inheritdoc />
     public Expression<Func<T, bool>> ToExpression() => criteria;

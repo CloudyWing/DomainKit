@@ -97,6 +97,20 @@ ISpecification<Customer> specification = new Specification<Customer>(customer =>
 
 工廠委派只在值存在時執行，可直接使用該值的非 null 形式建立條件運算式。
 
+## 組合規約集合
+
+規約數量在執行期才決定時，以 `AllOf` 與 `AnyOf` 將 `IEnumerable<ISpecification<T>>` 組成單一規約。`AllOf` 以 AND 組合，`AnyOf` 以 OR 組合。
+
+```csharp
+IEnumerable<ISpecification<Customer>> filters = selectedCities
+    .Select(city => new Specification<Customer>(customer => customer.City == city));
+
+ISpecification<Customer> inSelectedCities = filters.AnyOf();
+ISpecification<Customer> specification = active.And(inSelectedCities);
+```
+
+集合為空時，`AllOf` 回傳 `Specification<T>.True`，`AnyOf` 回傳 `Specification<T>.False`，與 AND、OR 的單位元素一致。`Specification<T>.True` 與 `Specification<T>.False` 也可單獨使用，例如作為不限制條件的預設規約，兩者皆為可共用的不可變執行個體。集合含 `null` 元素時拋出 `ArgumentException`。
+
 ## 分頁結果
 
 `GetPagedListAsync` 回傳 `PagedList<TItem>`，`Items` 是本頁投影結果，`Metadata` 是分頁統計。

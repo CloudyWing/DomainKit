@@ -119,7 +119,7 @@ PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
 ).ConfigureAwait(false);
 ```
 
-習慣以離散參數呼叫時，可透過 `QueryServiceSpecificationExtensions` 組成規約後委派核心多載。
+執行期才決定數量的規約可用 `AllOf`（AND）與 `AnyOf`（OR）組合，空集合分別回傳 `Specification<T>.True` 與 `Specification<T>.False`。習慣以離散參數呼叫時，可透過 `QueryServiceSpecificationExtensions` 組成規約後委派核心多載。
 
 ### 審計與雙軌事件
 
