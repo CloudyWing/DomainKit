@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,6 +30,9 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
         "Outbox 訊息 {OutboxMessageId} 派發失敗。"
     );
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
+    private static readonly ConcurrentDictionary<string, Type> EventTypes = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<Type, Type> HandlerServiceTypes = new();
+    private static readonly ConcurrentDictionary<Type, string> HandlerKeys = new();
     private readonly string instanceId = $"{Environment.MachineName}:{Environment.ProcessId}:{Guid.NewGuid():N}";
     private readonly ILogger<OutboxDispatcherHostedService<TDbContext>> logger;
     private readonly OutboxOptions options;
@@ -162,7 +166,11 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             if (message.TenantId.HasValue) {
                 activity?.SetTag("tenant.id", message.TenantId.Value);
             }
-            Type eventType = Type.GetType(message.EventType, throwOnError: true)!;
+            // 型別解析失敗時 factory 會拋出例外，GetOrAdd 不會快取失敗結果，下次重試仍會重新解析。
+            Type eventType = EventTypes.GetOrAdd(
+                message.EventType,
+                static typeName => Type.GetType(typeName, throwOnError: true)!
+            );
             object eventData = JsonSerializer.Deserialize(message.Payload, eventType, SerializerOptions)
                 ?? throw new InvalidOperationException("Outbox 事件內容無法反序列化。");
             if (eventData is not IIntegrationEvent) {
@@ -171,7 +179,10 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
 
             IntegrationEventContext context = scope.ServiceProvider.GetRequiredService<IntegrationEventContext>();
             context.SetEventId(message.Id);
-            Type handlerServiceType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+            Type handlerServiceType = HandlerServiceTypes.GetOrAdd(
+                eventType,
+                static type => typeof(IIntegrationEventHandler<>).MakeGenericType(type)
+            );
             IEnumerable<object?> handlers = scope.ServiceProvider.GetServices(handlerServiceType);
             foreach (object handler in handlers.OfType<object>()) {
                 string handlerName = CreateHandlerKey(handler.GetType());
@@ -234,9 +245,8 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
         message.RetryCount++;
         message.LockedBy = null;
         message.LockedUntil = null;
-        message.LastError = exception.ToString().Length <= 2000
-            ? exception.ToString()
-            : exception.ToString()[..2000];
+        string error = exception.ToString();
+        message.LastError = error.Length <= 2000 ? error : error[..2000];
         if (message.RetryCount > options.MaxRetryCount) {
             message.Status = OutboxMessageStatus.DeadLettered;
             DomainKitDiagnostics.OutboxDeadLetter.Add(1);
@@ -293,8 +303,10 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
     }
 
     private static string CreateHandlerKey(Type handlerType) {
-        string identity = CreateLegacyHandlerName(handlerType);
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(identity)));
+        return HandlerKeys.GetOrAdd(
+            handlerType,
+            static type => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(CreateLegacyHandlerName(type))))
+        );
     }
 
     private static string CreateLegacyHandlerName(Type handlerType) {

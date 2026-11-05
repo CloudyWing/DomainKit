@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+
 namespace CloudyWing.DomainKit.Entities;
 
 /// <summary>
@@ -5,6 +7,8 @@ namespace CloudyWing.DomainKit.Entities;
 /// </summary>
 /// <typeparam name="TKey">識別碼型別。</typeparam>
 public abstract class Entity<TKey> : IEntity<TKey> {
+    private static readonly ConcurrentDictionary<Type, Type> UnproxiedTypes = new();
+
     /// <summary>
     /// 初始化 <see cref="Entity{TKey}" /> 類別的新執行個體。
     /// </summary>
@@ -62,7 +66,10 @@ public abstract class Entity<TKey> : IEntity<TKey> {
     }
 
     private static Type GetUnproxiedType(object entity) {
-        Type type = entity.GetType();
+        return UnproxiedTypes.GetOrAdd(entity.GetType(), static type => ResolveUnproxiedType(type));
+    }
+
+    private static Type ResolveUnproxiedType(Type type) {
         string typeName = type.ToString();
 
         return typeName.Contains("Castle.Proxies.", StringComparison.Ordinal)
