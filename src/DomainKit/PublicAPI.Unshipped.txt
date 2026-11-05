@@ -3,3 +3,8 @@ static CloudyWing.DomainKit.Specifications.Specification<T>.False.get -> CloudyW
 static CloudyWing.DomainKit.Specifications.Specification<T>.True.get -> CloudyWing.DomainKit.Specifications.Specification<T>!
 static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AllOf<T>(this System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Specifications.ISpecification<T>!>! specifications) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
 static CloudyWing.DomainKit.Specifications.SpecificationExtensions.AnyOf<T>(this System.Collections.Generic.IEnumerable<CloudyWing.DomainKit.Specifications.ISpecification<T>!>! specifications) -> CloudyWing.DomainKit.Specifications.ISpecification<T>!
+CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>
+CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>.HasMore.get -> bool
+CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>.Items.get -> System.Collections.Generic.IReadOnlyList<TItem>!
+CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>.KeysetPage(System.Collections.Generic.IReadOnlyList<TItem>! items, TKey? nextKey, bool hasMore) -> void
+CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>.NextKey.get -> TKey?

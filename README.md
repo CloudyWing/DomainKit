@@ -96,6 +96,8 @@ string nextName = await queryService.GetFirstAsync(
 
 若查無資料但不想拋例外，改用 `GetFirstOrDefaultAsync`，無資料時回傳 `null`。
 
+自行組 `IQueryable` 時，`ToPagedListAsync` 提供頁碼分頁，`ToKeysetPageAsync` 以唯一且不可變的排序鍵提供 keyset 分頁，回傳 `KeysetPage<TItem, TKey>` 的 `Items`、`NextKey` 與 `HasMore`。
+
 ### 規約 Specifications
 
 `Specification<T>` 只負責條件，`PagedSpecification<T>` 再加上排序與分頁，可直接交給 `IQueryService<TEntity>` 的規約多載。

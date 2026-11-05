@@ -139,6 +139,42 @@ PagedList<CustomerListItem> page = await dbContext.Customers
 
 它會先執行一次 `CountAsync` 再取本頁資料，共兩次資料庫往返。排序須在呼叫前完成，未排序的來源分頁結果不穩定。
 
+## Keyset 分頁
+
+資料量大且只需依序翻頁時，用 `ToKeysetPageAsync` 以排序鍵定位下一頁。查詢條件只比較排序鍵，不需要 `Skip` 掃過前面的資料，也不另外執行 `CountAsync`。
+
+```csharp
+KeysetPage<CustomerListItem, Guid> page = await dbContext.Customers
+    .Where(customer => !customer.IsDisabled)
+    .Select(customer => new CustomerListItem(customer.Id, customer.Name))
+    .ToKeysetPageAsync(item => item.Id, 50, ct)
+    .ConfigureAwait(false);
+
+while (page.HasMore) {
+    page = await dbContext.Customers
+        .Where(customer => !customer.IsDisabled)
+        .Select(customer => new CustomerListItem(customer.Id, customer.Name))
+        .ToKeysetPageAsync(item => item.Id, page.NextKey, 50, ct)
+        .ConfigureAwait(false);
+}
+```
+
+`KeysetPage<TItem, TKey>` 的成員如下。
+
+| 成員 | 說明 |
+| --- | --- |
+| `Items` | 本頁資料，依排序鍵遞增 |
+| `NextKey` | 本頁最後一筆的排序鍵，查詢下一頁時傳入；本頁沒有資料時為預設值 |
+| `HasMore` | 本頁之後是否仍有資料 |
+
+使用限制如下：
+
+- 排序鍵必須唯一且不可變。`ToKeysetPageAsync` 以排序鍵遞增排序，並取代來源查詢既有的排序。
+- 排序鍵選擇器會在 SQL 與物化後的項目上各執行一次，應直接指向欄位或投影屬性。
+- 只支援以 `NextKey` 往下一頁移動，無法跳到任意頁碼。資料在游標前後新增或刪除時，後續頁面會反映最新資料，不提供快照一致性。
+- 數值與日期時間型別直接比較，字串以 `string.Compare` 比較，其他型別以 `CompareTo` 比較，能否轉譯為 SQL 取決於 provider。
+- 參考型別的排序鍵可傳入 `null` 作為第一頁；實值型別的第一頁請使用不含 `afterKey` 的多載。
+
 ## 分組查詢
 
 `GetGroupedListAsync` 先套用實體篩選，再執行 `GroupBy` 與彙總投影。`havingPredicate` 套用在彙總投影之後。
