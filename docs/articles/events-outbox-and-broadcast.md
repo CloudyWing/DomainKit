@@ -166,7 +166,7 @@ await eventBroadcast.PublishAsync(
 ).ConfigureAwait(false);
 ```
 
-應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的非取消例外會被忽略，其他訂閱者仍會繼續收到通知。取消例外會往外拋，發布端可據此中止。
+應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的非取消例外不會回拋給發布端，其他訂閱者仍會繼續收到通知。`AddDomainKit` 註冊的執行個體會以 `ILogger<InProcessEventBroadcast>` 將該例外記錄為 Warning；自行以無參數建構子建立時不記錄日誌，需要記錄時改用接受 `ILogger<InProcessEventBroadcast>` 的建構子。取消例外會往外拋，發布端可據此中止。
 
 訂閱與發布以通知的執行階段型別配對。`Subscribe<TNotification>` 只會收到型別完全相同的通知，訂閱基底型別或介面不會收到衍生型別的實例，通知型別應直接是要發布的具體型別。發布端只持有 `object` 參考時，可使用接受 `object` 的 `PublishAsync` 多載，配對規則相同，仍以實際型別查找訂閱者。沒有對應訂閱者的通知會被安靜捨棄，不視為錯誤。
 

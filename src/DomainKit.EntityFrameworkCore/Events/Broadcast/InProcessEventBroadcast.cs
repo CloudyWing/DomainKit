@@ -1,4 +1,6 @@
 using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast;
 
@@ -6,8 +8,31 @@ namespace CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast;
 /// 提供單一行程內的廣播通道。
 /// </summary>
 public sealed class InProcessEventBroadcast : IEventBroadcast {
+    private static readonly Action<ILogger, string, Exception?> SubscriberFailed = LoggerMessage.Define<string>(
+        LogLevel.Warning,
+        new EventId(1, nameof(SubscriberFailed)),
+        "廣播訂閱者處理通知 {NotificationType} 失敗。"
+    );
     private readonly ConcurrentDictionary<Type, ConcurrentDictionary<Guid, Func<object, CancellationToken, Task>>>
         subscriptions = new();
+    private readonly ILogger logger;
+
+    /// <summary>
+    /// 初始化 <see cref="InProcessEventBroadcast" /> 類別的新執行個體，訂閱者失敗時不記錄日誌。
+    /// </summary>
+    public InProcessEventBroadcast()
+        : this(NullLogger<InProcessEventBroadcast>.Instance) {
+    }
+
+    /// <summary>
+    /// 以指定 Logger 初始化 <see cref="InProcessEventBroadcast" /> 類別的新執行個體。
+    /// </summary>
+    /// <param name="logger">記錄訂閱者失敗的 Logger。</param>
+    public InProcessEventBroadcast(ILogger<InProcessEventBroadcast> logger) {
+        ArgumentNullException.ThrowIfNull(logger);
+
+        this.logger = logger;
+    }
 
     /// <inheritdoc />
     public async Task PublishAsync(object notification, CancellationToken cancellationToken = default) {
@@ -23,8 +48,9 @@ public sealed class InProcessEventBroadcast : IEventBroadcast {
                 await handler(notification, cancellationToken).ConfigureAwait(false);
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
                 throw;
-            } catch {
-                // 廣播為 best-effort；單一訂閱者失敗不得阻斷其他訂閱者或發布端。
+            } catch (Exception exception) {
+                // 廣播為 best-effort；單一訂閱者失敗不得阻斷其他訂閱者或發布端，只記錄後繼續。
+                SubscriberFailed(logger, notification.GetType().FullName ?? notification.GetType().Name, exception);
             }
         }
     }

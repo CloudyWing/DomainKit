@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
 namespace CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection;
@@ -50,7 +52,12 @@ public static class DomainKitServiceCollectionExtensions {
         );
         services.TryAddScoped<IUnitOfWork, UnitOfWork<TDbContext>>();
         services.TryAddScoped<RowVersionStampInterceptor>();
-        services.TryAddSingleton<IEventBroadcast, InProcessEventBroadcast>();
+        services.TryAddSingleton<IEventBroadcast>(
+            serviceProvider => new InProcessEventBroadcast(
+                serviceProvider.GetService<ILogger<InProcessEventBroadcast>>()
+                    ?? NullLogger<InProcessEventBroadcast>.Instance
+            )
+        );
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddSingleton<IOptions<OutboxOptions>>(Options.Create(options.Outbox));
 
