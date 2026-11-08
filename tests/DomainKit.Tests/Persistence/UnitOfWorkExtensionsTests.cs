@@ -79,6 +79,81 @@ public sealed class UnitOfWorkExtensionsTests {
     }
 
     [Test]
+    public async Task UseResilientTransactionAsync_RetryingStrategyWithPendingChanges_ThrowsBeforeExecutorAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(
+            configureDbContext: builder => builder.UseSqlite(
+                sqliteOptions => sqliteOptions.ExecutionStrategy(
+                    dependencies => new TimeoutRetryingExecutionStrategy(dependencies)
+                )
+            )
+        );
+        IUnitOfWork sut = database.Services.GetRequiredService<IUnitOfWork>();
+        bool isRetrying = database.DbContext.Database.CreateExecutionStrategy().RetriesOnFailure;
+        bool executorCalled = false;
+        database.DbContext.HardDeleteEntities.Add(new HardDeleteEntity { Name = "Pending" });
+
+        Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.UseResilientTransactionAsync(
+            _ => {
+                executorCalled = true;
+                return Task.CompletedTask;
+            }
+        ));
+        int count = await database.DbContext.HardDeleteEntities.AsNoTracking().CountAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(isRetrying, Is.True);
+            Assert.That(executorCalled, Is.False);
+            Assert.That(count, Is.Zero);
+            Assert.That(database.DbContext.Database.CurrentTransaction, Is.Null);
+            Assert.That(database.DbContext.ChangeTracker.HasChanges(), Is.True);
+        }
+    }
+
+    [Test]
+    public async Task UseResilientTransactionAsync_NonRetryingStrategyWithPendingChanges_CommitsChangesAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        IUnitOfWork sut = database.Services.GetRequiredService<IUnitOfWork>();
+        bool isRetrying = database.DbContext.Database.CreateExecutionStrategy().RetriesOnFailure;
+        database.DbContext.HardDeleteEntities.Add(new HardDeleteEntity { Name = "Pending" });
+
+        await sut.UseResilientTransactionAsync(async cancellationToken => {
+            await sut.SaveChangesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        });
+        int count = await database.DbContext.HardDeleteEntities.AsNoTracking().CountAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(isRetrying, Is.False);
+            Assert.That(count, Is.EqualTo(1));
+        }
+    }
+
+    [Test]
+    public async Task UseResilientTransactionAsync_RetryingStrategyWithoutPendingChanges_CommitsChangesAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(
+            configureDbContext: builder => builder.UseSqlite(
+                sqliteOptions => sqliteOptions.ExecutionStrategy(
+                    dependencies => new TimeoutRetryingExecutionStrategy(dependencies)
+                )
+            )
+        );
+        IUnitOfWork sut = database.Services.GetRequiredService<IUnitOfWork>();
+        bool isRetrying = database.DbContext.Database.CreateExecutionStrategy().RetriesOnFailure;
+
+        string result = await sut.UseResilientTransactionAsync(async (_, cancellationToken) => {
+            database.DbContext.HardDeleteEntities.Add(new HardDeleteEntity { Name = "Resilient" });
+            await sut.SaveChangesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            return "done";
+        });
+        int count = await database.DbContext.HardDeleteEntities.AsNoTracking().CountAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(isRetrying, Is.True);
+            Assert.That(result, Is.EqualTo("done"));
+            Assert.That(count, Is.EqualTo(1));
+        }
+    }
+
+    [Test]
     public void UseResilientTransactionAsync_ForeignUnitOfWork_ThrowsNotSupportedException() {
         IUnitOfWork sut = Substitute.For<IUnitOfWork>();
 

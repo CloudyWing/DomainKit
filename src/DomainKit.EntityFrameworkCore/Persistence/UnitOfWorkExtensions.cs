@@ -15,10 +15,12 @@ public static class UnitOfWorkExtensions {
     /// <param name="cancellationToken">取消權杖。</param>
     /// <returns>非同步作業。</returns>
     /// <exception cref="NotSupportedException"><paramref name="unitOfWork" /> 不是 DomainKit 的 <see cref="UnitOfWork{TDbContext}" /> 時。</exception>
+    /// <exception cref="InvalidOperationException">execution strategy 具重試能力且 DbContext 已有未儲存的變更時。</exception>
     /// <remarks>
     /// 只能在尚未開啟交易時呼叫；已有交易時，具重試能力的 execution strategy 會拒絕執行。
-    /// 每次重試前會呼叫 <see cref="IUnitOfWork.DiscardChanges" />，清除 DbContext 的所有追蹤狀態與待派發事件，
-    /// 包含呼叫前已追蹤的變更；<paramref name="executor" /> 應在內部重新載入並修改所需資料。
+    /// 每次重試前會呼叫 <see cref="IUnitOfWork.DiscardChanges" />，清除 DbContext 的所有追蹤狀態與待派發事件。
+    /// execution strategy 具重試能力且 DbContext 在呼叫前已有未儲存的變更時，會於執行前擲出例外；
+    /// <paramref name="executor" /> 應在內部重新載入並修改所需資料。
     /// </remarks>
     public static Task UseResilientTransactionAsync(
         this IUnitOfWork unitOfWork,
@@ -47,10 +49,12 @@ public static class UnitOfWorkExtensions {
     /// <param name="cancellationToken">取消權杖。</param>
     /// <returns>作業結果。</returns>
     /// <exception cref="NotSupportedException"><paramref name="unitOfWork" /> 不是 DomainKit 的 <see cref="UnitOfWork{TDbContext}" /> 時。</exception>
+    /// <exception cref="InvalidOperationException">execution strategy 具重試能力且 DbContext 已有未儲存的變更時。</exception>
     /// <remarks>
     /// 只能在尚未開啟交易時呼叫；已有交易時，具重試能力的 execution strategy 會拒絕執行。
-    /// 每次重試前會呼叫 <see cref="IUnitOfWork.DiscardChanges" />，清除 DbContext 的所有追蹤狀態與待派發事件，
-    /// 包含呼叫前已追蹤的變更；<paramref name="executor" /> 應在內部重新載入並修改所需資料。
+    /// 每次重試前會呼叫 <see cref="IUnitOfWork.DiscardChanges" />，清除 DbContext 的所有追蹤狀態與待派發事件。
+    /// execution strategy 具重試能力且 DbContext 在呼叫前已有未儲存的變更時，會於執行前擲出例外；
+    /// <paramref name="executor" /> 應在內部重新載入並修改所需資料。
     /// </remarks>
     public static async Task<TResult> UseResilientTransactionAsync<TResult>(
         this IUnitOfWork unitOfWork,
@@ -67,6 +71,12 @@ public static class UnitOfWorkExtensions {
         }
 
         IExecutionStrategy strategy = dbContextProvider.DbContext.Database.CreateExecutionStrategy();
+        if (strategy.RetriesOnFailure && dbContextProvider.DbContext.ChangeTracker.HasChanges()) {
+            throw new InvalidOperationException(
+                $"{nameof(UseResilientTransactionAsync)} 重試時會清除追蹤狀態，呼叫前不可有未儲存的變更，請先儲存或將修改移入 executor。"
+            );
+        }
+
         bool isRetry = false;
 
         return await strategy.ExecuteAsync(
