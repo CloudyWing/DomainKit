@@ -54,6 +54,8 @@ public sealed class CustomerRenamedDomainEventHandler
 }
 ```
 
+掃描組件時，若組件內部分型別因相依組件無法載入而拋出 `ReflectionTypeLoadException`，`AddDomainKit` 會略過這些型別，仍註冊其餘可載入的 handler，且不輸出任何訊息。Domain event 與 Integration event 的 handler 掃描行為相同。被略過型別的 handler 不會被註冊，部署時須確認 handler 組件的相依組件都已一併部署。
+
 Domain event 在 EF Core 寫入前派發。Handler 對同一個 `DbContext` 追蹤實體所做的變更會進入同次 `SaveChanges`。Handler 新增的 Domain event 會繼續派發，最多迭代 32 輪；未收斂時提交會失敗。
 
 事件集合只在提交成功後清除。提交失敗時 Integration event 仍保留於聚合，供呼叫端決定是否重試或放棄工作單元。
@@ -158,6 +160,18 @@ bool requeued = await outboxAdministrator.RequeueDeadLetteredAsync(messageId, ct
 | `GetStatisticsAsync` | 回傳 `Pending`、`Processing`、`Processed`、`DeadLettered` 各狀態筆數與最早一筆待派發訊息的 `OccurredOn` |
 | `RequeueDeadLetteredAsync` | 只處理 `DeadLettered` 訊息，將狀態改回 `Pending`、重試次數歸零、清除租約並設為立即可派發；訊息不存在或不是 `DeadLettered` 時回傳 `false` |
 
+`OutboxStatistics` 的成員如下。
+
+| 成員 | 說明 |
+| --- | --- |
+| `PendingCount` | 等待派發的訊息筆數 |
+| `ProcessingCount` | 已由 dispatcher 認領、尚未完成的訊息筆數 |
+| `ProcessedCount` | 已完成派發且仍在保留期間內的訊息筆數 |
+| `DeadLetteredCount` | 已超過重試上限的訊息筆數 |
+| `OldestPendingOccurredOn` | 最早一筆待派發訊息的 `OccurredOn`；沒有待派發訊息時為 `null` |
+
+一般情況直接使用 `GetStatisticsAsync` 的回傳值。需要自行建立執行個體時（例如測試中替代 `IOutboxAdministrator`），以物件初始設定式指定；四個筆數屬性是 `required` 成員，必須全部指定，`OldestPendingOccurredOn` 可省略。
+
 重新排入不會清除 `LastError`，保留最近一次失敗摘要供追查。重新排入前應先修正造成失敗的原因，否則訊息會再次依重試策略進入 Dead Letter。
 
 ## Integration event handler
@@ -203,7 +217,9 @@ await eventBroadcast.PublishAsync(
 ).ConfigureAwait(false);
 ```
 
-應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的非取消例外不會回拋給發布端，其他訂閱者仍會繼續收到通知。`AddDomainKit` 註冊的執行個體會以 `ILogger<InProcessEventBroadcast>` 將該例外記錄為 Warning；自行以無參數建構子建立時不記錄日誌，需要記錄時改用接受 `ILogger<InProcessEventBroadcast>` 的建構子。取消例外會往外拋，發布端可據此中止。
+應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的例外不會回拋給發布端，其他訂閱者仍會繼續收到通知。唯一的情形是傳入 `PublishAsync` 的取消權杖已被取消，且訂閱者拋出 `OperationCanceledException`，此時例外會往外拋，發布端可據此中止，後續訂閱者不再收到通知。權杖未被取消時拋出的 `OperationCanceledException` 與其他例外相同，視為訂閱者失敗。
+
+訂閱者失敗時會以 Warning 記錄。`AddDomainKit` 註冊的執行個體在容器解析得到 `ILogger<InProcessEventBroadcast>` 時使用該 Logger，解析不到時改用 `NullLogger`，不輸出日誌。自行以無參數建構子建立時同樣不記錄日誌，需要記錄時改用接受 `ILogger<InProcessEventBroadcast>` 的建構子。
 
 訂閱與發布以通知的執行階段型別配對。`Subscribe<TNotification>` 只會收到型別完全相同的通知，訂閱基底型別或介面不會收到衍生型別的實例，通知型別應直接是要發布的具體型別。發布端只持有 `object` 參考時，可使用接受 `object` 的 `PublishAsync` 多載，配對規則相同，仍以實際型別查找訂閱者。沒有對應訂閱者的通知會被安靜捨棄，不視為錯誤。
 

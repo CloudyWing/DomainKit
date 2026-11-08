@@ -68,7 +68,7 @@ modelBuilder.ApplyTenantConventions(this);
 
 ## 寫入租戶欄位
 
-`TenantStampInterceptor` 會在新增資料前，把目前租戶寫入具有 `TenantId` shadow property 的實體。只要本次提交包含租戶實體，缺少租戶脈絡就會拋出 `InvalidOperationException`。
+`TenantStampInterceptor` 會在新增資料前，把目前租戶寫入具有 `TenantId` shadow property 的實體。只要本次提交包含租戶實體，缺少租戶脈絡就會拋出 `InvalidOperationException`。手動建構 `TenantStampInterceptor` 時，`currentTenant` 參數不可為 `null`，否則建構子會立即擲出 `ArgumentNullException`，不會等到提交時才失敗。
 
 新增實體的 `TenantId` 一律以目前租戶覆寫，呼叫端先行指定的值不會保留。這是刻意的隔離設計，寫入的資料只會落在目前租戶範圍。需要代替其他租戶寫入時，以 `ICurrentTenant.Change` 切換租戶脈絡後再提交。
 
@@ -109,10 +109,12 @@ public sealed class Customer : AggregateRootBase, IHasRowVersion {
 
 ```csharp
 modelBuilder.Entity<Customer>(builder => {
-    builder.ConfigureFullAuditedEntity();
+    builder.ConfigureEntityBase();
     builder.ConfigureRowVersion();
 });
 ```
+
+上例的 `Customer` 只實作 `IHasRowVersion`，因此以 `ConfigureEntityBase` 設定主鍵。實體另外實作審計標記介面時，改呼叫對應的審計設定擴充（例如 `ConfigureFullAuditedEntity`，實體須實作其要求的全部審計介面），再呼叫 `ConfigureRowVersion`。審計設定已包含主鍵設定。
 
 預設設定為 provider 中立的 concurrency token。`RowVersionStampInterceptor` 會在新增與修改時產生新的 token。
 

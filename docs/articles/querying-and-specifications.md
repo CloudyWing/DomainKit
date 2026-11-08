@@ -7,13 +7,14 @@
 | 方法 | 語意 |
 | --- | --- |
 | `AnyAsync` / `CountAsync` | 存在性與計數 |
-| `GetSingleAsync` / `GetSingleOrDefaultAsync` | 必須剛好一筆 |
+| `GetSingleAsync` | 必須剛好一筆，零筆或多於一筆都拋例外 |
+| `GetSingleOrDefaultAsync` | 至多一筆，零筆時回傳預設值，多於一筆時拋例外 |
 | `GetFirstAsync` / `GetFirstOrDefaultAsync` | 依排序取第一筆 |
 | `GetListAsync` | 清單投影 |
 | `GetPagedListAsync` | 分頁投影 |
 | `GetGroupedListAsync` | 分組、彙總、Having 與排序投影 |
 
-`GetSingleAsync` 在多於一筆時拋例外。「依排序取第一筆」請改用 `GetFirstAsync`：
+`GetSingleAsync` 在零筆或多於一筆時拋例外，`GetSingleOrDefaultAsync` 只在多於一筆時拋例外。「依排序取第一筆」請改用 `GetFirstAsync`：
 
 ```csharp
 string nextName = await queryService.GetFirstAsync(
@@ -166,6 +167,13 @@ while (page.HasMore) {
 | `Items` | 本頁資料，依排序鍵遞增 |
 | `NextKey` | 本頁最後一筆的排序鍵，查詢下一頁時傳入；本頁沒有資料時為預設值 |
 | `HasMore` | 本頁之後是否仍有資料 |
+
+一般查詢直接使用 `ToKeysetPageAsync` 的回傳值。需要自行建立結果時（例如測試中替代查詢方法），使用公開建構子 `KeysetPage<TItem, TKey>(items, nextKey, hasMore)`，三個參數依序對應上表的 `Items`、`NextKey` 與 `HasMore`，`items` 不可為 `null`。
+
+```csharp
+IReadOnlyList<CustomerListItem> items = [first, second];
+KeysetPage<CustomerListItem, Guid> page = new(items, second.Id, hasMore: false);
+```
 
 使用限制如下：
 

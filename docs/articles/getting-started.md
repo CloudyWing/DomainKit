@@ -1,6 +1,6 @@
 # 入門指南
 
-本指南示範如何導入 DomainKit，包含定義聚合、設定 DbContext、註冊服務，以及進行持久化與查詢。套件目前以 .NET 10 為目標框架。
+本指南示範如何導入 DomainKit，包含定義聚合、設定 DbContext、註冊服務，以及進行持久化與查詢。套件目前以 .NET 10 為目標框架。核心套件 `CloudyWing.DomainKit` 在專案檔設定 `IsAotCompatible`，建置時會啟用 trimming 與 AOT 相容性分析器。`CloudyWing.DomainKit.EntityFrameworkCore` 未設定此屬性。此屬性啟用建置期的分析器檢查，Native AOT 發佈的實際相容性仍須由宿主驗證。
 
 ## 安裝
 
@@ -18,11 +18,28 @@ dotnet add package CloudyWing.DomainKit.EntityFrameworkCore
 ```csharp
 using CloudyWing.DomainKit.Entities;
 
-public class Customer : AggregateRootBase, IHasDisabledState,
+public class Customer : AggregateRootBase, IHasDisabledState, IHasDisplayOrder,
     IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater, IHasDeletedTime, IHasDeleter {
     public string Name { get; private set; } = "";
 
+    public string City { get; private set; } = "";
+
+    public int DisplayOrder { get; private set; }
+
     public bool IsDisabled { get; private set; }
+
+    // 審計欄位由 SaveChanges 攔截器填值
+    public DateTimeOffset CreatedTime { get; private set; }
+
+    public Guid CreatorId { get; private set; }
+
+    public DateTimeOffset UpdatedTime { get; private set; }
+
+    public Guid UpdaterId { get; private set; }
+
+    public DateTimeOffset? DeletedTime { get; private set; }
+
+    public Guid? DeleterId { get; private set; }
 
     private Customer() { }
 
