@@ -1,16 +1,21 @@
 name: Build and Deploy Documentation
 
+# 需先將 Settings > Pages > Source 設為「GitHub Actions」。
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   docs:
-    uses: CloudyWing/devops-templates/.github/workflows/reusable-docfx-publish.yml@main
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: CloudyWing/devops-templates/.github/workflows/reusable-docfx-publish.yml@v1
     with:
-      docfx-config: "docs/docfx.json"
-      dotnet-version: "10.0.x"
+      docfx-config: docs/docfx.json

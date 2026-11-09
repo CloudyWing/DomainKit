@@ -21,6 +21,9 @@ public static class ModelBuilderExtensions {
     /// <see cref="DateTimeOffset" /> 的儲存型別因資料庫而異（SQL Server 有原生 <c>datetimeoffset</c>，SQLite 無），
     /// 故 DomainKit 不內建特定 converter，改由宿主依 provider 傳入對應的 <see cref="ValueConverter" />（seam）。
     /// EF Core 會對 <see cref="Nullable{DateTimeOffset}" /> 自動套用同一轉換器。
+    /// EF Core 的 pre-convention API 只接受轉換器型別，因此本方法以 <paramref name="dateTimeOffsetConverter" /> 的執行期型別註冊，
+    /// 由 EF Core 透過該型別的公開無參數建構子建立新實例；傳入實例的建構子參數與狀態不會套用。
+    /// 需要帶設定的轉換器時，建立以無參數建構子固定設定的衍生型別，或在個別屬性以 <c>HasConversion</c> 傳入實例。
     /// </remarks>
     /// <param name="configurationBuilder">模型設定建置器。</param>
     /// <param name="dateTimeOffsetConverter">宿主提供的 <see cref="DateTimeOffset" /> 值轉換器；為 <see langword="null" /> 時不套用轉換。</param>
@@ -161,6 +164,10 @@ public static class ModelBuilderExtensions {
     /// <summary>
     /// 設定完整審計欄位與軟刪除全域查詢篩選。
     /// </summary>
+    /// <remarks>
+    /// 預設以匿名查詢篩選註冊軟刪除條件。模型先呼叫 <see cref="QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters" /> 時，
+    /// 改以名稱 <see cref="DomainKitQueryFilterNames.SoftDelete" /> 註冊具名查詢篩選。
+    /// </remarks>
     /// <typeparam name="TEntity">實體型別。</typeparam>
     /// <param name="builder">實體型別建置器。</param>
     /// <returns>實體型別建置器。</returns>
@@ -172,7 +179,12 @@ public static class ModelBuilderExtensions {
         builder.ConfigureUserAuditedEntity();
         builder.Property<DateTimeOffset?>(nameof(IHasDeletedTime.DeletedTime));
         builder.Property<Guid?>(nameof(IHasDeleter.DeleterId));
-        builder.HasQueryFilter(CreateSoftDeleteFilter<TEntity>());
+        Expression<Func<TEntity, bool>> softDeleteFilter = CreateSoftDeleteFilter<TEntity>();
+        if (QueryFilterModelBuilderExtensions.IsNamedQueryFiltersEnabled(builder.Metadata.Model)) {
+            builder.HasQueryFilter(DomainKitQueryFilterNames.SoftDelete, softDeleteFilter);
+        } else {
+            builder.HasQueryFilter(softDeleteFilter);
+        }
 
         return builder;
     }

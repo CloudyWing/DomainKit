@@ -31,11 +31,21 @@ using CloudyWing.DomainKit.Entities;
 using CloudyWing.DomainKit.EntityFrameworkCore.Modeling;
 using Microsoft.EntityFrameworkCore;
 
-public class Customer : AggregateRootBase, IHasDisabledState,
+public class Customer : AggregateRootBase, IHasDisabledState, IHasDisplayOrder,
     IHasCreatedTime, IHasUpdatedTime, IHasCreator, IHasUpdater, IHasDeletedTime, IHasDeleter {
     public string Name { get; private set; } = "";
+    public string City { get; private set; } = "";
+    public int DisplayOrder { get; private set; }
     public bool IsDisabled { get; private set; }
-    // 充血行為與審計欄位
+
+    // 審計欄位由 SaveChanges 攔截器填值
+    public DateTimeOffset CreatedTime { get; private set; }
+    public Guid CreatorId { get; private set; }
+    public DateTimeOffset UpdatedTime { get; private set; }
+    public Guid UpdaterId { get; private set; }
+    public DateTimeOffset? DeletedTime { get; private set; }
+    public Guid? DeleterId { get; private set; }
+    // 充血行為
 }
 
 public interface ICustomerDbContext {
@@ -79,7 +89,7 @@ await repository.CreateAsync(customer, cancellationToken: ct).ConfigureAwait(fal
 await unitOfWork.SaveChangesAsync(actorId, ct).ConfigureAwait(false);
 ```
 
-需要明確交易範圍時，使用 `IUnitOfWork.UseTransactionAsync`。
+需要明確交易範圍時，使用 `IUnitOfWork.UseTransactionAsync`。provider 啟用具重試能力的 execution strategy 時，改用 `UseResilientTransactionAsync` 擴充方法，暫時性失敗時重新執行整個交易。具重試能力時，呼叫前 `DbContext` 不可有未儲存的變更，否則會擲出 `InvalidOperationException`。請先呼叫 `SaveChangesAsync`，或把修改移入委派。
 
 ### 查詢
 
@@ -95,6 +105,8 @@ string nextName = await queryService.GetFirstAsync(
 ```
 
 若查無資料但不想拋例外，改用 `GetFirstOrDefaultAsync`，無資料時回傳 `null`。
+
+自行組 `IQueryable` 時，`ToPagedListAsync` 提供頁碼分頁，`ToKeysetPageAsync` 以唯一且不可變的排序鍵提供 keyset 分頁，回傳 `KeysetPage<TItem, TKey>` 的 `Items`、`NextKey` 與 `HasMore`。
 
 ### 規約 Specifications
 
@@ -119,7 +131,7 @@ PagedList<CustomerListItem> page = await queryService.GetPagedListAsync(
 ).ConfigureAwait(false);
 ```
 
-習慣以離散參數呼叫時，可透過 `QueryServiceSpecificationExtensions` 組成規約後委派核心多載。
+執行期才決定數量的規約可用 `AllOf`（AND）與 `AnyOf`（OR）組合，空集合分別回傳 `Specification<T>.True` 與 `Specification<T>.False`。習慣以離散參數呼叫時，可透過 `QueryServiceSpecificationExtensions` 組成規約後委派核心多載。
 
 ### 審計與雙軌事件
 
@@ -131,6 +143,8 @@ Outbox、多租戶及 provider 專屬 RowVersion 設定請依完整文件導入�
 ## 版本與相容性
 
 目標框架為 .NET 10。版號由 MinVer 依 git tag（前綴 `v`）推導，發版即打 tag。
+
+核心套件 `CloudyWing.DomainKit` 在專案檔設定 `IsAotCompatible`，建置時會啟用 trimming 與 AOT 相容性分析器。`CloudyWing.DomainKit.EntityFrameworkCore` 未設定此屬性。此屬性啟用建置期的分析器檢查，Native AOT 發佈的實際相容性仍須由宿主驗證。
 
 `0.x` 期間不保證公開 API 穩定，次版號遞增即可能包含破壞性變更，變更內容記於 [CHANGELOG.md](./CHANGELOG.md)。相依此套件時建議釘死明確版號，避免使用範圍或浮動版號。
 

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,6 +30,9 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
         "Outbox 訊息 {OutboxMessageId} 派發失敗。"
     );
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
+    private static readonly ConcurrentDictionary<string, Type> EventTypes = new(StringComparer.Ordinal);
+    private static readonly ConcurrentDictionary<Type, Type> HandlerServiceTypes = new();
+    private static readonly ConcurrentDictionary<Type, string> HandlerKeys = new();
     private readonly string instanceId = $"{Environment.MachineName}:{Environment.ProcessId}:{Guid.NewGuid():N}";
     private readonly ILogger<OutboxDispatcherHostedService<TDbContext>> logger;
     private readonly OutboxOptions options;
@@ -95,10 +99,11 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             )
             .ConfigureAwait(false);
         DomainKitDiagnostics.SetPendingCount(pendingCount);
+        // 停機或當機時已認領的訊息會停留在 Processing，租約到期後視同可重新認領。
         List<Guid> candidateIds = await claimContext.Set<OutboxMessage>()
             .IgnoreQueryFilters()
-            .Where(message => message.Status == OutboxMessageStatus.Pending
-                && message.NextRetryOn <= now
+            .Where(message => ((message.Status == OutboxMessageStatus.Pending && message.NextRetryOn <= now)
+                    || message.Status == OutboxMessageStatus.Processing)
                 && (!message.LockedUntil.HasValue || message.LockedUntil.Value < now))
             .OrderBy(message => message.Id)
             .Take(options.BatchSize)
@@ -111,7 +116,8 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             int affected = await claimContext.Set<OutboxMessage>()
                 .IgnoreQueryFilters()
                 .Where(message => message.Id == id
-                    && message.Status == OutboxMessageStatus.Pending
+                    && (message.Status == OutboxMessageStatus.Pending
+                        || message.Status == OutboxMessageStatus.Processing)
                     && (!message.LockedUntil.HasValue || message.LockedUntil.Value < now))
                 .ExecuteUpdateAsync(
                     setters => setters
@@ -160,7 +166,11 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             if (message.TenantId.HasValue) {
                 activity?.SetTag("tenant.id", message.TenantId.Value);
             }
-            Type eventType = Type.GetType(message.EventType, throwOnError: true)!;
+            // 型別解析失敗時 factory 會拋出例外，GetOrAdd 不會快取失敗結果，下次重試仍會重新解析。
+            Type eventType = EventTypes.GetOrAdd(
+                message.EventType,
+                static typeName => Type.GetType(typeName, throwOnError: true)!
+            );
             object eventData = JsonSerializer.Deserialize(message.Payload, eventType, SerializerOptions)
                 ?? throw new InvalidOperationException("Outbox 事件內容無法反序列化。");
             if (eventData is not IIntegrationEvent) {
@@ -169,7 +179,10 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
 
             IntegrationEventContext context = scope.ServiceProvider.GetRequiredService<IntegrationEventContext>();
             context.SetEventId(message.Id);
-            Type handlerServiceType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+            Type handlerServiceType = HandlerServiceTypes.GetOrAdd(
+                eventType,
+                static type => typeof(IIntegrationEventHandler<>).MakeGenericType(type)
+            );
             IEnumerable<object?> handlers = scope.ServiceProvider.GetServices(handlerServiceType);
             foreach (object handler in handlers.OfType<object>()) {
                 string handlerName = CreateHandlerKey(handler.GetType());
@@ -224,16 +237,16 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
             .IgnoreQueryFilters()
             .SingleOrDefaultAsync(item => item.Id == id, cancellationToken)
             .ConfigureAwait(false);
-        if (message is null) {
+        // 租約逾期後訊息可能已由其他執行個體完成，失敗結果不得把已完成的訊息退回待派發。
+        if (message is null || message.Status == OutboxMessageStatus.Processed) {
             return;
         }
 
         message.RetryCount++;
         message.LockedBy = null;
         message.LockedUntil = null;
-        message.LastError = exception.ToString().Length <= 2000
-            ? exception.ToString()
-            : exception.ToString()[..2000];
+        string error = exception.ToString();
+        message.LastError = error.Length <= 2000 ? error : error[..2000];
         if (message.RetryCount > options.MaxRetryCount) {
             message.Status = OutboxMessageStatus.DeadLettered;
             DomainKitDiagnostics.OutboxDeadLetter.Add(1);
@@ -259,46 +272,35 @@ public sealed class OutboxDispatcherHostedService<TDbContext> : BackgroundServic
         await using TDbContext dbContext = await dbContextFactory
             .CreateDbContextAsync(cancellationToken)
             .ConfigureAwait(false);
-        List<ProcessedEvent> processedEvents = await dbContext.Set<ProcessedEvent>()
-            .ToListAsync(cancellationToken)
-            .ConfigureAwait(false);
-        List<ProcessedEvent> expiredProcessedEvents = processedEvents
+        // 以伺服器端批次刪除清理過期資料，避免每輪把整張表載入記憶體。
+        await dbContext.Set<ProcessedEvent>()
             .Where(processed => processed.ProcessedOn < cutoff)
+            .OrderBy(processed => processed.ProcessedOn)
             .Take(options.BatchSize)
-            .ToList();
-        List<OutboxMessage> processedOutboxMessages = await dbContext.Set<OutboxMessage>()
-            .IgnoreQueryFilters()
-            .Where(message => message.Status == OutboxMessageStatus.Processed)
-            .ToListAsync(cancellationToken)
+            .ExecuteDeleteAsync(cancellationToken)
             .ConfigureAwait(false);
-        List<OutboxMessage> expiredOutboxMessages = processedOutboxMessages
-            .Where(message => message.ProcessedOn.HasValue && message.ProcessedOn.Value < cutoff)
+        await dbContext.Set<OutboxMessage>()
+            .IgnoreQueryFilters()
+            .Where(message => message.Status == OutboxMessageStatus.Processed
+                && message.ProcessedOn.HasValue
+                && message.ProcessedOn.Value < cutoff)
+            .OrderBy(message => message.ProcessedOn)
             .Take(options.BatchSize)
-            .ToList();
-        if (expiredProcessedEvents.Count == 0 && expiredOutboxMessages.Count == 0) {
-            return;
-        }
-
-        dbContext.Set<ProcessedEvent>().RemoveRange(expiredProcessedEvents);
-        dbContext.Set<OutboxMessage>().RemoveRange(expiredOutboxMessages);
-        await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            .ExecuteDeleteAsync(cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private static void ValidateOptions(OutboxOptions options) {
-        if (options.BatchSize <= 0
-            || options.PollingInterval <= TimeSpan.Zero
-            || options.LockDuration <= TimeSpan.Zero
-            || options.BaseRetryDelay <= TimeSpan.Zero
-            || options.MaxRetryDelay < options.BaseRetryDelay
-            || options.MaxRetryCount < 0
-            || options.RetentionPeriod <= TimeSpan.Zero) {
+        if (OutboxOptionsValidator.GetFailures(options).Count > 0) {
             throw new InvalidOperationException("Outbox 選項包含無效值。");
         }
     }
 
     private static string CreateHandlerKey(Type handlerType) {
-        string identity = CreateLegacyHandlerName(handlerType);
-        return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(identity)));
+        return HandlerKeys.GetOrAdd(
+            handlerType,
+            static type => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(CreateLegacyHandlerName(type))))
+        );
     }
 
     private static string CreateLegacyHandlerName(Type handlerType) {

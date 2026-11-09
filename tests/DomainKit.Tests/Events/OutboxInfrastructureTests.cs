@@ -219,6 +219,100 @@ public sealed class OutboxInfrastructureTests {
         Assert.That(recorder.IntegrationEvents, Has.Count.EqualTo(1));
     }
 
+    [Test]
+    public async Task DispatchBatchAsync_ProcessingMessageWithExpiredLease_ReclaimsAndMarksProcessedAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        await AddIntegrationEventAsync(database);
+        await SetProcessingLeaseAsync(database, DateTimeOffset.UtcNow.AddMinutes(-5));
+        EventRecorder recorder = database.Services.GetRequiredService<EventRecorder>();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        int dispatched = await dispatcher.DispatchBatchAsync(default);
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(dispatched, Is.EqualTo(1));
+            Assert.That(recorder.IntegrationEvents, Has.Count.EqualTo(1));
+            Assert.That(message.Status, Is.EqualTo(OutboxMessageStatus.Processed));
+            Assert.That(message.LockedUntil, Is.Null);
+        }
+    }
+
+    [Test]
+    public async Task DispatchBatchAsync_ProcessingMessageWithActiveLease_DoesNotClaimAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        await AddIntegrationEventAsync(database);
+        await SetProcessingLeaseAsync(database, DateTimeOffset.UtcNow.AddMinutes(5));
+        EventRecorder recorder = database.Services.GetRequiredService<EventRecorder>();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        int dispatched = await dispatcher.DispatchBatchAsync(default);
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(dispatched, Is.Zero);
+            Assert.That(recorder.IntegrationEvents, Is.Empty);
+            Assert.That(message.Status, Is.EqualTo(OutboxMessageStatus.Processing));
+        }
+    }
+
+    [Test]
+    public async Task DispatchBatchAsync_ProcessedRowsOlderThanRetention_DeletesExpiredRowsOnlyAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        DateTimeOffset now = DateTimeOffset.UtcNow;
+        Guid expiredId = Guid.CreateVersion7();
+        Guid recentId = Guid.CreateVersion7();
+        database.DbContext.Set<OutboxMessage>().AddRange(
+            CreateProcessedMessage(expiredId, now.AddDays(-8)),
+            CreateProcessedMessage(recentId, now.AddDays(-1))
+        );
+        database.DbContext.Set<ProcessedEvent>().AddRange(
+            new ProcessedEvent { HandlerName = "expired", EventId = expiredId, ProcessedOn = now.AddDays(-8) },
+            new ProcessedEvent { HandlerName = "recent", EventId = recentId, ProcessedOn = now.AddDays(-1) }
+        );
+        await database.DbContext.SaveChangesAsync();
+        database.DbContext.ChangeTracker.Clear();
+        OutboxDispatcherHostedService<TestDbContext> dispatcher = GetDispatcher(database);
+
+        await dispatcher.DispatchBatchAsync(default);
+        List<Guid> remainingMessageIds = await database.DbContext.Set<OutboxMessage>()
+            .Select(message => message.Id)
+            .ToListAsync();
+        List<Guid> remainingProcessedEventIds = await database.DbContext.Set<ProcessedEvent>()
+            .Select(processed => processed.EventId)
+            .ToListAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(remainingMessageIds, Is.EquivalentTo(new[] { recentId }));
+            Assert.That(remainingProcessedEventIds, Is.EquivalentTo(new[] { recentId }));
+        }
+    }
+
+    private static OutboxMessage CreateProcessedMessage(Guid id, DateTimeOffset processedOn) {
+        return new OutboxMessage {
+            Id = id,
+            EventType = typeof(TestIntegrationEvent).AssemblyQualifiedName
+                ?? throw new InvalidOperationException("測試事件缺少組件限定名稱。"),
+            Payload = "{}",
+            OccurredOn = processedOn,
+            Status = OutboxMessageStatus.Processed,
+            NextRetryOn = processedOn,
+            ProcessedOn = processedOn
+        };
+    }
+
+    private static async Task SetProcessingLeaseAsync(TestDatabase database, DateTimeOffset lockedUntil) {
+        database.DbContext.ChangeTracker.Clear();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+        message.Status = OutboxMessageStatus.Processing;
+        message.LockedBy = "crashed-instance";
+        message.LockedUntil = lockedUntil;
+        await database.DbContext.SaveChangesAsync();
+        database.DbContext.ChangeTracker.Clear();
+    }
+
     private static async Task AddIntegrationEventAsync(TestDatabase database) {
         AuditedAggregate aggregate = new() {
             Name = "Outbox",
@@ -233,17 +327,5 @@ public sealed class OutboxInfrastructureTests {
         return database.Services.GetServices<IHostedService>()
             .OfType<OutboxDispatcherHostedService<TestDbContext>>()
             .Single();
-    }
-
-    private sealed class FixedTimeProvider : TimeProvider {
-        private readonly DateTimeOffset utcNow;
-
-        public FixedTimeProvider(DateTimeOffset utcNow) {
-            this.utcNow = utcNow;
-        }
-
-        public override DateTimeOffset GetUtcNow() {
-            return utcNow;
-        }
     }
 }

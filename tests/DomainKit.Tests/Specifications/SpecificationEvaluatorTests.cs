@@ -39,6 +39,24 @@ public sealed class SpecificationEvaluatorTests {
         Assert.That(actual, Is.EqualTo(new[] { "Astra" }));
     }
 
+    [Test]
+    public void ApplyPaged_PageOffsetExceedsInt32_ReturnsEmptyPage() {
+        IQueryable<AuditedAggregate> query = CreateQuery();
+        IPagedSpecification<AuditedAggregate> specification = PagedSpecification<AuditedAggregate>.Create(
+            entity => entity.Name != "",
+            entities => entities.OrderBy(entity => entity.Name),
+            int.MaxValue,
+            100
+        );
+
+        string[] actual = SpecificationEvaluator<AuditedAggregate>
+            .ApplyPaged(query, specification)
+            .Select(entity => entity.Name)
+            .ToArray();
+
+        Assert.That(actual, Is.Empty);
+    }
+
     private static IQueryable<AuditedAggregate> CreateQuery() {
         return new[] {
             new AuditedAggregate {

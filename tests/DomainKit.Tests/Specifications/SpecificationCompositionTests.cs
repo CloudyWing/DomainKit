@@ -37,6 +37,79 @@ public sealed class SpecificationCompositionTests {
     }
 
     [Test]
+    public void True_AnyEntity_MatchesAllRows() {
+        IQueryable<AuditedAggregate> query = CreateQuery();
+
+        int actual = query.Count(Specification<AuditedAggregate>.True.ToExpression());
+
+        Assert.That(actual, Is.EqualTo(3));
+    }
+
+    [Test]
+    public void False_AnyEntity_MatchesNoRows() {
+        IQueryable<AuditedAggregate> query = CreateQuery();
+
+        int actual = query.Count(Specification<AuditedAggregate>.False.ToExpression());
+
+        Assert.That(actual, Is.Zero);
+    }
+
+    [Test]
+    public void AllOf_MultipleSpecifications_ReturnsIntersection() {
+        IQueryable<AuditedAggregate> query = CreateQuery();
+        ISpecification<AuditedAggregate>[] specifications = [
+            new Specification<AuditedAggregate>(entity => entity.Name.StartsWith("A")),
+            new Specification<AuditedAggregate>(entity => entity.Name.EndsWith("a")),
+            new Specification<AuditedAggregate>(entity => entity.Name.Contains("lph"))
+        ];
+
+        string[] actual = query
+            .Where(specifications.AllOf().ToExpression())
+            .Select(entity => entity.Name)
+            .ToArray();
+
+        Assert.That(actual, Is.EqualTo(new[] { "Alpha" }));
+    }
+
+    [Test]
+    public void AnyOf_MultipleSpecifications_ReturnsUnion() {
+        IQueryable<AuditedAggregate> query = CreateQuery();
+        ISpecification<AuditedAggregate>[] specifications = [
+            new Specification<AuditedAggregate>(entity => entity.Name == "Alpha"),
+            new Specification<AuditedAggregate>(entity => entity.Name == "Beta")
+        ];
+
+        string[] actual = query
+            .Where(specifications.AnyOf().ToExpression())
+            .Select(entity => entity.Name)
+            .OrderBy(name => name)
+            .ToArray();
+
+        Assert.That(actual, Is.EqualTo(new[] { "Alpha", "Beta" }));
+    }
+
+    [Test]
+    public void AllOf_EmptySequence_ReturnsTrueSpecification() {
+        ISpecification<AuditedAggregate> actual = Array.Empty<ISpecification<AuditedAggregate>>().AllOf();
+
+        Assert.That(actual, Is.SameAs(Specification<AuditedAggregate>.True));
+    }
+
+    [Test]
+    public void AnyOf_EmptySequence_ReturnsFalseSpecification() {
+        ISpecification<AuditedAggregate> actual = Array.Empty<ISpecification<AuditedAggregate>>().AnyOf();
+
+        Assert.That(actual, Is.SameAs(Specification<AuditedAggregate>.False));
+    }
+
+    [Test]
+    public void AllOf_NullElement_ThrowsArgumentException() {
+        ISpecification<AuditedAggregate>[] specifications = [null!];
+
+        Assert.Throws<ArgumentException>(() => specifications.AllOf());
+    }
+
+    [Test]
     public void Not_WithSpecification_ReturnsComplement() {
         IQueryable<AuditedAggregate> query = CreateQuery();
         ISpecification<AuditedAggregate> startsWithA = new Specification<AuditedAggregate>(entity => entity.Name.StartsWith("A"));

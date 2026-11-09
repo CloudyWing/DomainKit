@@ -58,6 +58,70 @@ public sealed class AuditAndDomainEventInterceptorTests {
     }
 
     [Test]
+    public async Task SaveChanges_SyncPath_FillsAuditValuesAndStampsRowVersionAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        AuditedAggregate aggregate = new() {
+            Name = "SyncAudited",
+            ExternalKey = Guid.CreateVersion7()
+        };
+        database.DbContext.AuditedAggregates.Add(aggregate);
+
+        database.DbContext.SaveChanges();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(aggregate.CreatedTime, Is.Not.EqualTo(default(DateTimeOffset)));
+            Assert.That(aggregate.UpdatedTime, Is.Not.EqualTo(default(DateTimeOffset)));
+            Assert.That(aggregate.RowVersion, Is.Not.Empty);
+        }
+    }
+
+    [Test]
+    public async Task SaveChanges_SyncPathWithDomainEvent_DispatchesAndClearsEventAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        EventRecorder recorder = database.Services.GetRequiredService<EventRecorder>();
+        SideEffectEntity sideEffect = new() {
+            Note = "pending"
+        };
+        AuditedAggregate aggregate = new() {
+            Name = "SyncDomainEvent",
+            ExternalKey = Guid.CreateVersion7()
+        };
+        aggregate.RaiseDomainEvent(sideEffect.Id);
+        database.DbContext.SideEffects.Add(sideEffect);
+        database.DbContext.AuditedAggregates.Add(aggregate);
+
+        database.DbContext.SaveChanges();
+        database.DbContext.ChangeTracker.Clear();
+        SideEffectEntity storedSideEffect = await database.DbContext.SideEffects.SingleAsync(entity => entity.Id == sideEffect.Id);
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(recorder.DomainEvents.OfType<TestDomainEvent>().Count(), Is.EqualTo(1));
+            Assert.That(storedSideEffect.Note, Is.EqualTo("handled"));
+            Assert.That(aggregate.DomainEvents, Is.Empty);
+        }
+    }
+
+    [Test]
+    public async Task SaveChanges_SyncPathWithIntegrationEvent_PersistsOutboxMessageAndClearsEventAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync(registerHandlers: true);
+        AuditedAggregate aggregate = new() {
+            Name = "SyncIntegrationEvent",
+            ExternalKey = Guid.CreateVersion7()
+        };
+        aggregate.RaiseIntegrationEvent();
+        database.DbContext.AuditedAggregates.Add(aggregate);
+
+        database.DbContext.SaveChanges();
+        OutboxMessage message = await database.DbContext.Set<OutboxMessage>().SingleAsync();
+
+        using (Assert.EnterMultipleScope()) {
+            Assert.That(message.Status, Is.EqualTo(OutboxMessageStatus.Pending));
+            Assert.That(message.EventType, Does.Contain(nameof(TestIntegrationEvent)));
+            Assert.That(aggregate.IntegrationEvents, Is.Empty);
+        }
+    }
+
+    [Test]
     public async Task SaveChangesAsync_AddedCreationAuditedEntity_FillsCreatedAuditValuesOnlyAsync() {
         await using TestDatabase database = await TestDatabase.CreateAsync();
         IUnitOfWork unitOfWork = database.Services.GetRequiredService<IUnitOfWork>();

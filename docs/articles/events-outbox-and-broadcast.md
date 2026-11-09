@@ -54,6 +54,8 @@ public sealed class CustomerRenamedDomainEventHandler
 }
 ```
 
+掃描組件時，若組件內部分型別因相依組件無法載入而拋出 `ReflectionTypeLoadException`，`AddDomainKit` 會略過這些型別，仍註冊其餘可載入的 handler，且不輸出任何訊息。Domain event 與 Integration event 的 handler 掃描行為相同。被略過型別的 handler 不會被註冊，部署時須確認 handler 組件的相依組件都已一併部署。
+
 Domain event 在 EF Core 寫入前派發。Handler 對同一個 `DbContext` 追蹤實體所做的變更會進入同次 `SaveChanges`。Handler 新增的 Domain event 會繼續派發，最多迭代 32 輪；未收斂時提交會失敗。
 
 事件集合只在提交成功後清除。提交失敗時 Integration event 仍保留於聚合，供呼叫端決定是否重試或放棄工作單元。
@@ -102,10 +104,12 @@ modelBuilder.ApplyTenantConventions(
 ## Outbox 處理流程
 
 1. `SavingChanges` 將聚合的 Integration event 序列化成 `OutboxMessage`，與業務資料同一次提交。
-2. 背景服務依 `Id` 排序取得可處理訊息，再以條件式更新取得租約。
+2. 背景服務依 `Id` 排序取得可處理訊息，再以條件式更新取得租約。停機或當機中斷而停留在 `Processing` 的訊息，租約到期後也會重新認領。
 3. 派發前依訊息保存的 `TenantId` 還原租戶脈絡。
 4. 每個 handler 成功處理後新增 `ProcessedEvent`，以 handler 型別與事件識別碼判重。
 5. 全部 handler 與資料變更儲存成功後，訊息標成 `Processed`。
+
+`LockDuration` 應大於單一訊息全部 handler 的處理時間。處理時間超過租約時，其他執行個體可能重新認領同一筆訊息，由 `ProcessedEvent` 判重避免同一個 handler 重複完成。
 
 Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler 應維持冪等；若 handler 在資料庫提交前已呼叫外部系統，後續儲存失敗仍可能造成外部副作用重複。
 
@@ -122,6 +126,53 @@ Outbox 提供至少一次處理語意，不提供全域嚴格順序。Handler �
 | `RetentionPeriod` | 7 天 | 已處理訊息與判重資料的保留期間 |
 
 事件型別以 assembly-qualified name 儲存。仍有待處理訊息時重新命名事件型別、移動組件或移除相容的建構資料，可能使反序列化失敗並進入重試或 Dead Letter 流程。部署前應先完成事件版本相容策略。
+
+已處理訊息與判重資料超過 `RetentionPeriod` 後，dispatcher 每輪以資料庫端批次刪除清理，每個資料表每輪最多刪除 `BatchSize` 筆。
+
+### 以 Options pipeline 設定
+
+上表選項預設由 `DomainKitOptions.Outbox` 直接設定，不經過 Options pipeline。需要從 configuration 綁定，或希望在 Host 啟動時就驗證選項值時，改用接受 `Action<OptionsBuilder<OutboxOptions>>` 的 `AddDomainKit` 多載。
+
+```csharp
+services.AddDomainKit<AppDbContext>(
+    options => options.EnableOutboxDispatcher = true,
+    outbox => outbox
+        .BindConfiguration("DomainKit:Outbox")
+        .ValidateOnStart(),
+    typeof(CustomerRenamedIntegrationEventHandler).Assembly
+);
+```
+
+`DomainKitOptions.Outbox` 的值會先作為預設值套用，之後才執行建置器加入的設定。此多載會註冊 `IValidateOptions<OutboxOptions>` 檢查各選項範圍，例如 `BatchSize` 必須大於 0、`MaxRetryDelay` 不可小於 `BaseRetryDelay`。驗證失敗時拋出 `OptionsValidationException`，呼叫 `ValidateOnStart` 後會在 Host 啟動時就失敗。`BindConfiguration` 來自 `Microsoft.Extensions.Options.ConfigurationExtensions` 套件，由宿主自行參考。
+
+## Outbox 維運管理
+
+`AddDomainKit` 會註冊 `IOutboxAdministrator`，提供 Dead Letter 重新排入與狀態統計。操作會略過全域查詢篩選並跨租戶存取全部訊息，只應開放給受控的維運流程。
+
+```csharp
+OutboxStatistics statistics = await outboxAdministrator.GetStatisticsAsync(ct).ConfigureAwait(false);
+
+bool requeued = await outboxAdministrator.RequeueDeadLetteredAsync(messageId, ct).ConfigureAwait(false);
+```
+
+| 方法 | 行為 |
+| --- | --- |
+| `GetStatisticsAsync` | 回傳 `Pending`、`Processing`、`Processed`、`DeadLettered` 各狀態筆數與最早一筆待派發訊息的 `OccurredOn` |
+| `RequeueDeadLetteredAsync` | 只處理 `DeadLettered` 訊息，將狀態改回 `Pending`、重試次數歸零、清除租約並設為立即可派發；訊息不存在或不是 `DeadLettered` 時回傳 `false` |
+
+`OutboxStatistics` 的成員如下。
+
+| 成員 | 說明 |
+| --- | --- |
+| `PendingCount` | 等待派發的訊息筆數 |
+| `ProcessingCount` | 已由 dispatcher 認領、尚未完成的訊息筆數 |
+| `ProcessedCount` | 已完成派發且仍在保留期間內的訊息筆數 |
+| `DeadLetteredCount` | 已超過重試上限的訊息筆數 |
+| `OldestPendingOccurredOn` | 最早一筆待派發訊息的 `OccurredOn`；沒有待派發訊息時為 `null` |
+
+一般情況直接使用 `GetStatisticsAsync` 的回傳值。需要自行建立執行個體時（例如測試中替代 `IOutboxAdministrator`），以物件初始設定式指定；四個筆數屬性是 `required` 成員，必須全部指定，`OldestPendingOccurredOn` 可省略。
+
+重新排入不會清除 `LastError`，保留最近一次失敗摘要供追查。重新排入前應先修正造成失敗的原因，否則訊息會再次依重試策略進入 Dead Letter。
 
 ## Integration event handler
 
@@ -166,7 +217,9 @@ await eventBroadcast.PublishAsync(
 ).ConfigureAwait(false);
 ```
 
-應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的非取消例外會被忽略，其他訂閱者仍會繼續收到通知。取消例外會往外拋，發布端可據此中止。
+應在訂閱者生命週期結束時釋放 `subscription`。單一訂閱者拋出的例外不會回拋給發布端，其他訂閱者仍會繼續收到通知。唯一的情形是傳入 `PublishAsync` 的取消權杖已被取消，且訂閱者拋出 `OperationCanceledException`，此時例外會往外拋，發布端可據此中止，後續訂閱者不再收到通知。權杖未被取消時拋出的 `OperationCanceledException` 與其他例外相同，視為訂閱者失敗。
+
+訂閱者失敗時會以 Warning 記錄。`AddDomainKit` 註冊的執行個體在容器解析得到 `ILogger<InProcessEventBroadcast>` 時使用該 Logger，解析不到時改用 `NullLogger`，不輸出日誌。自行以無參數建構子建立時同樣不記錄日誌，需要記錄時改用接受 `ILogger<InProcessEventBroadcast>` 的建構子。
 
 訂閱與發布以通知的執行階段型別配對。`Subscribe<TNotification>` 只會收到型別完全相同的通知，訂閱基底型別或介面不會收到衍生型別的實例，通知型別應直接是要發布的具體型別。發布端只持有 `object` 參考時，可使用接受 `object` 的 `PublishAsync` 多載，配對規則相同，仍以實際型別查找訂閱者。沒有對應訂閱者的通知會被安靜捨棄，不視為錯誤。
 

@@ -10,7 +10,7 @@ namespace CloudyWing.DomainKit.EntityFrameworkCore.Persistence;
 /// 以 EF Core <see cref="DbContext" /> 實作工作單元。
 /// </summary>
 /// <typeparam name="TDbContext">資料庫內容型別。</typeparam>
-public sealed class UnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbContext {
+public sealed class UnitOfWork<TDbContext> : IUnitOfWork, IDbContextProvider where TDbContext : DbContext {
     private readonly TDbContext dbContext;
 
     /// <summary>
@@ -22,6 +22,8 @@ public sealed class UnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCo
 
         this.dbContext = dbContext;
     }
+
+    DbContext IDbContextProvider.DbContext => dbContext;
 
     /// <inheritdoc />
     public async Task<int> SaveChangesAsync(Guid? actorId = null, CancellationToken cancellationToken = default) {
@@ -89,7 +91,8 @@ public sealed class UnitOfWork<TDbContext> : IUnitOfWork where TDbContext : DbCo
 
             return result;
         } catch {
-            await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
+            // 取消時仍須完成 rollback，並保留原始例外，不讓已取消的權杖改拋 OperationCanceledException。
+            await transaction.RollbackAsync(CancellationToken.None).ConfigureAwait(false);
             throw;
         }
     }

@@ -5,7 +5,7 @@ using System.Reflection;
 namespace CloudyWing.DomainKit.EntityFrameworkCore.Events;
 
 internal static class EventHandlerInvoker {
-    private static readonly ConcurrentDictionary<(Type HandlerType, Type EventType),
+    private static readonly ConcurrentDictionary<(Type OpenHandlerType, Type EventType),
         Func<object, object, CancellationToken, Task>> Invokers = new();
 
     public static Task InvokeAsync(
@@ -14,11 +14,9 @@ internal static class EventHandlerInvoker {
         Type openHandlerType,
         CancellationToken cancellationToken
     ) {
-        Type eventType = eventData.GetType();
-        Type handlerType = openHandlerType.MakeGenericType(eventType);
         Func<object, object, CancellationToken, Task> invoker = Invokers.GetOrAdd(
-            (handlerType, eventType),
-            static key => BuildInvoker(key.HandlerType, key.EventType)
+            (openHandlerType, eventData.GetType()),
+            static key => BuildInvoker(key.OpenHandlerType.MakeGenericType(key.EventType), key.EventType)
         );
 
         return invoker(handler, eventData, cancellationToken);

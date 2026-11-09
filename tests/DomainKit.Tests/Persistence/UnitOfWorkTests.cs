@@ -31,6 +31,31 @@ public sealed class UnitOfWorkTests {
     }
 
     [Test]
+    public async Task UseTransactionAsync_TokenCanceledBeforeFailure_RollsBackAndKeepsOriginalExceptionAsync() {
+        await using TestDatabase database = await TestDatabase.CreateAsync();
+        IUnitOfWork sut = database.Services.GetRequiredService<IUnitOfWork>();
+        using CancellationTokenSource cancellationTokenSource = new();
+
+        Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.UseTransactionAsync(
+            async cancellationToken => {
+                database.DbContext.HardDeleteEntities.Add(
+                    new HardDeleteEntity {
+                        Name = "Canceled"
+                    }
+                );
+                await sut.SaveChangesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+                await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                throw new InvalidOperationException("Failure after cancellation.");
+            },
+            cancellationTokenSource.Token
+        ));
+        database.DbContext.ChangeTracker.Clear();
+        int count = await database.DbContext.HardDeleteEntities.AsNoTracking().CountAsync();
+
+        Assert.That(count, Is.Zero);
+    }
+
+    [Test]
     public async Task UseTransactionAsync_NoCurrentTransaction_CommitsTransactionAsync() {
         await using TestDatabase database = await TestDatabase.CreateAsync();
         IUnitOfWork sut = database.Services.GetRequiredService<IUnitOfWork>();

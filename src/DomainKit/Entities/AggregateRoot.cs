@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CloudyWing.DomainKit.Events;
 
 namespace CloudyWing.DomainKit.Entities;
@@ -9,6 +10,8 @@ namespace CloudyWing.DomainKit.Entities;
 public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot {
     private readonly List<IDomainEvent> domainEvents = [];
     private readonly List<IIntegrationEvent> integrationEvents = [];
+    private ReadOnlyCollection<IDomainEvent>? domainEventsView;
+    private ReadOnlyCollection<IIntegrationEvent>? integrationEventsView;
 
     /// <summary>
     /// 初始化 <see cref="AggregateRoot{TKey}" /> 類別的新執行個體。
@@ -19,10 +22,10 @@ public abstract class AggregateRoot<TKey> : Entity<TKey>, IAggregateRoot {
     }
 
     /// <inheritdoc />
-    public IReadOnlyList<IDomainEvent> DomainEvents => domainEvents.AsReadOnly();
+    public IReadOnlyList<IDomainEvent> DomainEvents => domainEventsView ??= domainEvents.AsReadOnly();
 
     /// <inheritdoc />
-    public IReadOnlyList<IIntegrationEvent> IntegrationEvents => integrationEvents.AsReadOnly();
+    public IReadOnlyList<IIntegrationEvent> IntegrationEvents => integrationEventsView ??= integrationEvents.AsReadOnly();
 
     /// <inheritdoc />
     public void ClearDomainEvents() {

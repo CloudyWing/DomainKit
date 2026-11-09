@@ -28,6 +28,8 @@ DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase`
 | `IHasUpdater` | `UpdaterId` |
 | `IHasDeletedTime` / `IHasDeleter` | 軟刪除時間與操作者 |
 
+同步 `SaveChanges()` 與非同步 `SaveChangesAsync()` 經過相同的審計填值、RowVersion 更新、領域事件派發與 Outbox 寫入。同步路徑會同步等待領域事件處理器與廣播通道完成，具有 `SynchronizationContext` 的宿主應使用非同步版本，避免同步等待造成死結。
+
 依需要的審計層級，在 `OnModelCreating` 套用對應的設定擴充（位於 `CloudyWing.DomainKit.EntityFrameworkCore.Modeling`）：
 
 | 設定擴充 | 套用範圍 |
@@ -65,7 +67,9 @@ DomainKit 採真 Code First。聚合根即 EF 對映型別。`AggregateRootBase`
 
 Repository 依 `IHasDeletedTime` 判斷刪除策略。實作此介面的實體會寫入 `DeletedTime`；未實作時才會執行實體刪除。若實體同時實作 `IHasDeleter`，審計攔截器會在軟刪除時寫入 `DeleterId`。
 
-`ConfigureFullAuditedEntity` 加入 `DeletedTime is null` 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。詳見[多租戶與並行控制](tenancy-and-concurrency.md)。
+審計時間與 `DeletedTime` 皆取自 `TimeProvider`。審計攔截器使用 DI 註冊的 `TimeProvider`，`AddDomainKit` 未發現既有註冊時才補上 `TimeProvider.System`。Repository 優先使用建構子傳入的 `TimeProvider`；使用不含 `TimeProvider` 的建構子時，改取 DbContext 所屬應用程式服務容器中的註冊，兩者皆無時使用 `TimeProvider.System`。
+
+`ConfigureFullAuditedEntity` 加入 `DeletedTime is null` 的全域 query filter，因此一般 Repository 與 QueryService 查詢不會取得已刪除資料。管理流程若略過 filter，必須同時評估租戶 filter 的影響。模型呼叫 `UseDomainKitNamedQueryFilters` 後，軟刪除篩選改為具名篩選 `DomainKit.SoftDelete`，可只略過軟刪除而保留租戶篩選。詳見[多租戶與並行控制](tenancy-and-concurrency.md)。
 
 ## 時間儲存與時區
 
@@ -77,6 +81,8 @@ protected override void ConfigureConventions(ModelConfigurationBuilder configura
     configurationBuilder.ApplyDomainKitConventions(new UtcDateTimeOffsetConverter());
 }
 ```
+
+EF Core 的 pre-convention API 只接受轉換器型別，`ApplyDomainKitConventions` 會以傳入實例的執行期型別註冊，再由 EF Core 透過公開無參數建構子建立新實例。傳入實例的建構子參數與狀態不會套用。需要帶設定的轉換器時，建立以無參數建構子固定設定的衍生型別，或在個別屬性以 `HasConversion` 傳入實例。
 
 未傳入 converter 時，DomainKit 不改變 EF Core 的 provider 預設對映。若採 UTC 儲存，取到應用層後再依需求轉換為呈現時區。
 

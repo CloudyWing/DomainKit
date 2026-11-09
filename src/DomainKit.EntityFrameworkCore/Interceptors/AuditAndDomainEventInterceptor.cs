@@ -53,6 +53,24 @@ public sealed class AuditAndDomainEventInterceptor : SaveChangesInterceptor {
     }
 
     /// <inheritdoc />
+    /// <remarks>
+    /// 同步儲存路徑以 <c>GetAwaiter().GetResult()</c> 等待領域事件處理器與廣播通道，
+    /// 讓同步與非同步 <c>SaveChanges</c> 的審計、事件與 Outbox 語意一致。
+    /// 具有 <see cref="SynchronizationContext" /> 的宿主應改用非同步儲存，避免同步等待造成死結。
+    /// </remarks>
+    public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result) {
+        if (eventData.Context is null) {
+            return result;
+        }
+
+        ApplyAuditValues(eventData.Context);
+        DispatchDomainEventsAsync(eventData.Context, CancellationToken.None).GetAwaiter().GetResult();
+        CapturePendingEventsAndAddOutboxMessages(eventData.Context);
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -70,6 +88,17 @@ public sealed class AuditAndDomainEventInterceptor : SaveChangesInterceptor {
     }
 
     /// <inheritdoc />
+    public override int SavedChanges(SaveChangesCompletedEventData eventData, int result) {
+        if (eventData.Context is null) {
+            return result;
+        }
+
+        PublishPendingEventsAsync(eventData.Context, CancellationToken.None).GetAwaiter().GetResult();
+
+        return result;
+    }
+
+    /// <inheritdoc />
     public override async ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
@@ -79,7 +108,28 @@ public sealed class AuditAndDomainEventInterceptor : SaveChangesInterceptor {
             return result;
         }
 
-        PendingEvents pendingEvents = RemovePendingEvents(eventData.Context);
+        await PublishPendingEventsAsync(eventData.Context, cancellationToken).ConfigureAwait(false);
+
+        return result;
+    }
+
+    /// <inheritdoc />
+    public override void SaveChangesFailed(DbContextErrorEventData eventData) {
+        DetachPendingOutboxMessages(eventData.Context);
+    }
+
+    /// <inheritdoc />
+    public override Task SaveChangesFailedAsync(
+        DbContextErrorEventData eventData,
+        CancellationToken cancellationToken = default
+    ) {
+        DetachPendingOutboxMessages(eventData.Context);
+
+        return Task.CompletedTask;
+    }
+
+    private async Task PublishPendingEventsAsync(DbContext dbContext, CancellationToken cancellationToken) {
+        PendingEvents pendingEvents = RemovePendingEvents(dbContext);
         foreach (IAggregateRoot aggregateRoot in pendingEvents.AggregateRoots) {
             aggregateRoot.ClearDomainEvents();
         }
@@ -91,30 +141,24 @@ public sealed class AuditAndDomainEventInterceptor : SaveChangesInterceptor {
         foreach (IIntegrationEvent integrationEvent in pendingEvents.IntegrationEvents) {
             await eventBroadcast.PublishAsync(integrationEvent, cancellationToken).ConfigureAwait(false);
         }
-
-        return result;
     }
 
-    /// <inheritdoc />
-    public override Task SaveChangesFailedAsync(
-        DbContextErrorEventData eventData,
-        CancellationToken cancellationToken = default
-    ) {
-        if (eventData.Context is not null) {
-            PendingEvents pendingEvents = RemovePendingEvents(eventData.Context);
-            foreach (OutboxMessage outboxMessage in pendingEvents.OutboxMessages) {
-                EntityEntry entry = eventData.Context.Entry(outboxMessage);
-                if (entry.State == EntityState.Added) {
-                    entry.State = EntityState.Detached;
-                }
-            }
+    private void DetachPendingOutboxMessages(DbContext? dbContext) {
+        if (dbContext is null) {
+            return;
         }
 
-        return Task.CompletedTask;
+        PendingEvents pendingEvents = RemovePendingEvents(dbContext);
+        foreach (OutboxMessage outboxMessage in pendingEvents.OutboxMessages) {
+            EntityEntry entry = dbContext.Entry(outboxMessage);
+            if (entry.State == EntityState.Added) {
+                entry.State = EntityState.Detached;
+            }
+        }
     }
 
     private void ApplyAuditValues(DbContext dbContext) {
-        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateTimeOffset now = timeProvider.GetUtcNow();
         Guid? actorId = AuditScope.ActorId ?? auditUser.UserId;
 
         foreach (EntityEntry entry in dbContext.ChangeTracker.Entries()) {

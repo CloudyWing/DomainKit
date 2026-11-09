@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using CloudyWing.DomainKit.Events;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,6 +8,7 @@ namespace CloudyWing.DomainKit.EntityFrameworkCore.Events;
 /// 以 DI 容器解析並派發整合事件處理器。
 /// </summary>
 public sealed class IntegrationEventDispatcher : IIntegrationEventDispatcher {
+    private static readonly ConcurrentDictionary<Type, Type> HandlerTypes = new();
     private readonly IServiceProvider serviceProvider;
 
     /// <summary>
@@ -27,7 +29,10 @@ public sealed class IntegrationEventDispatcher : IIntegrationEventDispatcher {
         ArgumentNullException.ThrowIfNull(integrationEvents);
 
         foreach (IIntegrationEvent integrationEvent in integrationEvents) {
-            Type handlerType = typeof(IIntegrationEventHandler<>).MakeGenericType(integrationEvent.GetType());
+            Type handlerType = HandlerTypes.GetOrAdd(
+                integrationEvent.GetType(),
+                static eventType => typeof(IIntegrationEventHandler<>).MakeGenericType(eventType)
+            );
             IEnumerable<object?> handlers = serviceProvider.GetServices(handlerType);
             foreach (object? handler in handlers) {
                 if (handler is null) {

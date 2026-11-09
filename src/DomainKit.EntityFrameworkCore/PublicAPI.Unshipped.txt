@@ -1,1 +1,35 @@
 #nullable enable
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SaveChangesFailed(Microsoft.EntityFrameworkCore.Diagnostics.DbContextErrorEventData! eventData) -> void
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SavedChanges(Microsoft.EntityFrameworkCore.Diagnostics.SaveChangesCompletedEventData! eventData, int result) -> int
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.AuditAndDomainEventInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData! eventData, Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int> result) -> Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>
+override CloudyWing.DomainKit.EntityFrameworkCore.Interceptors.RowVersionStampInterceptor.SavingChanges(Microsoft.EntityFrameworkCore.Diagnostics.DbContextEventData! eventData, Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int> result) -> Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult<int>
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.Repository<TDbContext, TEntity, TKey>.Repository(TDbContext! dbContext, CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork! unitOfWork, System.TimeProvider! timeProvider) -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast.InProcessEventBroadcast(Microsoft.Extensions.Logging.ILogger<CloudyWing.DomainKit.EntityFrameworkCore.Events.Broadcast.InProcessEventBroadcast!>! logger) -> void
+static CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions.ToKeysetPageAsync<TItem, TKey>(this System.Linq.IQueryable<TItem>! query, System.Linq.Expressions.Expression<System.Func<TItem, TKey>!>! keySelector, int pageSize, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>!>!
+static CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryableExtensions.ToKeysetPageAsync<TItem, TKey>(this System.Linq.IQueryable<TItem>! query, System.Linq.Expressions.Expression<System.Func<TItem, TKey>!>! keySelector, TKey? afterKey, int pageSize, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<CloudyWing.DomainKit.Paging.KeysetPage<TItem, TKey>!>!
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWorkExtensions
+static CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWorkExtensions.UseResilientTransactionAsync(this CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork! unitOfWork, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.Task!>! executor, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+static CloudyWing.DomainKit.EntityFrameworkCore.Persistence.UnitOfWorkExtensions.UseResilientTransactionAsync<TResult>(this CloudyWing.DomainKit.EntityFrameworkCore.Persistence.IUnitOfWork! unitOfWork, System.Func<Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction!, System.Threading.CancellationToken, System.Threading.Tasks.Task<TResult>!>! executor, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<TResult>!
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.IOutboxAdministrator
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.IOutboxAdministrator.GetStatisticsAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics!>!
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.IOutboxAdministrator.RequeueDeadLetteredAsync(System.Guid id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<bool>!
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.DeadLetteredCount.get -> int
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.DeadLetteredCount.init -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.OldestPendingOccurredOn.get -> System.DateTimeOffset?
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.OldestPendingOccurredOn.init -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.OutboxStatistics() -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.PendingCount.get -> int
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.PendingCount.init -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessedCount.get -> int
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessedCount.init -> void
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.get -> int
+CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxStatistics.ProcessingCount.init -> void
+static CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitServiceCollectionExtensions.AddDomainKit<TDbContext>(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<CloudyWing.DomainKit.EntityFrameworkCore.DependencyInjection.DomainKitOptions!>? configure, System.Action<Microsoft.Extensions.Options.OptionsBuilder<CloudyWing.DomainKit.EntityFrameworkCore.Events.Outbox.OutboxOptions!>!>! configureOutboxOptions, params System.Reflection.Assembly![]! handlerAssemblies) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames
+CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryFilterModelBuilderExtensions
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity>.IgnoreSoftDeleteFilterOnly.get -> bool
+CloudyWing.DomainKit.EntityFrameworkCore.Persistence.QueryService<TDbContext, TEntity>.IgnoreSoftDeleteFilterOnly.set -> void
+const CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames.SoftDelete = "DomainKit.SoftDelete" -> string!
+const CloudyWing.DomainKit.EntityFrameworkCore.Modeling.DomainKitQueryFilterNames.Tenant = "DomainKit.Tenant" -> string!
+static CloudyWing.DomainKit.EntityFrameworkCore.Modeling.QueryFilterModelBuilderExtensions.UseDomainKitNamedQueryFilters(this Microsoft.EntityFrameworkCore.ModelBuilder! modelBuilder) -> Microsoft.EntityFrameworkCore.ModelBuilder!

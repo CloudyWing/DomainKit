@@ -54,3 +54,5 @@
   href: 0027-stable-langversion.md
 - name: ADR-0028 發佈憑證採 Trusted Publishing
   href: 0028-trusted-publishing.md
+- name: ADR-0029 具名查詢篩選採 opt-in 啟用
+  href: 0029-opt-in-named-query-filters.md

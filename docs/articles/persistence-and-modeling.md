@@ -71,7 +71,47 @@ Guid customerId = await unitOfWork.UseTransactionAsync(
 ).ConfigureAwait(false);
 ```
 
-重用既有交易時，方法不會提交也不會回復該交易，交由原本開啟交易的那一層負責。
+重用既有交易時，方法不會提交也不會回復該交易，交由原本開啟交易的那一層負責。回復一律以 `CancellationToken.None` 執行，取消權杖已觸發時仍會完成回復。回復成功後重新拋出委派原本的例外。回復本身拋出例外時（例如連線已中斷），該例外會取代委派原本的例外。
+
+## 可重試的交易
+
+資料庫 provider 啟用具重試能力的 execution strategy（例如 SQL Server 的 `EnableRetryOnFailure`）時，自行開啟的交易必須包在 execution strategy 內。`UnitOfWorkExtensions.UseResilientTransactionAsync` 以 `CreateExecutionStrategy().ExecuteAsync` 包住 `UseTransactionAsync`，暫時性失敗時重新執行整個交易。
+
+```csharp
+await unitOfWork.UseResilientTransactionAsync(
+    async cancellationToken => {
+        Customer customer = await customerRepository.GetAsync(customerId, cancellationToken)
+            .ConfigureAwait(false);
+        customer.Rename(name, timeProvider);
+        await unitOfWork.SaveChangesAsync(actorId, cancellationToken).ConfigureAwait(false);
+    },
+    ct
+).ConfigureAwait(false);
+```
+
+需要在交易範圍內取得回傳值，或需要直接操作交易物件時，使用泛型多載。委派簽章與 `UseTransactionAsync` 的泛型多載相同，會收到目前的 `IDbContextTransaction`。重試時整個委派會重新執行，因此新增的聚合也應在委派內建立。
+
+```csharp
+Guid customerId = await unitOfWork.UseResilientTransactionAsync(
+    async (transaction, cancellationToken) => {
+        Customer customer = Customer.Create(name);
+        await customerRepository.CreateAsync(customer, cancellationToken: cancellationToken)
+            .ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(actorId, cancellationToken).ConfigureAwait(false);
+
+        return customer.Id;
+    },
+    ct
+).ConfigureAwait(false);
+```
+
+使用前確認下列條件：
+
+- 委派在重試時會完整重新執行，應在委派內載入與修改資料，並可安全重複執行。
+- 重試前會呼叫 `DiscardChanges`，清除 DbContext 的所有追蹤狀態與待派發事件，包含呼叫前已追蹤的實體。
+- 呼叫前 DbContext 不可有未儲存的變更。execution strategy 具重試能力（`RetriesOnFailure` 為 `true`）且 `ChangeTracker.HasChanges()` 為 `true` 時，方法會在開啟交易、呼叫委派前擲出 `InvalidOperationException`，避免重試清除追蹤狀態時丟失這些變更。請先呼叫 `SaveChangesAsync` 儲存，或把修改移入委派。execution strategy 不具重試能力時不做此檢查。
+- 只能在尚未開啟交易時呼叫。已有交易時，具重試能力的 execution strategy 會拒絕執行。
+- 擴充方法需要 DomainKit 的 `UnitOfWork<TDbContext>` 實作，其他 `IUnitOfWork` 實作會拋出 `NotSupportedException`。
 
 ## 軟刪除判定
 
