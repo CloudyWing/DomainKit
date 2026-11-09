@@ -11,12 +11,12 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CloudyWing.Enumeration" Version="0.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.14" />
   </ItemGroup>
 </Project>
